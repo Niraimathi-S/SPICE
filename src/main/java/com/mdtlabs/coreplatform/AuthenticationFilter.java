@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,6 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
@@ -36,10 +40,8 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -51,6 +53,18 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.CustomDateSerializer;
+import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserTenantsContextHolder;
+import com.mdtlabs.coreplatform.common.exception.Validation;
+import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
+import com.mdtlabs.coreplatform.common.model.entity.UserToken;
+import com.mdtlabs.coreplatform.common.repository.CommonRepository;
+import com.mdtlabs.coreplatform.common.repository.GenericRepository;
+import com.mdtlabs.coreplatform.common.service.UserTokenService;
+import com.mdtlabs.coreplatform.common.util.DateUtil;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -59,23 +73,11 @@ import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.mdtlabs.coreplatform.common.Constants;
-import com.mdtlabs.coreplatform.common.CustomDateSerializer;
-import com.mdtlabs.coreplatform.common.UserContextHolder;
-import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
-import com.mdtlabs.coreplatform.common.contexts.UserTenantsContextHolder;
-import com.mdtlabs.coreplatform.common.exception.Validation;
-import com.mdtlabs.coreplatform.common.logger.Logger;
-import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
-import com.mdtlabs.coreplatform.common.model.entity.User;
-import com.mdtlabs.coreplatform.common.model.entity.UserToken;
-import com.mdtlabs.coreplatform.common.repository.CommonRepository;
-import com.mdtlabs.coreplatform.common.repository.GenericRepository;
-import com.mdtlabs.coreplatform.common.util.DateUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
+
+import com.mdtlabs.coreplatform.common.logger.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.modelmapper.ModelMapper;
 
 /**
  * Used to do internal filter on token validation
@@ -97,6 +99,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
 			MediaType.valueOf(Constants.APPLICATIONJSON), MediaType.valueOf(Constants.APPLICATION_XML),
 			MediaType.MULTIPART_FORM_DATA);
+
 	org.apache.logging.log4j.Logger log = LogManager.getLogger(AuthenticationFilter.class);
 
 	@Value("${app.private-key}")
@@ -110,6 +113,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private DiscoveryClient discoveryClient;
+
+	@Autowired
+	private UserTokenService userTokenService;
 
 	private RestTemplate restService = new RestTemplate();
 
@@ -126,7 +132,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 				|| request.getRequestURI().contains("/forget-password-limit-exceed")
 				|| request.getRequestURI().contains("/reset-password-limit-exceed")
 				|| request.getRequestURI().contains("/webjars/swagger-ui")
-				|| request.getRequestURI().contains("/v3/api-docs")) {
+				|| request.getRequestURI().contains("/v3/api-docs")
+				|| request.getRequestURI().contains("/generate-token")) {
 			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(null, null, null);
 			SecurityContextHolder.getContext().setAuthentication(auth);
 			filterChain.doFilter(request, response);
@@ -149,6 +156,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 							SecurityContextHolder.getContext().setAuthentication(auth);
 						}
 					}
+
 					commonRepository.getApiRolePermission().stream().forEach(api -> {
 						if (StringUtils.isNotBlank(api.getRoles())) {
 							Map<String, List<String>> apiRoleMap = new HashMap<>();
@@ -191,16 +199,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	 * @throws ParseException
 	 * @throws JsonProcessingException
 	 */
+
 	public UserDTO validateAspect(String jwtToken, HttpServletResponse response)
 			throws ParseException, JsonProcessingException {
-		String newAuthToken = null;
-		String newRefreshToken = null;
+
 		if (StringUtils.isBlank(jwtToken)) {
 			jwtToken = Constants.SPACE;
 		}
 		if (null == privateRsaKey) {
 			tokenDecrypt();
 		}
+
 		EncryptedJWT jwt;
 		try {
 			jwt = EncryptedJWT.parse(jwtToken);
@@ -220,7 +229,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		Date expDateJwt = pstFormat.parse(pstFormat.format(jwt.getJWTClaimsSet().getClaim(Constants.EXP)));
 		Date currentDate = pstFormat.parse(pstFormat.format(DateUtil.formatDate(new Date())));
 		UserDTO userDetail = null;
+//		System.out.println("jwt claimset" + jwt.getJWTClaimsSet().toString(true));
+//		System.out.println("userdata: " + jwt.getJWTClaimsSet().getClaim(Constants.USER_DATA));
 		String rawJson = String.valueOf(jwt.getJWTClaimsSet().getClaim(Constants.USER_DATA));
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		userDetail = objectMapper.readValue(rawJson, UserDTO.class);
 		userDetail.setAuthorization(jwtToken);
@@ -233,55 +245,71 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		if (null != userDetail.getTimezone()) {
 			CustomDateSerializer.USER_ZONE_ID = userDetail.getTimezone().getOffset();
 		}
-		if ((expDateJwt.getTime() - currentDate.getTime()) / (60 * 1000) < Constants.ZERO) {
-			ResponseEntity<Map> userResponse = restService.exchange(
-					getUserInfo() + "/user-service/user/getRefreshToken/" + userDetail.getId(), HttpMethod.GET, null,
-					Map.class);
-			User loggedInUser = modelMapper.map(userResponse.getBody().get(Constants.ENTITY), User.class);
-			// need to change
-//			String refreshToken = loggedInUser.getRefreshToken();
-			String refreshToken = jwtToken;
 
-			EncryptedJWT jwtRefresh;
-			try {
-				jwtRefresh = EncryptedJWT
-						.parse(refreshToken.substring(Constants.BEARER.length(), refreshToken.length()));
-			} catch (ParseException e) {
-				Logger.logError(e);
-				throw new Validation(3013);
-			}
-			try {
-				jwtRefresh.decrypt(decrypter);
-			} catch (JOSEException e) {
-				Logger.logError(e);
-				throw new Validation(3013);
-			}
-			Date expDateRefresh = pstFormat
-					.parse(pstFormat.format(jwtRefresh.getJWTClaimsSet().getClaim(Constants.EXP)));
-			if ((expDateJwt.getTime() - currentDate.getTime()) / (Constants.SIXTY * Constants.THOUSAND) < Constants.ZERO
-					&& (expDateRefresh.getTime() - currentDate.getTime()) / Constants.THOUSAND < Constants.ZERO) {
-				throw new ExpiredJwtException(null, null, Constants.TOKEN_EXPIRED);
-			} else {
-				Map<String, Object> userInfo = new ObjectMapper().convertValue(userDetail, Map.class);
-				try {
-					generateKey();
-					newAuthToken = authTokenCreation(userDetail, userInfo);
-					newRefreshToken = refreshTokenCreation(userDetail);
-					createUserToken(userDetail.getId(), newAuthToken, newRefreshToken);
-				} catch (JOSEException e) {
-					Logger.logError(Constants.JOSE_EXCEPTION + e);
-				} catch (Exception e) {
-					Logger.logError(Constants.EXCEPTION_DURING_TOKEN_UTIL, e);
-				}
-			}
-			response.setHeader(org.springframework.http.HttpHeaders.AUTHORIZATION, newAuthToken);
-			response.setHeader(Constants.REFRESH_TOKEN, newRefreshToken);
+		UserToken userToken = userTokenService.getUserToken(jwtToken);
+
+		boolean isTokenActive = false;
+
+		if (!Objects.isNull(userToken) && userToken.isActive()) {
+			isTokenActive = true;
+		}
+
+		if (!isTokenActive) {
+//			userTokenService.deleteUserTokenByToken(jwtToken, userToken.getUserId());
+			throw new ExpiredJwtException(null, null, Constants.TOKEN_EXPIRED);
+		}
+
+		if ((expDateJwt.getTime() - currentDate.getTime()) / (60 * 1000) < Constants.ZERO) {
+			throw new Validation(3013);
+//			ResponseEntity<Map> userResponse = restService.exchange(
+//					getUserInfo() + "/user-service/user/getRefreshToken/" + userDetail.getId(), HttpMethod.GET, null,
+//					Map.class);
+//			User loggedInUser = modelMapper.map(userResponse.getBody().get(Constants.ENTITY), User.class);
+//			String refreshToken = loggedInUser.getRefreshToken();
+//
+//			EncryptedJWT jwtRefresh;
+//			try {
+//				jwtRefresh = EncryptedJWT
+//						.parse(refreshToken.substring(Constants.BEARER.length(), refreshToken.length()));
+//			} catch (ParseException e) {
+//				Logger.logError(e);
+//				throw new Validation(3013);
+//			}
+//			try {
+//				jwtRefresh.decrypt(decrypter);
+//			} catch (JOSEException e) {
+//				Logger.logError(e);
+//				throw new Validation(3013);
+//			}
+//			Date expDateRefresh = pstFormat
+//					.parse(pstFormat.format(jwtRefresh.getJWTClaimsSet().getClaim(Constants.EXP)));
+//
+//			if ((expDateJwt.getTime() - currentDate.getTime()) / (Constants.SIXTY * Constants.THOUSAND) < Constants.ZERO
+//					&& (expDateRefresh.getTime() - currentDate.getTime()) / Constants.THOUSAND < Constants.ZERO) {
+////				userTokenService.deleteUserTokenByToken(jwtToken, userToken.getUserId());
+//				throw new ExpiredJwtException(null, null, Constants.TOKEN_EXPIRED);
+//			} else {
+////				Map<String, Object> userInfo = new ObjectMapper().convertValue(userDetail, Map.class);
+////				try {
+////					generateKey();
+////					newAuthToken = authTokenCreation(userDetail, userInfo);
+////					newRefreshToken = refreshTokenCreation(userDetail);
+////				updateUserToken(userDetail.getId(), newAuthToken, newRefreshToken);
+//				updateUserToken(userDetail.getId(), jwtToken);
+////				} catch (JOSEException e) {
+////					Logger.logError(Constants.JOSE_EXCEPTION + e);
+////				} catch (Exception e) {
+////					Logger.logError(Constants.EXCEPTION_DURING_TOKEN_UTIL, e);
+////				}
+//			}
+//			response.setHeader(org.springframework.http.HttpHeaders.AUTHORIZATION, newAuthToken);
+//			response.setHeader(Constants.REFRESH_TOKEN, newRefreshToken);
 
 		} else {
 			UserContextHolder.setUserDto(userDetail);
 			return userDetail;
 		}
-		return userDetail;
+//		return userDetail;
 	}
 
 	/**
@@ -418,7 +446,19 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		if (visible) {
 			try {
 				String contentString = new String(content, contentEncoding);
-				Stream.of(contentString.split(Constants.SPLIT_CONTENT)).forEach(line -> log.info("{}", line));
+				boolean logInfo = true;
+				if (contentString.startsWith("{") && contentString.endsWith("}")) {
+					JSONObject json = new JSONObject(contentString);
+					if (json.has("entityList") && json.get("entityList") instanceof JSONArray) {
+						JSONArray entityList = (JSONArray) json.get("entityList");
+						if (entityList.length() > 1) {
+							logInfo = false;
+						}
+					}
+				}
+				if (logInfo) {
+					Stream.of(contentString.split(Constants.SPLIT_CONTENT)).forEach(line -> log.info("{}", line));
+				}
 			} catch (UnsupportedEncodingException e) {
 				log.info("{} [{} bytes content]", prefix, content.length);
 			}
@@ -515,13 +555,35 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	 * @param jwtToken        - jwt token of the logged in user
 	 * @param jwtRefreshToken - refresh token of the logged in user
 	 */
-	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken) {
-		UserToken usertoken = new UserToken();
-		usertoken.setUserId(userId);
-		usertoken.setAuthToken(jwtToken);
-		usertoken.setRefreshToken(jwtRefreshToken);
-		genericRepository.save(usertoken);
-	}
+//<<<<<<< Updated upstream
+//	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken) {
+//		UserToken usertoken = new UserToken();
+//		usertoken.setUserId(userId);
+//		usertoken.setAuthToken(jwtToken);
+//		usertoken.setRefreshToken(jwtRefreshToken);
+//		genericRepository.save(usertoken);
+//=======
+//	private void updateUserToken(long userId, String jwtToken, String jwtRefreshToken) {
+//		UserToken userToken = new UserToken();
+//		userToken.setUserId(userId);
+//		userToken.setAuthToken(jwtToken);
+//		userToken.setActive(true);
+//		userToken.setRefreshToken(jwtRefreshToken);
+//		commonRepository.updateUserToken(userId, jwtToken, jwtRefreshToken);
+//		userTokenService.saveUserToken(userToken);
+//	}
+
+	/**
+	 * To update user token
+	 * 
+	 * @param user
+	 * @param jwtToken
+	 * @param jwtRefreshToken
+	 */
+//	private void updateUserToken(long userId, String existingToken) {
+//		userTokenService.deleteUserTokenByToken(existingToken, userId);
+//>>>>>>> Stashed changes
+//	}
 
 	/**
 	 * <p>

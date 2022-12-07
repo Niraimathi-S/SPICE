@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.mdtlabs.coreplatform.common.logger.Logger;
@@ -88,5 +89,21 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 		StringWriter writer = new StringWriter();
 		error.printStackTrace(new PrintWriter(writer));
 		return writer.toString();
+	}
+
+	/**
+	 * This method is used to handle internal server error
+	 * 
+	 * @param exception- passing exception
+	 * @return ErrorMessage - error trace message
+	 */
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ExceptionHandler(value = Unauthorized.class)
+	@ResponseBody
+	public ErrorMessage authExceptionHandler(Exception exception) {
+		Logger.logError(StringUtil.constructString(exception.getClass().getName(), ExceptionConstants.MESSAGE_GENERIC,
+				getErrorStackString(exception)));
+
+		return resolver.resolveError(HttpStatus.UNAUTHORIZED, exception.getMessage());
 	}
 }

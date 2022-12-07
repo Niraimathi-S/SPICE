@@ -95,8 +95,6 @@ public class AuditConfiguration {
 							audit = new Audit();
 							audit.setAction(Constants.CREATE.toUpperCase());
 							audit.setColumnName(userClassMethod.getName().substring(Constants.NUMBER_THREE));
-							audit.setCreatedBy(Constants.EMPTY);
-							audit.setUpdatedBy(Constants.EMPTY);
 							audit.setEntity(entity.getClass().getSimpleName());
 							audit.setNewValue(userClassValue.toString());
 							auditListToBeSaved.add(audit);

@@ -63,10 +63,10 @@ public class Audit implements Serializable {
 	private long id;
 
 	@Column(name = Constants.CREATED_BY, updatable = false, nullable = false)
-	private String createdBy = getUserValue();
+	private long createdBy = getUserValue();
 
 	@Column(name = Constants.UPDATED_BY, nullable = true)
-	private String updatedBy = getUserValue();
+	private long updatedBy = getUserValue();
 
 	@Column(name = Constants.CREATED_AT, columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
 	@CreationTimestamp
@@ -86,10 +86,10 @@ public class Audit implements Serializable {
 	 * @return String - user value
 	 */
 	@JsonIgnore
-	public String getUserValue() {
+	public long getUserValue() {
 		if (null != UserContextHolder.getUserDto()) {
-			return String.valueOf(UserContextHolder.getUserDto().getId());
+			return UserContextHolder.getUserDto().getId();
 		}
-		return null;
+		return Constants.ZERO;
 	}
 }

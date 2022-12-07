@@ -289,6 +289,7 @@ public final class Constants {
 	public static final String UTF_8 = "UTF-8";
 	public static final String NOTIFICATION = "NOTIFICATION";
 	public static final String SAVING_EMAIL_NOTIFICATION_ERROR = "Error while saving notification for email";
+
 	public static final String AUTH_API = "Auth API";
 	public static final String VERSION = "1.0";
 	public static final String DOCUMENTATION_AUTH_API = "Documentation Auth API v1.0";
@@ -423,4 +424,8 @@ public final class Constants {
 	public static final Integer FBS_MG_DL = 126;
 	public static final Integer RBS_MG_DL = 198;
 
+	public static final String TABLE_USER_TOKEN = "user_token";
+	public static final String LAST_SESSION_TIME = "last_session_time";
+
+	public static final long EXPIRY_MINUTES = 15;
 }

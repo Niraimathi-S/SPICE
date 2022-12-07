@@ -59,4 +59,5 @@ public class GenericServiceImpl<T extends BaseEntity> implements GenericService<
 			throw exception;
 		}
 	}
+
 }

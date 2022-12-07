@@ -119,7 +119,7 @@ public class User extends BaseEntity implements Serializable, UserDetails {
     private int passwordResetAttempts;
 
 	@Column(name = FieldConstants.IS_LICENSE_ACCEPTANCE)
-    private boolean isLicenseAcceptance;
+    private boolean isLicenseAcceptance = false;
 
 	@Column(name = FieldConstants.LAST_LOGGED_IN)
     private Date lastLoggedIn;

@@ -32,6 +32,6 @@ public class Timezone extends BaseEntity implements Serializable {
 	private String description;
 
 	@Column(name = FieldConstants.OFFSET)
-	private String timezoneOffset;
+	private String offset;
 
 }

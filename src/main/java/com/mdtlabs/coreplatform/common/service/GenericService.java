@@ -39,5 +39,6 @@ public interface GenericService<T extends BaseEntity> {
 	 * @throws Exception
 	 */
 	T findById(Long id) throws Exception;
+	
 
 }

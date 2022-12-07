@@ -55,9 +55,9 @@ public class UserDTO {
 	
 	private String tenants;
 	
-	public TimezoneDTO getTimezone() {
-		   ModelMapper modelMapper = new ModelMapper();
-		   return modelMapper.map(timezone, TimezoneDTO.class);
-		}
+//	public TimezoneDTO getTimezone() {
+//		   ModelMapper modelMapper = new ModelMapper();
+//		   return modelMapper.map(timezone, TimezoneDTO.class);
+//		}
 	
 }
