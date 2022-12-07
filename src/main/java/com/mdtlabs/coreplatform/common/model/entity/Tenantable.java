@@ -10,6 +10,8 @@ import org.hibernate.annotations.ParamDef;
 
 import com.mdtlabs.coreplatform.common.listeners.TenantEntityListener;
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.TableConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -31,6 +33,6 @@ import lombok.Data;
 public class Tenantable {
 
     @JsonIgnore
-    @Column(name = Constants.TENANT_ID, nullable = false)
+    @Column(name = FieldConstants.TENANT_ID, nullable = false)
     private int tenantId;
 }

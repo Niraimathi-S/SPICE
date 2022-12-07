@@ -6,6 +6,19 @@ public final class FieldConstants {
 
     private FieldConstants() {
     }
+    
+	public static final String ENTITY_ID = "entity_id";
+	public static final String CREATE = "create";
+	public static final String UPDATE = "update";
+	public static final String SUBCOUNTY_ID = "sub_county_id";
+	public static final String SUBCOUNTY = "sub_county";
+	public static final String CULTURE = "culture";
+	public static final String COUNTRY = "country";
+	public static final String ADDRESS_ONE = "address_1";
+	public static final String UTC = "UTC";
+	public static final String METHOD = "method";
+	public static final String API = "api";
+
 
     public static final String ID = "id";
     public static final String CREATED_BY = "created_by";
@@ -41,6 +54,7 @@ public final class FieldConstants {
     public static final String MOBILE_NUMBER = "mobile_number";
     public static final String STATE_ID = "state_id";
     public static final String VM_CONTENT = "vm_content";
+    public static final String REGION = "region";
     public static final String BODY = "body";
     public static final String TITLE = "title";
     public static final String APP_URL = "app_url";
@@ -247,7 +261,6 @@ public final class FieldConstants {
 	public static final String ADDRESS_2 = "address_2";
 	public static final String CITY = "city";
 	public static final String OPERATING_UNIT_ID = "operating_unit_id";
-	public static final String ACCOUNT_ID = "account_id";
 	public static final String CULTURE_ID = "culture_id";
 	public static final String DOCTOR_NAME = "doctor_name";
 	public static final String WORKING_DAYS = "working_days";
@@ -265,7 +278,8 @@ public final class FieldConstants {
 
 	// Program fields
 	public static final String OPERATING_UNIT = "operating_unit_id";
-	public static final String ACCOUNT = "account_id";
+	public static final String ACCOUNT_ID = "account_id";
+	public static final String ACCOUNT = "account";
 	public static final String SITE = "site_id";
 	public static final String QUESTION_ID = "question_id";
 	public static final String ANSWER_ID = "answer_id";

@@ -16,6 +16,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
+import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.telecounselor.TelecounselorConstants;
 
 import lombok.Data;
@@ -29,24 +31,24 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = Constants.TABLE_USER_FILTER_LOCK)
+@Table(name = TableConstants.TABLE_USER_FILTER_LOCK)
 public class UserFilterLock {
 
 	@Id
-	@Column(name = Constants.ID)
+	@Column(name = FieldConstants.ID)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(name = Constants.USER_ID, unique = true)
+	@Column(name = FieldConstants.USER_ID, unique = true)
 	private long userId;
 
 	@Column(name = TelecounselorConstants.FILTER_VALUES)
 	private String filterValues;
 
-	@Column(name = Constants.CREATED_BY)
+	@Column(name = FieldConstants.CREATED_BY)
 	private long createdBy;
 
-	@Column(name = Constants.CREATED_AT, columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
+	@Column(name = FieldConstants.CREATED_AT, columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonSerialize(using = CustomDateSerializer.class)

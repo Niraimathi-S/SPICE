@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.common.telecounselor;
 import java.util.List;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.enumeration.telecounselor.PatientCategory;
 
 /**
@@ -131,7 +132,7 @@ public class TelecounselorConstants {
 	public static final String TABLE_PATIENT_CALL_SCRIPT = "patient_call_script";
 	public static final String TABLE_PATIENT_ASSIGNED_LIST = "patient_assigned_list";
 	public static final String COLUMN_DEFINITION_LONGBLOB = "LONGBLOB";
-	public static final String COLUMN_TRANSFORMER_READ_AES_PASSWORD = "AES_DECRYPT(" + Constants.PASSWORD + ", '"
+	public static final String COLUMN_TRANSFORMER_READ_AES_PASSWORD = "AES_DECRYPT(" + FieldConstants.PASSWORD + ", '"
 			+ Constants.AES_KEY + "')";
 	public static final String COLUMN_TRANSFORMER_WRITE_AES = "AES_ENCRYPT(?, '" + Constants.AES_KEY + "')";
 	public static final String LOGIN_USER_AUTH = "login auth key for secure to get user details";

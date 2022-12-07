@@ -17,7 +17,7 @@ import lombok.Data;
  * This class is an entity class for timezone table.
  * </p>
  * 
- * @author ArunKarthik created on Aug 2022
+ * @author Prabu created on Dec 06 2022
  */
 @Data
 public class TimezoneDTO {

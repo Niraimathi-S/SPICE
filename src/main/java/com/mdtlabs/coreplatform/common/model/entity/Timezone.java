@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.TableConstants;
 
 import lombok.Data;
 
@@ -20,15 +21,15 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = Constants.TABLE_TIMEZONE)
+@Table(name = TableConstants.TABLE_TIMEZONE)
 public class Timezone extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = Constants.ABBREVIATION)
+	@Column(name = FieldConstants.ABBREVIATION)
 	private String abbreviation;
 
-	@Column(name = Constants.DESCRIPTION)
+	@Column(name = FieldConstants.DESCRIPTION)
 	private String description;
 
 	@Column(name = FieldConstants.OFFSET)

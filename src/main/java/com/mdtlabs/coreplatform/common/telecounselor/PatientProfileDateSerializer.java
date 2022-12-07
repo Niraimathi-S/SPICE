@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,7 +38,7 @@ public class PatientProfileDateSerializer extends StdSerializer<Date> {
 	public void serialize(Date date, JsonGenerator gen, SerializerProvider arg2) throws IOException {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT);
 		Instant timeStamp = date.toInstant();
-		String zoneId = String.valueOf(ZoneId.of(Constants.UTC));
+		String zoneId = String.valueOf(ZoneId.of(FieldConstants.UTC));
 		if (StringUtils.isNotEmpty(CustomDateSerializer.USER_ZONE_ID)) {
 			zoneId = CustomDateSerializer.USER_ZONE_ID;
 		}

@@ -2,9 +2,11 @@ package com.mdtlabs.coreplatform.common.model.dto;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 
+import com.mdtlabs.coreplatform.common.model.dto.spice.CountryDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
 import com.mdtlabs.coreplatform.common.model.entity.Role;
 import com.mdtlabs.coreplatform.common.model.entity.Timezone;
@@ -52,12 +54,16 @@ public class UserDTO {
 	private Country region;
 
 	private Timezone timezone;
-	
+
 	private String tenants;
-	
+
 //	public TimezoneDTO getTimezone() {
-//		   ModelMapper modelMapper = new ModelMapper();
-//		   return modelMapper.map(timezone, TimezoneDTO.class);
-//		}
+//		ModelMapper modelMapper = new ModelMapper();
+//		return modelMapper.map(timezone, TimezoneDTO.class);
+//	}
 	
+	public Set<RoleDTO> getRoles() {
+		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());
+	}
+
 }

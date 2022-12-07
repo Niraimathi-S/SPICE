@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.common.model.entity.telecounselor;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 import com.mdtlabs.coreplatform.common.model.enumeration.telecounselor.CurrentCallStatus;
 import com.mdtlabs.coreplatform.common.model.enumeration.telecounselor.LastCallStatus;
@@ -41,10 +42,10 @@ public class PatientChaselist extends BaseEntity {
 	@Column(name = TelecounselorConstants.NATIONAL_ID)
 	private String nationalId;
 
-	@Column(name = Constants.FIRST_NAME)
+	@Column(name = FieldConstants.FIRST_NAME)
 	private String firstName;
 
-	@Column(name = Constants.LAST_NAME)
+	@Column(name = FieldConstants.LAST_NAME)
 	private String lastName;
 
 	@Column(name = TelecounselorConstants.DOB)
@@ -53,22 +54,22 @@ public class PatientChaselist extends BaseEntity {
 	@Column(name = TelecounselorConstants.AGE)
 	private int age;
 
-	@Column(name = Constants.GENDER)
+	@Column(name = FieldConstants.GENDER)
 	private String gender;
 
-	@Column(name = Constants.COUNTRY_CODE)
+	@Column(name = FieldConstants.COUNTRY_CODE)
 	private String countryCode;
 
-	@Column(name = Constants.PHONE_NUMBER)
+	@Column(name = FieldConstants.PHONE_NUMBER)
 	private String phoneNumber;
 
 	@Column(name = TelecounselorConstants.PHONE_NUMBER_CATEGORY)
 	private String phoneNumberCategory;
 
-	@Column(name = Constants.REGION)
+	@Column(name = FieldConstants.REGION)
 	private String region;
 
-	@Column(name = Constants.ACCOUNT)
+	@Column(name = FieldConstants.ACCOUNT)
 	private String account;
 
 	@Column(name = TelecounselorConstants.OPERATING_UNIT)
@@ -83,13 +84,13 @@ public class PatientChaselist extends BaseEntity {
 	@Column(name = TelecounselorConstants.REGION_ID)
 	private String regionId;
 
-	@Column(name = Constants.ACCOUNT_ID)
+	@Column(name = FieldConstants.ACCOUNT_ID)
 	private String accountId;
 
-	@Column(name = Constants.OPERATING_UNIT_ID)
+	@Column(name = FieldConstants.OPERATING_UNIT_ID)
 	private String operatingUnitId;
 
-	@Column(name = Constants.SITE_ID)
+	@Column(name = FieldConstants.SITE_ID)
 	private String siteId;
 
 	@Column(name = TelecounselorConstants.PROGRAM_ID)
@@ -131,7 +132,7 @@ public class PatientChaselist extends BaseEntity {
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date enrolledDate;
 
-	@Column(name = Constants.TENANT_ID)
+	@Column(name = FieldConstants.TENANT_ID)
 	private String tenantId;
 
 	@Column(name = TelecounselorConstants.CVD_RISK_SCORE)

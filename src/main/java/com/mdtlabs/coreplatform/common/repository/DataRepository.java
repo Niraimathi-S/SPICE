@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.entity.ApiRolePermission;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
 import com.mdtlabs.coreplatform.common.model.entity.Timezone;
@@ -60,7 +61,7 @@ public interface DataRepository extends JpaRepository<User, Long> {
 	 * @return Country - country object
 	 */
 	@Query(value = GET_COUNTRY_BY_ID)
-	public Country getCountryById(@Param(Constants.ID) String id);
+	public Country getCountryById(@Param(FieldConstants.ID) String id);
 
 	/**
 	 * <p>
@@ -70,7 +71,7 @@ public interface DataRepository extends JpaRepository<User, Long> {
 	 * @return Timezone - timezone object
 	 */
 	@Query(value = GET_TIMEZONE_BY_ID)
-	public Timezone getTimezoneById(@Param(Constants.ID) String id);
+	public Timezone getTimezoneById(@Param(FieldConstants.ID) String id);
 
 	/**
 	 * This method is used to get api roles permission

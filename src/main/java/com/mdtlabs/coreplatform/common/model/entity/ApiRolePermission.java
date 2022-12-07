@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.TableConstants;
 
 import lombok.Data;
 
@@ -20,21 +22,21 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = Constants.TABLE_API_ROLE_PERMISSION)
+@Table(name = TableConstants.TABLE_API_ROLE_PERMISSION)
 public class ApiRolePermission {
 
 	@Id
-	@Column(name = Constants.ID)
+	@Column(name = FieldConstants.ID)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(name = Constants.METHOD)
+	@Column(name = FieldConstants.METHOD)
 	private String method;
 	
-	@Column(name = Constants.API)
+	@Column(name = FieldConstants.API)
 	private String api;
 	
-	@Column(name = Constants.ROLES)
+	@Column(name = FieldConstants.ROLES)
 	private String roles;
 
 }

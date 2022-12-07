@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.common.util;
 import org.apache.commons.lang3.StringUtils;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.exception.Validation;
 
 import java.text.DateFormat;
@@ -83,7 +84,7 @@ public class DateUtil {
 	 */
 	public static ZonedDateTime getZonedDateTime(Date date) {
 		Instant timeStamp = date.toInstant();
-		String zoneId = String.valueOf(ZoneId.of(Constants.UTC));
+		String zoneId = String.valueOf(ZoneId.of(FieldConstants.UTC));
 		return timeStamp.atZone(ZoneId.of(zoneId));
 	}
 

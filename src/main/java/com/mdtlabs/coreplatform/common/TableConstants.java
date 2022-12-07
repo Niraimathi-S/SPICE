@@ -4,10 +4,16 @@ public final class TableConstants {
 
 	private TableConstants() {
 	};
-
+	
+	public static final String TABLE_OPERATINGUNIT = "operatingunit";
+	public static final String TABLE_SUBCOUNTY = "subcounty";
+	public static final String TABLE_ORGANIZATIONS = "organizations";
+	public static final String TABLE_PROGRAM_DETAILS = "program_details";
+	public static final String TABLE_USER_FILTER_LOCK = "user_filter_lock";
+	public static final String TIMEZONE_OFFSET = "timezone_offset";
+	public static final String TABLE_API_ROLE_PERMISSION = "api_role_permission";
 	public static final String TABLE_ROLE = "role";
 	public static final String TABLE_USER = "\"user\"";
-	public static final String TABLE_USERS = "\"user\"";
 	public static final String TABLE_USER_ROLE = "user_role";
 	public static final String TABLE_USER_ORGANIZATION = "user_organization";
 	public static final String TABLE_NOTIFICATION = "notification";

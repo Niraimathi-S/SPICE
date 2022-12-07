@@ -36,7 +36,7 @@ public class CustomDateSerializer extends StdSerializer<Date> {
             throws IOException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT_TIMEZONE);
         Instant timeStamp = date.toInstant();
-        String zoneId = String.valueOf(ZoneId.of(Constants.UTC));
+        String zoneId = String.valueOf(ZoneId.of(FieldConstants.UTC));
         if (StringUtils.isNotEmpty(CustomDateSerializer.USER_ZONE_ID)) {
             zoneId = CustomDateSerializer.USER_ZONE_ID;
         }

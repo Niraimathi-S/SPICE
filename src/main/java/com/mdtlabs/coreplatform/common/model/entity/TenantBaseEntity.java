@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -34,32 +35,32 @@ public class TenantBaseEntity extends Tenantable implements Serializable {
 	private static final long serialVersionUID = 4174505913611242103L;
 
 	@Id
-	@Column(name = Constants.ID)
+	@Column(name = FieldConstants.ID)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(name = Constants.CREATED_BY, updatable = false, nullable = false)
+	@Column(name = FieldConstants.CREATED_BY, updatable = false, nullable = false)
 	private long createdBy = getUserValue();
 
-	@Column(name = Constants.UPDATED_BY, nullable = true)
+	@Column(name = FieldConstants.UPDATED_BY, nullable = true)
 	private long updatedBy = getUserValue();
 
-	@Column(name = Constants.CREATED_AT, columnDefinition = Constants.TIMESTAMP, nullable = false, updatable = false)
+	@Column(name = FieldConstants.CREATED_AT, columnDefinition = Constants.TIMESTAMP, nullable = false, updatable = false)
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createdAt;
 
-	@Column(name = Constants.UPDATED_AT, columnDefinition = Constants.TIMESTAMP)
+	@Column(name = FieldConstants.UPDATED_AT, columnDefinition = Constants.TIMESTAMP)
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date updatedAt;
 
-	@Column(name = Constants.IS_ACTIVE)
+	@Column(name = FieldConstants.IS_ACTIVE)
 	private boolean isActive;
 
-	@Column(name = Constants.IS_DELETED)
+	@Column(name = FieldConstants.IS_DELETED)
 	private boolean isDeleted;
 
 	/**

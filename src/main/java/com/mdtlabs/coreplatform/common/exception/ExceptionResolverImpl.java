@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.common.exception;
 import org.springframework.http.HttpStatus;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.logger.Logger;
 
 import java.time.ZonedDateTime;
@@ -21,11 +22,11 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 	 * {@inheritDoc}
 	 */
 	public ErrorMessage resolveError(final HttpStatus statusCode, final String msg) {
-		Logger.logInfo(Constants.RESOLVER_ERROR + msg);
+		Logger.logInfo(ErrorConstants.RESOLVER_ERROR + msg);
 		final ErrorMessage.Builder builder = new ErrorMessage.Builder();
 		builder.setDateTime(ZonedDateTime.now().toInstant().toEpochMilli());
 
-		Logger.logInfo(Constants.RESOLVER_ERROR + msg);
+		Logger.logInfo(ErrorConstants.RESOLVER_ERROR + msg);
 
 		builder.setErrorCode(statusCode.value());
 		builder.setMessage(msg);

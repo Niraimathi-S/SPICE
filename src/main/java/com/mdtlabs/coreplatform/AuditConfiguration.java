@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.logger.Logger;
 import com.mdtlabs.coreplatform.common.model.entity.Audit;
 
@@ -93,7 +94,7 @@ public class AuditConfiguration {
 						userClassValue = userClassMethod.invoke(entity, null);
 						if (userClassValue != null) {
 							audit = new Audit();
-							audit.setAction(Constants.CREATE.toUpperCase());
+							audit.setAction(FieldConstants.CREATE.toUpperCase());
 							audit.setColumnName(userClassMethod.getName().substring(Constants.NUMBER_THREE));
 							audit.setEntity(entity.getClass().getSimpleName());
 							audit.setNewValue(userClassValue.toString());
@@ -118,7 +119,7 @@ public class AuditConfiguration {
 						audit.setColumnName(propertyNames[iterator]);
 						audit.setOldValue(previousState[iterator].toString());
 						audit.setNewValue(currentState[iterator].toString());
-						audit.setAction(Constants.UPDATE.toUpperCase());
+						audit.setAction(FieldConstants.UPDATE.toUpperCase());
 						audit.setEntity(entity.getClass().getSimpleName());
 						audit.setEntityId(Long.valueOf(id.toString()));
 						auditListToBeSaved.add(audit);

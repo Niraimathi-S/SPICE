@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 import com.mdtlabs.coreplatform.common.service.GenericService;
 
@@ -62,7 +62,7 @@ public class GenericController<T extends BaseEntity> {
 	 * @return ResponseEntity<T> - response entity
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<T> findById(@PathVariable(Constants.ID) Long id) {
+	public ResponseEntity<T> findById(@PathVariable(FieldConstants.ID) Long id) {
 		try {
 			T entity = genericService.findById(id);
 			if (entity != null) {

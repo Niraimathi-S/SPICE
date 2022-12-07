@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 import com.mdtlabs.coreplatform.common.model.enumeration.telecounselor.PatientCategory;
 import com.mdtlabs.coreplatform.common.telecounselor.TelecounselorConstants;
@@ -43,7 +44,7 @@ public class PatientAssignedList extends BaseEntity {
 	@Column(name = TelecounselorConstants.ASSIGNED_BY)
 	private String assignedBy;
 
-	@Column(name = Constants.TENANT_ID)
+	@Column(name = FieldConstants.TENANT_ID)
 	private String tenantId;
 
 }

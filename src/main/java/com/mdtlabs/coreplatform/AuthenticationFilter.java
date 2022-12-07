@@ -56,6 +56,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.ErrorConstants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.contexts.UserTenantsContextHolder;
 import com.mdtlabs.coreplatform.common.exception.Validation;
@@ -256,7 +258,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 		if (!isTokenActive) {
 //			userTokenService.deleteUserTokenByToken(jwtToken, userToken.getUserId());
-			throw new ExpiredJwtException(null, null, Constants.TOKEN_EXPIRED);
+			throw new ExpiredJwtException(null, null, ErrorConstants.TOKEN_EXPIRED);
 		}
 
 		if ((expDateJwt.getTime() - currentDate.getTime()) / (60 * 1000) < Constants.ZERO) {
@@ -340,7 +342,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			KeyFactory kf = KeyFactory.getInstance(Constants.RSA);
 			this.privateRsaKey = (RSAPrivateKey) kf.generatePrivate(privateKeySpec);
 		} catch (Exception execption) {
-			Logger.logError(Constants.EXCEPTION_DURING_TOKEN_UTIL, execption);
+			Logger.logError(ErrorConstants.EXCEPTION_DURING_TOKEN_UTIL, execption);
 		}
 
 	}

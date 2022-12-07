@@ -2,6 +2,9 @@ package com.mdtlabs.coreplatform.common.model.dto;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
 
 import com.mdtlabs.coreplatform.common.model.entity.Role;
 
@@ -22,4 +25,8 @@ public class UserProfileDTO {
 	private String firstName;
 
 	private String lastName;
+	
+	public Set<RoleDTO> getRoles() {
+		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());
+	}
 }

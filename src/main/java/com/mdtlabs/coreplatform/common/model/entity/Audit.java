@@ -15,6 +15,8 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
+import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.UserContextHolder;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,47 +36,48 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = Constants.TABLE_AUDIT)
+@Table(name = TableConstants.TABLE_AUDIT)
 public class Audit implements Serializable {
 
 	private static final long serialVersionUID = 4174505913611242103L;
 
-	@Column(name = Constants.ENTITY)
+	@Column(name = FieldConstants.ENTITY)
 	private String entity;
 
-	@Column(name = Constants.ACTION)
+	@Column(name = FieldConstants.ACTION)
 	private String action;
 
-	@Column(name = Constants.ENTITY_ID)
+	@Column(name = FieldConstants.ENTITY_ID)
 	private long entityId;
 
-	@Column(name = Constants.COLUMN_NAME)
+	@Column(name = FieldConstants.COLUMN_NAME)
 	private String columnName;
 
-	@Column(name = Constants.OLD_VALUE)
+	@Column(name = FieldConstants.OLD_VALUE)
 	private String oldValue;
 
-	@Column(name = Constants.NEW_VALUE)
+	@Column(name = FieldConstants.NEW_VALUE)
 	private String newValue;
 
 	@Id
-	@Column(name = Constants.ID)
+	@Column(name = FieldConstants.ID)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(name = Constants.CREATED_BY, updatable = false, nullable = false)
+
+	@Column(name = FieldConstants.CREATED_BY, updatable = false, nullable = false)
 	private long createdBy = getUserValue();
 
-	@Column(name = Constants.UPDATED_BY, nullable = true)
+	@Column(name = FieldConstants.UPDATED_BY, nullable = true)
 	private long updatedBy = getUserValue();
 
-	@Column(name = Constants.CREATED_AT, columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
+	@Column(name = FieldConstants.CREATED_AT, columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createdAt;
 
-	@Column(name = Constants.UPDATED_AT, columnDefinition = "TIMESTAMP")
+	@Column(name = FieldConstants.UPDATED_AT, columnDefinition = "TIMESTAMP")
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonSerialize(using = CustomDateSerializer.class)

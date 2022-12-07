@@ -78,6 +78,28 @@ public final class ErrorConstants {
     public static final String CLASSIFICATION_ID_NOT_NULL = "Classification Id should not be null";
     public static final String BRAND_ID_NOT_NULL = "Brand Id should not be null";
     public static final String DOSAGE_FORM_ID_NOT_NULL = "Dosage form Id should not be null";
+    public static final String NOTIFICAION_STATUS_FAILED = "Notification status failed";
+	public static final String SAME_PASSWORD = "New password cannot be same as old password";
+	public static final String PASSWORD_ERROR = "Password cannot be same as user name";
+	public static final String ERROR_USERNAME_PASSWORD_BLANK = "No Username and / or Password Provided";
+	public static final String ERROR_INVALID_USER = "Invalid credentials";
+	public static final String ERROR_ACCOUNT_DISABLED = "Disabled Account";
+	public static final String ERROR_INVALID_ATTEMPTS = "Account locked due to multiple invalid login attempts.";
+	public static final String INFO_USER_NOT_EXIST = "Username does not exist : ";
+	public static final String INFO_USER_PASSWORD_NOT_MATCH = "Password doesn't match for the user : ";
+	public static final String EXCEPTION_TOKEN_UTILS = "Exception occured while loading token utills";
+	public static final String INVALID_USER_ERROR = "{ \"error\": \"Invalid User\"}";
+	public static final String LOGIN_ERROR = "Login Error ";
+	public static final String ERROR_JWE_TOKEN = "Error while creating jwe token ";
+	public static final String TOKEN_EXPIRED = "Token expired";
+	public static final String JOSE_EXCEPTION = "JOSE Excpetion ococcured while loading token utills";
+	public static final String EXCEPTION_DURING_TOKEN_UTIL = "Exception occured while loading token utills";
+	public static final String RESOLVER_ERROR = "Error message construction using resolver Error Message";
+	public static final String LINK_EXPIRED = "Link has expired.";
+	public static final String SAVING_EMAIL_NOTIFICATION_ERROR = "Error while saving notification for email";
+
+
+
 //        public static final String
 //    public static final String
     //    public static final String

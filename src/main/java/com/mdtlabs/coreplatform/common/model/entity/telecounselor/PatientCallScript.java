@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 import com.mdtlabs.coreplatform.common.model.enumeration.telecounselor.Answered;
 import com.mdtlabs.coreplatform.common.model.enumeration.telecounselor.InterestLevel;
@@ -100,7 +101,7 @@ public class PatientCallScript extends BaseEntity {
 	@Column(name = TelecounselorConstants.OTHER_HEALTH_ISSUES)
 	private String otherHealthIssues;
 
-	@Column(name = Constants.TENANT_ID)
+	@Column(name = FieldConstants.TENANT_ID)
 	private String tenantId;
 
 }
