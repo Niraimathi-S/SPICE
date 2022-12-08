@@ -17,7 +17,7 @@ import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -41,6 +41,11 @@ public class Audit implements Serializable {
 
 	private static final long serialVersionUID = 4174505913611242103L;
 
+	@Id
+	@Column(name = FieldConstants.ID)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	
 	@Column(name = FieldConstants.ENTITY)
 	private String entity;
 
@@ -58,12 +63,6 @@ public class Audit implements Serializable {
 
 	@Column(name = FieldConstants.NEW_VALUE)
 	private String newValue;
-
-	@Id
-	@Column(name = FieldConstants.ID)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-
 
 	@Column(name = FieldConstants.CREATED_BY, updatable = false, nullable = false)
 	private long createdBy = getUserValue();

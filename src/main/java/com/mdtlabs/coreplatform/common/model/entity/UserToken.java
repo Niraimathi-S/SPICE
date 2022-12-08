@@ -1,18 +1,15 @@
 package com.mdtlabs.coreplatform.common.model.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 
 import lombok.Data;
-import org.hibernate.annotations.UpdateTimestamp;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * <p>

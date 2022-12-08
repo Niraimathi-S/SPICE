@@ -8,8 +8,6 @@ public final class FieldConstants {
     }
     
 	public static final String ENTITY_ID = "entity_id";
-	public static final String CREATE = "create";
-	public static final String UPDATE = "update";
 	public static final String SUBCOUNTY_ID = "sub_county_id";
 	public static final String SUBCOUNTY = "sub_county";
 	public static final String CULTURE = "culture";
@@ -449,21 +447,3 @@ public final class FieldConstants {
 
 
 }
-
-/*"bp_arm
-"bp_position
-"physically_active
-"type
-"device_info_id
-FieldConstants
-on
-"is_before_gestational_diabetes
-"id_type
-"is_family_diabetes_history
-"preferred_name 
-
-
-"notes", 
-        "covid_vacc_status", 
-        "assessment_category", 
-        "assessment_landmark"*/

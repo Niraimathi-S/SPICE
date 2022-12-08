@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
 import com.mdtlabs.coreplatform.common.FieldConstants;
-import com.mdtlabs.coreplatform.common.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -59,24 +59,10 @@ public class BaseEntity implements Serializable {
 	private Date updatedAt;
 
 	@Column(name = FieldConstants.IS_ACTIVE)
-	private boolean isActive;
+	private boolean isActive = true;
 
 	@Column(name = FieldConstants.IS_DELETED)
-	private boolean isDeleted;
-
-	/**
-	 * Default Constructor
-	 */
-	public BaseEntity() {
-
-	}
-
-	/**
-	 * Constructor to set Id
-	 */
-	public BaseEntity(long id) {
-		this.id = id;
-	}
+	private boolean isDeleted = false;
 
 	/**
 	 * This method is used to get user value

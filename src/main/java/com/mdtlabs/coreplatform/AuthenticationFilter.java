@@ -231,8 +231,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		Date expDateJwt = pstFormat.parse(pstFormat.format(jwt.getJWTClaimsSet().getClaim(Constants.EXP)));
 		Date currentDate = pstFormat.parse(pstFormat.format(DateUtil.formatDate(new Date())));
 		UserDTO userDetail = null;
-//		System.out.println("jwt claimset" + jwt.getJWTClaimsSet().toString(true));
-//		System.out.println("userdata: " + jwt.getJWTClaimsSet().getClaim(Constants.USER_DATA));
 		String rawJson = String.valueOf(jwt.getJWTClaimsSet().getClaim(Constants.USER_DATA));
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -557,34 +555,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	 * @param jwtToken        - jwt token of the logged in user
 	 * @param jwtRefreshToken - refresh token of the logged in user
 	 */
-//<<<<<<< Updated upstream
 //	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken) {
 //		UserToken usertoken = new UserToken();
 //		usertoken.setUserId(userId);
 //		usertoken.setAuthToken(jwtToken);
 //		usertoken.setRefreshToken(jwtRefreshToken);
 //		genericRepository.save(usertoken);
-//=======
-//	private void updateUserToken(long userId, String jwtToken, String jwtRefreshToken) {
-//		UserToken userToken = new UserToken();
-//		userToken.setUserId(userId);
-//		userToken.setAuthToken(jwtToken);
-//		userToken.setActive(true);
-//		userToken.setRefreshToken(jwtRefreshToken);
-//		commonRepository.updateUserToken(userId, jwtToken, jwtRefreshToken);
-//		userTokenService.saveUserToken(userToken);
-//	}
-
-	/**
-	 * To update user token
-	 * 
-	 * @param user
-	 * @param jwtToken
-	 * @param jwtRefreshToken
-	 */
-//	private void updateUserToken(long userId, String existingToken) {
-//		userTokenService.deleteUserTokenByToken(existingToken, userId);
-//>>>>>>> Stashed changes
 //	}
 
 	/**

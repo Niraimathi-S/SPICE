@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,8 +24,10 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.contexts.AuditContextHolder;
 import com.mdtlabs.coreplatform.common.logger.Logger;
 import com.mdtlabs.coreplatform.common.model.entity.Audit;
+import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 
 @Configuration
 public class AuditConfiguration {
@@ -94,15 +97,17 @@ public class AuditConfiguration {
 						userClassValue = userClassMethod.invoke(entity, null);
 						if (userClassValue != null) {
 							audit = new Audit();
-							audit.setAction(FieldConstants.CREATE.toUpperCase());
+							audit.setAction(Constants.CREATE.toUpperCase());
 							audit.setColumnName(userClassMethod.getName().substring(Constants.NUMBER_THREE));
 							audit.setEntity(entity.getClass().getSimpleName());
 							audit.setNewValue(userClassValue.toString());
+							//audit.setEntityId(baseEntity.getId());
 							auditListToBeSaved.add(audit);
 						}
 					}
 				}
-				authenticationFilter().commonRepository.saveAll(auditListToBeSaved);
+				AuditContextHolder.set(auditListToBeSaved);
+				//authenticationFilter().commonRepository.saveAll(auditListToBeSaved);
 
 			}
 
@@ -110,25 +115,45 @@ public class AuditConfiguration {
 			public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState,
 					String[] propertyNames, Type[] types) {
 				Audit audit = new Audit();
-				List<Audit> auditListToBeSaved = new ArrayList<>();
+				List<Audit> updateAuditListToBeSaved = new ArrayList<>();
 				for (int iterator = Constants.ZERO; iterator < currentState.length; iterator++) {
 					if (!Objects.deepEquals(currentState[iterator], previousState[iterator])
 							&& Objects.nonNull(currentState[iterator])
 							&& (Objects.nonNull(currentState[iterator]) && Objects.nonNull(previousState[iterator]))) {
 						audit = new Audit();
+						audit.setAction(Constants.UPDATE.toUpperCase());
 						audit.setColumnName(propertyNames[iterator]);
+						audit.setEntity(entity.getClass().getSimpleName());
 						audit.setOldValue(previousState[iterator].toString());
 						audit.setNewValue(currentState[iterator].toString());
-						audit.setAction(FieldConstants.UPDATE.toUpperCase());
-						audit.setEntity(entity.getClass().getSimpleName());
 						audit.setEntityId(Long.valueOf(id.toString()));
-						auditListToBeSaved.add(audit);
+						updateAuditListToBeSaved.add(audit);
 					}
 				}
-				authenticationFilter().commonRepository.saveAll(auditListToBeSaved);
+				AuditContextHolder.set(updateAuditListToBeSaved);
+				//authenticationFilter().commonRepository.saveAll(updateAuditListToBeSaved);
 				return true;
 			}
-
+			
+			public void postFlush(Iterator iterator) {
+				long entityId = 0;
+				List<Audit> auditList = AuditContextHolder.get();
+				while (iterator.hasNext()) {
+					Object obj = iterator.next();
+					if (obj instanceof BaseEntity) {
+						BaseEntity baseEntity = (BaseEntity) obj;
+						entityId = baseEntity.getId();
+					}
+				}
+				for (Audit audit : auditList) {
+					audit.setEntityId(entityId);
+				}
+				if (!auditList.isEmpty()) {
+					authenticationFilter().commonRepository.saveAll(auditList);
+					AuditContextHolder.clear();
+				}
+				
+			}
 		};
 	}
 

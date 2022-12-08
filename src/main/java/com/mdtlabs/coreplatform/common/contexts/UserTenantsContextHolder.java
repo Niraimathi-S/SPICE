@@ -3,9 +3,7 @@ package com.mdtlabs.coreplatform.common.contexts;
 import java.util.List;
 
 /**
- * When the end user submits the any request after successful login, the jwt
- * token is required to determine which user currently logged in. This used to
- * capture current user object in all service. {@link TokenValidator}
+ * The end user tenant id are stored in this context.
  * 
  * <br/>
  * <br/>

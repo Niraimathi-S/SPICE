@@ -51,55 +51,55 @@ public class User extends BaseEntity implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = FieldConstants.FIRST_NAME)
-    private String firstName;
+	private String firstName;
 
-    @Column(name = FieldConstants.MIDDLE_NAME)
-    private String middleName;
+	@Column(name = FieldConstants.MIDDLE_NAME)
+	private String middleName;
 
-    @Column(name = FieldConstants.LAST_NAME)
-    private String lastName;
+	@Column(name = FieldConstants.LAST_NAME)
+	private String lastName;
 
-    @Column(name = FieldConstants.GENDER)
-    private String gender;
-    
-    @Column(name = FieldConstants.PHONE_NUMBER)
-    private String phoneNumber;
+	@Column(name = FieldConstants.GENDER)
+	private String gender;
 
-    @Column(name = FieldConstants.ADDRESS)
-    private String address;
+	@Column(name = FieldConstants.PHONE_NUMBER)
+	private String phoneNumber;
 
-    @Column(name = FieldConstants.USERNAME)
-    private String username;
+	@Column(name = FieldConstants.ADDRESS)
+	private String address;
 
-    @ColumnTransformer(forColumn = FieldConstants.PASSWORD, read = "public.pgp_sym_decrypt(password::bytea, " + "'"
+	@Column(name = FieldConstants.USERNAME)
+	private String username;
+
+	@ColumnTransformer(forColumn = FieldConstants.PASSWORD, read = "public.pgp_sym_decrypt(password::bytea, " + "'"
 			+ FieldConstants.TELECOUNSELOR + "'"
 			+ ")", write = "public.pgp_sym_encrypt(?, " + "'" + FieldConstants.TELECOUNSELOR + "'" + ")")
 	@Column(name = FieldConstants.PASSWORD, columnDefinition = "bytea", nullable = false)
-    private String password;
-    
-    @Column(name = FieldConstants.COUNTRY_CODE)
-    private String countryCode;
+	private String password;
 
-    @Column(name = FieldConstants.IS_BLOCKED)
+	@Column(name = FieldConstants.COUNTRY_CODE)
+	private String countryCode;
+
+	@Column(name = FieldConstants.IS_BLOCKED)
 	private Boolean isBlocked;
 
-    @Column(name = FieldConstants.BLOCKED_DATE, columnDefinition = "TIMESTAMP")
+	@Column(name = FieldConstants.BLOCKED_DATE, columnDefinition = "TIMESTAMP")
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date blockedDate;
 
-    @Column(name = FieldConstants.FORGET_PASSWORD_TOKEN)
+	@Column(name = FieldConstants.FORGET_PASSWORD_TOKEN)
 	private String forgetPasswordToken;
 
-    @Column(name = FieldConstants.FORGET_PASSWORD_TIME, columnDefinition = "TIMESTAMP")
+	@Column(name = FieldConstants.FORGET_PASSWORD_TIME, columnDefinition = "TIMESTAMP")
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date forgetPasswordTime;
 
-    @Column(name = FieldConstants.FORGET_PASSWORD_COUNT)
+	@Column(name = FieldConstants.FORGET_PASSWORD_COUNT)
 	private int forgetPasswordCount;
 
-    @Column(name = FieldConstants.INVALID_LOGIN_TIME, columnDefinition = "TIMESTAMP")
+	@Column(name = FieldConstants.INVALID_LOGIN_TIME, columnDefinition = "TIMESTAMP")
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date invalidLoginTime;
@@ -107,44 +107,47 @@ public class User extends BaseEntity implements Serializable, UserDetails {
 	@Column(name = FieldConstants.INVALID_LOGIN_ATTEMPTS)
 	private int invalidLoginAttempts;
 
-    @Column(name = FieldConstants.INVALID_RESET_TIME, columnDefinition = "TIMESTAMP")
+	@Column(name = FieldConstants.INVALID_RESET_TIME, columnDefinition = "TIMESTAMP")
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date invalidResetTime;
 
 	@Column(name = FieldConstants.IS_PASSWORD_RESET_ENABLED)
-    private Boolean isPasswordResetEnabled;
+	private Boolean isPasswordResetEnabled;
 
 	@Column(name = FieldConstants.PASSWORD_RESET_ATTEMPTS)
-    private int passwordResetAttempts;
+	private int passwordResetAttempts;
 
 	@Column(name = FieldConstants.IS_LICENSE_ACCEPTANCE)
     private boolean isLicenseAcceptance = false;
 
 	@Column(name = FieldConstants.LAST_LOGGED_IN)
-    private Date lastLoggedIn;
+	private Date lastLoggedIn;
 
 	@Column(name = FieldConstants.LAST_LOGGED_OUT)
-    private Date lastLoggedOut;
+	private Date lastLoggedOut;
 
-    @Column(name = FieldConstants.COUNTRY_ID)
-    private Long countryId;
+	@ManyToOne
+	@JoinColumn(name = FieldConstants.COUNTRY_ID)
+	private Country country;
 
-    @ManyToOne
-    @JoinColumn(name = FieldConstants.TIMEZONE_ID)
-    private Timezone timezoneId;
+	@ManyToOne
+	@JoinColumn(name = FieldConstants.TIMEZONE_ID)
+	private Timezone timezone;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)
 	@JoinTable(name = TableConstants.TABLE_USER_ROLE, joinColumns = {
-			@JoinColumn(name = FieldConstants.USER_ID) }, inverseJoinColumns = { @JoinColumn(name = FieldConstants.ROLE_ID) })
+			@JoinColumn(name = FieldConstants.USER_ID) }, inverseJoinColumns = {
+					@JoinColumn(name = FieldConstants.ROLE_ID) })
 	private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)
 	@JoinTable(name = TableConstants.TABLE_USER_ORGANIZATION, joinColumns = {
-			@JoinColumn(name = FieldConstants.USER_ID) }, inverseJoinColumns = { @JoinColumn(name = FieldConstants.ORGANIZATION_ID) })
-    private Set<Organization>  organizations;
+			@JoinColumn(name = FieldConstants.USER_ID) }, inverseJoinColumns = {
+					@JoinColumn(name = FieldConstants.ORGANIZATION_ID) })
+	private Set<Organization> organizations;
 
 	@Override
 	public String getPassword() {

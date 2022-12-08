@@ -54,10 +54,15 @@ public class AuthUserDTO {
 
 	private Timezone timezone;
 
-	public TimezoneDTO getTimezone() {
-		ModelMapper modelMapper = new ModelMapper();
-		return modelMapper.map(timezone, TimezoneDTO.class);
-	}
+	private Set<Organization> tenants;
+	
+	private String countryCode;
+	
+	private Boolean isBlocked;
+	
+	private Country country;
+	
+	private Long deviceInfoId;
 
 	public Set<RoleDTO> getRoles() {
 		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());

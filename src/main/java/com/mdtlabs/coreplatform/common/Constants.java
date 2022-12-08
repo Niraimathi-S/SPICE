@@ -47,6 +47,7 @@ public final class Constants {
 	public static String DATE_FORMAT = "dd MMM, yyyy";
 	public static final String NO_DATA_FOUND = "No Data Found";
 	public static final List<String> NO_DATA_LIST = Arrays.asList(NO_DATA_FOUND);
+
 	public static final String USER_ENTITY = "User";
 	public static final String ROLE_ENTITY = "Role";
 	public static final String FORGOT_NOTIFICATION_SUBJECT = "Spice Forgot Password";
@@ -111,8 +112,8 @@ public final class Constants {
 	public static final String TOKEN = "token";
 	public static final String EMAIL = "email";
 	public static final String ROLE_IDS = "roleIds";
-	public static final String JWT_TOKEN = "jwtToken";
-	public static final String JWT_REFRESH_TOKEN = "jwtRefreshToken";
+	public static final String JWE_TOKEN = "jweToken";
+	public static final String JWE_REFRESH_TOKEN = "jweRefreshToken";
 	public static final String NOTIFICATION_INSTANCE = "NOTIFICATION";
 	public static final String LOGGER = "Logger";
 	public static final int ZERO = 0;
@@ -157,6 +158,8 @@ public final class Constants {
 	public static final String DOCUMENTATION_USER_API = "Documentation User API v1.0";
 	public static final String USER_API = "User API";
 	public static final String API_ROLES_MAP_CLEARED = "api permission map cleared";
+	public static final String CREATE = "create";
+	public static final String UPDATE = "update";
 
 	// Tenant
 	public static final String AUTHORIZATION_HEADER = "Authorization";

@@ -1,11 +1,13 @@
-package com.mdtlabs.coreplatform.common;
+package com.mdtlabs.coreplatform.common.contexts;
 
-import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
+import java.util.List;
+
+import com.mdtlabs.coreplatform.common.model.entity.Audit;
 
 /**
- * When the end user submits the any request after successful login, the jwt
- * token is required to determine which user currently logged in. This used to
- * capture current user object in all service. {@link TokenValidator}
+ * The audit information created before create or update the entity. That created 
+ * information stored in this context. Once the operation will executed the audit 
+ * context information stored in db using postFlush method in {@link AuditConfiguration}.
  * 
  * <br/>
  * <br/>
@@ -28,19 +30,19 @@ import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
  * @author VigneshKumar created on Jun 30, 2022
  */
 
-public class UserContextHolder {
+public class AuditContextHolder {
 
-	private static final ThreadLocal<UserDTO> USER_CONTEXT = new ThreadLocal<>();
+	private static final ThreadLocal<List<Audit>> AUDIT_CONTEXT = new ThreadLocal<>();
 
-	public static void setUserDto(UserDTO userDto) {
-		USER_CONTEXT.set(userDto);
+	public static void set(List<Audit> audit) {
+		AUDIT_CONTEXT.set(audit);
 	}
 
-	public static UserDTO getUserDto() {
-		return USER_CONTEXT.get();
+	public static List<Audit> get() {
+		return AUDIT_CONTEXT.get();
 	}
 
 	public static void clear() {
-		USER_CONTEXT.remove();
+		AUDIT_CONTEXT.remove();
 	}
 }

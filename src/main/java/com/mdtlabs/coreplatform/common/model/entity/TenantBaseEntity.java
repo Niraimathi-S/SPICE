@@ -58,24 +58,10 @@ public class TenantBaseEntity extends Tenantable implements Serializable {
 	private Date updatedAt;
 
 	@Column(name = FieldConstants.IS_ACTIVE)
-	private boolean isActive;
+	private boolean isActive = true;
 
 	@Column(name = FieldConstants.IS_DELETED)
-	private boolean isDeleted;
-
-	/**
-	 * Default Constructor
-	 */
-	public TenantBaseEntity() {
-
-	}
-
-	/**
-	 * Constructor to set Id
-	 */
-	public TenantBaseEntity(long id) {
-		this.id = id;
-	}
+	private boolean isDeleted = false;
 
 	/**
 	 * This method is used to get user value
