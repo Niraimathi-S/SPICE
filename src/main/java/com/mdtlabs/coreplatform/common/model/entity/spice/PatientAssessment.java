@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_ASSESSMENT_LOG)
-public class AssessmentLog extends BaseEntity {
+public class PatientAssessment extends BaseEntity {
     
     @Column(name = FieldConstants.BP_LOG_ID)
     private Long bpLogId;
@@ -21,12 +21,12 @@ public class AssessmentLog extends BaseEntity {
     @Column(name = FieldConstants.GLUCOSE_LOG_ID)
     private Long glucoseLogId;
 
-    public AssessmentLog(Long bpLogId, Long glucoseLogId) {
+    public PatientAssessment(Long bpLogId, Long glucoseLogId) {
         this.bpLogId = bpLogId;
         this.glucoseLogId = glucoseLogId;
     }
 
-    public AssessmentLog() {}
+    public PatientAssessment() {}
 
 
 }

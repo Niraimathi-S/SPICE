@@ -161,7 +161,7 @@ public class ScreeningLog extends BaseEntity {
     @Column(name = FieldConstants.OPERATING_UNIT)
     private Long operatingUnitId;
 
-    @Column(name = FieldConstants.ACCOUNT)
+    @Column(name = FieldConstants.ACCOUNT_ID)
     private Long accountId;
 
     @Column(name = FieldConstants.BP_ARM)

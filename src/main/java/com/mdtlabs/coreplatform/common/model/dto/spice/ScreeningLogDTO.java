@@ -58,7 +58,7 @@ public class ScreeningLogDTO {
     private String cvdRiskScoreDisplay;
 
     @NotNull(message = ErrorConstants.SITE_ID_NOT_NULL, groups = {ScreeningInfo.class})
-    private Long site;
+    private Long siteId;
 
     private List<Map<String, Object>> customizedWorkflows;
 

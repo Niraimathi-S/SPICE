@@ -38,7 +38,7 @@ public class AccountCustomization extends BaseEntity {
 	private Long clinicalWorkflowId;
 
 //	@NotNull
-	@Column(name = FieldConstants.ACCOUNT)
+	@Column(name = FieldConstants.ACCOUNT_ID)
 	private Long accountId;
 
 	@Column(name = FieldConstants.WORKFLOW)

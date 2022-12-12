@@ -15,7 +15,7 @@ import lombok.Data;
 
 /**
  * This is a DTO class for user entity.
- * 
+ *
  * @author Vigneshkumar Created on 30 Jun 2022
  */
 @Data
@@ -51,11 +51,17 @@ public class UserDTO {
 
 	private String phonenumber;
 
-	private Country region;
+	private Country country	;
 
 	private Timezone timezone;
 
 	private String tenants;
+	
+	private Boolean isBlocked;
+
+    private String countryCode;
+
+    private Long deviceInfoId;
 
 //	public TimezoneDTO getTimezone() {
 //		ModelMapper modelMapper = new ModelMapper();

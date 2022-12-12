@@ -39,7 +39,7 @@ public class Symptom extends BaseEntity {
     @Column(name = FieldConstants.DISPLAY_ORDER)
     private int displayOrder;
     
-    @Column(name = FieldConstants.CATEGORY, columnDefinition = "jsonb")
+    @Column(name = FieldConstants.CATEGORIES, columnDefinition = "jsonb")
     @Type(type = "jsonb")
     private Map<String, Boolean> categories;
 }

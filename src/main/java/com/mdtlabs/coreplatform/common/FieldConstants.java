@@ -75,7 +75,7 @@ public final class FieldConstants {
     public static final String PHONENUMBER = "phonenumber";
     public static final String MIDDLE_NAME = "middle_name";
     public static final String AUTH_TOKEN = "auth_token";
-    public static final String REFRESH_TOKEN = "refresh_token";
+    public static final String REFRESH_TOKEN = "RefreshToken";
     public static final String FORGET_PASSWORD_TOKEN = "forget_password_token";
     public static final String FORGET_PASSWORD_TIME = "forget_password_time";
     public static final String FORGET_PASSWORD_COUNT = "forget_password_count";
@@ -118,6 +118,7 @@ public final class FieldConstants {
     public static final String COUNTY_ID = "county_id";
     public static final String SUB_COUNTY_ID = "sub_county_id";
     public static final String CATEGORY = "category";
+    public static final String CATEGORIES = "categories";
     public static final String AVG_SYSTOLIC = "avg_systolic";
     public static final String AVG_DIASTOLIC = "avg_diastolic";
     public static final String AVG_PULSE = "avg_pulse";
@@ -198,47 +199,50 @@ public final class FieldConstants {
     public static final String PULSE = "pulse";
     public static final String BPLOG_DETAILS = "bplog_details";
 
-    // country fields
-    public static final String COUNTRY_CODE = "country_code";
-    public static final String CODE = "code";
-    public static final String UNIT_MEASUREMENT = "unit_measurement";
+	// country fields
+	public static final String COUNTRY_CODE = "country_code";
+	public static final String CODE = "code";
+	public static final String UNIT_MEASUREMENT = "unit_measurement";
 	// region customization fields
 	public static final String FORM_INPUT = "form_input";
-    public static final String COUNTY = "county_id";
-    // Program fields
-    // public static final String OPERATING_UNIT = "operating_unit_id";
-    // public static final String ACCOUNT = "account_id";
-    // public static final String SITE = "site_id";
-    // public static final String QUESTION_ID = "question_id";
-    // public static final String ANSWER_ID = "answer_id";
-    // public static final String SCORE = "score";
-    // public static final String MENTAL_HEALTH_DETAILS_ID = "mental_health_details_id";
-    // public static final String PATIENT_VISIT_ID = "patient_visit_id";
-    public static final String IS_PROVISIONAL = "is_provisional";
-    public static final String ANTENATAL_CHECK_FREQUENCY = "antenatal_check_frequency";
-    public static final String DIABETIC_FOOT_CHECK_FREQUENCY = "diabetic_foot_check_frequency";
-    public static final String HBA1C_CHECK_FREQUENCY = "hba1c_check_frequency";
-    public static final String MENTAL_HEALTH_CHECK_FREQUENCY = "mental_health_check_frequency";
-    public static final String BG_CHECK_FREQUENCY = "bg_check_frequency";
-    public static final String BP_CHECK_FREQUENCY = "bp_check_frequency";
-    public static final String MEDICAL_REVIEW_FREQUENCY = "medical_review_frequency";
-    // public static final String = "";
-    public static final String FREQUENCY_NAME = "frequency_name";
-    public static final String FREQUENCY_TYPE = "frequency_type";
-    public static final String DURATION = "duration";
-    public static final String PERIOD = "period";
-    // public static final String COMORBIDITY_ID = "comorbidity_id";
-    // public static final String OTHER_COMORBIDITY = "other_comorbidity";
-    // public static final String IS_DIABETES_DIAGNOSIS = "is_diabetes_diagnosis";
-    // public static final String DIABETES_DIAG_CONTROLLED_TYPE = "diabetes_diag_controlled_type";
-    // public static final String DIABETES_PATIENT_TYPE = "diabetes_patient_type";
-    // public static final String HTN_PATIENT_TYPE = "htn_patient_type";
-    // public static final String DIABETES_DIAGNOSIS = "diabetes_diagnosis";
-    // public static final String IS_HTN_DIAGNOSIS = "is_htn_diagnosis";
-    // public static final String DIABETES_YEAR_OF_DIAGNOSIS = "diabetes_year_of_diagnosis";
-    // public static final String HTN_YEAR_OF_DIAGNOSIS = "htn_year_of_diagnosis";
-    public static final String NEXT_BP_ASSESSMENT_DATE = "next_bp_assesment_date";
-    public static final String NEXT_BG_ASSESSMENT_DATE = "next_bg_assesment_date";
+	public static final String COUNTY = "county_id";
+	// Program fields
+	// public static final String OPERATING_UNIT = "operating_unit_id";
+	// public static final String ACCOUNT = "account_id";
+	// public static final String SITE = "site_id";
+	// public static final String QUESTION_ID = "question_id";
+	// public static final String ANSWER_ID = "answer_id";
+	// public static final String SCORE = "score";
+	// public static final String MENTAL_HEALTH_DETAILS_ID =
+	// "mental_health_details_id";
+	// public static final String PATIENT_VISIT_ID = "patient_visit_id";
+	public static final String IS_PROVISIONAL = "is_provisional";
+	public static final String ANTENATAL_CHECK_FREQUENCY = "antenatal_check_frequency";
+	public static final String DIABETIC_FOOT_CHECK_FREQUENCY = "diabetic_foot_check_frequency";
+	public static final String HBA1C_CHECK_FREQUENCY = "hba1c_check_frequency";
+	public static final String MENTAL_HEALTH_CHECK_FREQUENCY = "mental_health_check_frequency";
+	public static final String BG_CHECK_FREQUENCY = "bg_check_frequency";
+	public static final String BP_CHECK_FREQUENCY = "bp_check_frequency";
+	public static final String MEDICAL_REVIEW_FREQUENCY = "medical_review_frequency";
+	// public static final String = "";
+	public static final String FREQUENCY_NAME = "frequency_name";
+	public static final String FREQUENCY_TYPE = "frequency_type";
+	public static final String DURATION = "duration";
+	public static final String PERIOD = "period";
+	// public static final String COMORBIDITY_ID = "comorbidity_id";
+	// public static final String OTHER_COMORBIDITY = "other_comorbidity";
+	// public static final String IS_DIABETES_DIAGNOSIS = "is_diabetes_diagnosis";
+	// public static final String DIABETES_DIAG_CONTROLLED_TYPE =
+	// "diabetes_diag_controlled_type";
+	// public static final String DIABETES_PATIENT_TYPE = "diabetes_patient_type";
+	// public static final String HTN_PATIENT_TYPE = "htn_patient_type";
+	// public static final String DIABETES_DIAGNOSIS = "diabetes_diagnosis";
+	// public static final String IS_HTN_DIAGNOSIS = "is_htn_diagnosis";
+	// public static final String DIABETES_YEAR_OF_DIAGNOSIS =
+	// "diabetes_year_of_diagnosis";
+	// public static final String HTN_YEAR_OF_DIAGNOSIS = "htn_year_of_diagnosis";
+	public static final String NEXT_BP_ASSESSMENT_DATE = "next_bp_assesment_date";
+	public static final String NEXT_BG_ASSESSMENT_DATE = "next_bg_assesment_date";
 	// account fields
 	public static final String MAX_NO_OF_USERS = "max_no_of_users";
 	public static final String IS_USERS_RESTRICTED = "is_users_restricted";
@@ -287,7 +291,6 @@ public final class FieldConstants {
 	public static final String PHQ9_MENTAL_HEALTH = "phq9_mental_health";
 	public static final String GAD7_MENTAL_HEALTH = "gad7_mental_health";
 
-
 	// bplog fields
 	public static final String PARENT_COMPLIANCE_ID = "parent_compliance_id";
 	public static final String IS_CHILD_EXISTS = "is_child_exists";
@@ -304,7 +307,7 @@ public final class FieldConstants {
 	public static final String IS_DRUG_ALLERGIES = "is_drug_allergies";
 	public static final String IS_ADHERING_CURRENT_MED = "is_adhering_current_med";
 	public static final String ADHERRING_MED_COMMENT = "adhering_med_comment";
-	public static final String ALLERGIES_COMMENT =  "allergies_comment";
+	public static final String ALLERGIES_COMMENT = "allergies_comment";
 	public static final String COMORBIDITY_ID = "comorbidity_id";
 	public static final String OTHER_COMORBIDITY = "other_comorbidity";
 	public static final String COMPLICATION_ID = "complication_id";
@@ -313,7 +316,7 @@ public final class FieldConstants {
 	public static final String IS_HTN_DIAGNOSIS = "is_htn_diagnosis";
 	public static final String IS_DIABETES_DIAGNOSIS = "is_diabetes_diagnosis";
 	public static final String DIABETES_DIAG_CONTROLLED_TYPE = "diabetes_diag_controlled_type";
-	public static final String HTN_PATIENT_TYPE = "htn_patient_type";	
+	public static final String HTN_PATIENT_TYPE = "htn_patient_type";
 	public static final String HTN_YEAR_OF_DIAGNOSIS = "htn_year_of_diagnosis";
 	public static final String DIABETES_YEAR_OF_DIAGNOSIS = "diabetes_year_of_diagnosis";
 	public static final String DIABETES_PATIENT_TYPE = "diabetes_patient_type";
@@ -325,30 +328,30 @@ public final class FieldConstants {
 	public static final String PHYSICAL_EXAM_COMMENTS = "physical_exam_comments";
 	public static final String COMPLIANT_COMMENTS = "complaint_comments";
 
-    //Patient Lab Test fields
-    public static final String LABTEST_NAME = "labtest_name";
-    public static final String RESULT_DATE = "result_date";
-    public static final String REFERRED_BY = "referred_by";
-    public static final String IS_OTHER_LABTEST = "is_other_labtest";
-    public static final String RESULT_UPDATE_BY = "result_update_by";
-    public static final String IS_REVIEWED = "is_reviewed";
+	// Patient Lab Test fields
+	public static final String LABTEST_NAME = "labtest_name";
+	public static final String RESULT_DATE = "result_date";
+	public static final String REFERRED_BY = "referred_by";
+	public static final String IS_OTHER_LABTEST = "is_other_labtest";
+	public static final String RESULT_UPDATE_BY = "result_update_by";
+	public static final String IS_REVIEWED = "is_reviewed";
 
-    //Patient labtest result fields
-    public static final String IS_ABNORMAL = "is_abnormal";
-    public static final String RESULT_STATUS = "result_status";
-    public static final String RESULT_VALUE = "result_value";
-    public static final String RESULT_NAME = "result_name";
-    public static final String DIAGNOSIS = "diagnosis";
-    public static final String IS_ON_TREATMENT = "is_on_treatment";
-    public static final String GRAVIDA = "gravida";
-    public static final String PREGNANCY_FETUSES_NUMBER = "pregnancy_fetuses_number";
-    public static final String PARITY = "parity";
-    public static final String DIAGNOSIS_TIME = "diagnosis_time";
-    public static final String IS_LABTEST_REFERRAL = "is_labtest_referred";
-    public static final String MODULE_VALUE = "module_value";
-    public static final String CLINICAL_WORFKLOW_ID = "clinical_workflow_id";
-    public static final String CUSTOMIZED_WORFKLOW_ID = "customized_workflow_id";
-    public static final String SCREEN_TYPE = "screen_type";
+	// Patient labtest result fields
+	public static final String IS_ABNORMAL = "is_abnormal";
+	public static final String RESULT_STATUS = "result_status";
+	public static final String RESULT_VALUE = "result_value";
+	public static final String RESULT_NAME = "result_name";
+	public static final String DIAGNOSIS = "diagnosis";
+	public static final String IS_ON_TREATMENT = "is_on_treatment";
+	public static final String GRAVIDA = "gravida";
+	public static final String PREGNANCY_FETUSES_NUMBER = "pregnancy_fetuses_number";
+	public static final String PARITY = "parity";
+	public static final String DIAGNOSIS_TIME = "diagnosis_time";
+	public static final String IS_LABTEST_REFERRAL = "is_labtest_referred";
+	public static final String MODULE_VALUE = "module_value";
+	public static final String CLINICAL_WORFKLOW_ID = "clinical_workflow_id";
+	public static final String CUSTOMIZED_WORFKLOW_ID = "customized_workflow_id";
+	public static final String SCREEN_TYPE = "screen_type";
 	public static final String LAB_TEST_RESULT_ID = "lab_test_result_id";
 
 	// Prescription fields
@@ -378,72 +381,83 @@ public final class FieldConstants {
 
 	public static final String IS_LABTEST_REFERRED = "is_labtest_referred";
 
-    public static final String IS_MEDICATION_PRESCRIBED = "is_medication_prescribed";
-    public static final String OTHER_COMPLIANCE = "other_compliance";
-    public static final String COMPLIANCE_ID = "compliance_id" ;
+	public static final String IS_MEDICATION_PRESCRIBED = "is_medication_prescribed";
+	public static final String OTHER_COMPLIANCE = "other_compliance";
+	public static final String COMPLIANCE_ID = "compliance_id";
 
+	public static final String IS_ANSWER_DEPENDENT = "is_answer_dependent";
+	// Patient Nutrition Lifestyle Fields
+	public static final String PATIENT_NUTRITION_LIFESTYLE_ID = "patient_nutrition_lifestyle_id";
+	public static final String LIFESTYLES = "lifestyles";
+	public static final String LIFESTYLE = "lifestyle";
+	public static final String LIFESTYLE_ASSESSMENT = "lifestyle_assessment";
+	public static final String LIFESTYLE_TYPE = "lifestyle_type";
+	public static final String ASSESSED_DATE = "assessed_date";
+	public static final String ASSESSED_BY = "assessed_by";
+	public static final String REFERRED_DATE = "referred_date";
+	// public static final String REFERRED_BY = "referred_by";
+	public static final String CLINICAL_NOTE = "clinical_note";
+	public static final String OTHER_NOTE = "other_note";
+	public static final String IS_VIEWED = "is_viewed";
 
-    public static final String IS_ANSWER_DEPENDENT = "is_answer_dependent";
-    //Patient Nutrition Lifestyle Fields
-    public static final String PATIENT_NUTRITION_LIFESTYLE_ID = "patient_nutrition_lifestyle_id";
-    public static final String LIFESTYLES = "lifestyles";
-    public static final String LIFESTYLE = "lifestyle";
-    public static final String LIFESTYLE_ASSESSMENT = "lifestyle_assessment";
-    public static final String LIFESTYLE_TYPE = "lifestyle_type";
-    public static final String ASSESSED_DATE = "assessed_date";
-    public static final String ASSESSED_BY = "assessed_by";
-    public static final String REFERRED_DATE = "referred_date";
-    // public static final String REFERRED_BY = "referred_by";
-    public static final String CLINICAL_NOTE = "clinical_note";
-    public static final String OTHER_NOTE = "other_note";
-    public static final String IS_VIEWED = "is_viewed";
+	public static final String NUTRITION_LIFESTYLE_ID = "nutrition_lifestyle_id";
+	public static final String NOTIFICATION_ID = "notificationId";
+	public static final String BODY_JSON = "body_json";
 
-    public static final String NUTRITION_LIFESTYLE_ID = "nutrition_lifestyle_id";
-    public static final String NOTIFICATION_ID = "notificationId";
-    public static final String BODY_JSON = "body_json";
+	public static final String TEMPLATE_ID = "template_id";
+	public static final String FORM_DATA_ID = "form_data_id";
+	public static final String IS_PROCESSED = "is_processed";
+	public static final String RETRY_ATTEMPTS = "retry_attempts";
+	public static final String FORM_NAME = "form_name";
+	public static final String TO = "\"to\"";
+	public static final String CC = "cc";
+	public static final String BCC = "bcc";
 
-    public static final String TEMPLATE_ID = "template_id";
-    public static final String FORM_DATA_ID = "form_data_id";
-    public static final String IS_PROCESSED = "is_processed";
-    public static final String RETRY_ATTEMPTS = "retry_attempts";
-    public static final String FORM_NAME = "form_name";
-    public static final String TO = "\"to\"";
-    public static final String CC = "cc";
-    public static final String BCC = "bcc";
+	public static final String PARENT_ORGANIZATION_ID = "parent_organization_id";
+	public static final String SEQUENCE = "sequence";
 
-    public static final String PARENT_ORGANIZATION_ID = "parent_organization_id";
-    public static final String SEQUENCE = "sequence";
+	public static final String ADDITIONAL_PARAMS = "additional_params";
 
-    public static final String ADDITIONAL_PARAMS = "additional_params";
+	// patient
+	public static final String OTHER_ID_TYPE = "other_id_type";
+	public static final String ETHNICITY = "ethnicity";
+	public static final String LANGUAGES = "languages";
+	public static final String ID_TYPE = "id_type";
+	public static final String OTHER_LANGUAGES = "other_languages";
+	public static final String ER_VISIT_REASON = "er_visit_reason";
+	public static final String LOTE = "lote";
+	public static final String HOME_MEDICAL_DEVICES = "home_medical_devices";
+	public static final String ER_VISIT_FREQUENCY = "er_visit_frequency";
+	public static final String EMR_NUMBER = "emr_number";
+	public static final String IS_ER_VISIT_HISTORY = "is_er_visit_history";
 
-    //patient
-    public static final String OTHER_ID_TYPE = "other_id_type" ;
-    public static final String ETHNICITY = "ethnicity" ;
-    public static final String LANGUAGES = "languages" ;
-    public static final String ID_TYPE = "id_type" ;
-    public static final String OTHER_LANGUAGES = "other_languages" ;
-    public static final String ER_VISIT_REASON = "er_visit_reason" ;
-    public static final String LOTE = "lote" ;
-    public static final String HOME_MEDICAL_DEVICES = "home_medical_devices" ;
-    public static final String ER_VISIT_FREQUENCY = "er_visit_frequency" ;
-    public static final String EMR_NUMBER = "emr_number" ;
-    public static final String IS_ER_VISIT_HISTORY = "is_er_visit_history" ;
+	// screeninglog
+	public static final String BP_ARM = "bp_arm";
+	public static final String BP_POSITION = "bp_position";
+	public static final String PHYSICALLY_ACTIVE = "physically_active";
+	public static final String IS_BEFORE_GESTATIONAL_DIABETES = "is_before_gestational_diabetes";
+	public static final String IS_FAMILY_DIABETES_HISTORY = "is_family_diabetes_history";
+	public static final String PREFERRED_NAME = "preferred_name";
+	public static final String DEVICE_INFO_ID = "device_info_id";
 
-    //screeninglog
-    public static final String BP_ARM = "bp_arm";
-    public static final String BP_POSITION = "bp_position";
-    public static final String PHYSICALLY_ACTIVE = "physically_active";
-    public static final String IS_BEFORE_GESTATIONAL_DIABETES = "is_before_gestational_diabetes";
-    public static final String IS_FAMILY_DIABETES_HISTORY = "is_family_diabetes_history";
-    public static final String PREFERRED_NAME = "preferred_name";
-    public static final String DEVICE_INFO_ID = "device_info_id";
-
-    //BPLOG
-    public static final String NOTES = "notes";
-    public static final String COVID_VACC_STATUS = "covid_vacc_status";
-    public static final String ASSESSMENT_CATEGORY = "assessment_category";
-    public static final String ASSESSMENT_LANDMARK = "assessment_landmark";
-
-
+	// BPLOG
+	public static final String NOTES = "notes";
+	public static final String COVID_VACC_STATUS = "covid_vacc_status";
+	public static final String ASSESSMENT_CATEGORY = "assessment_category";
+	public static final String ASSESSMENT_LANDMARK = "assessment_landmark";
+	public static final String RISK_ALGORITHM = "risk_algorithm";
+	public static final String MENU = "menus";
+	public static final String ROLE_NAME = "role_name";
+	
+	public static final String ICON = "icon";
+	public static final String ORDER = "order";
+	public static final String IS_PARENT = "is_parent";
+	public static final String IS_STATIC_MENU = "is_static_menu";
+	
+	public static final String VALUE  = "value";
+	public static final String IS_DEFAULT = "is_default";
+	
+	public static final String QUESTIONS = "questions";
+	public static final String IS_MANDATORY = "is_mandatory";
 
 }

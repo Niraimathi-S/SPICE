@@ -136,24 +136,26 @@ public class AuditConfiguration {
 			}
 			
 			public void postFlush(Iterator iterator) {
-				long entityId = 0;
-				List<Audit> auditList = AuditContextHolder.get();
-				while (iterator.hasNext()) {
-					Object obj = iterator.next();
-					if (obj instanceof BaseEntity) {
-						BaseEntity baseEntity = (BaseEntity) obj;
-						entityId = baseEntity.getId();
-					}
-				}
-				for (Audit audit : auditList) {
-					audit.setEntityId(entityId);
-				}
-				if (!auditList.isEmpty()) {
-					authenticationFilter().commonRepository.saveAll(auditList);
-					AuditContextHolder.clear();
-				}
-				
-			}
+                long entityId = 0;
+                List<Audit> auditList = AuditContextHolder.get();
+                if (null != auditList) {
+                    while (iterator.hasNext()) {
+                        Object obj = iterator.next();
+                        if (obj instanceof BaseEntity) {
+                            BaseEntity baseEntity = (BaseEntity) obj;
+                            entityId = baseEntity.getId();
+                        }
+                    }
+                    if (!auditList.isEmpty()) {
+                        authenticationFilter().commonRepository.saveAll(auditList);
+                        AuditContextHolder.clear();
+                    }
+                    for (Audit audit : auditList) {
+                        audit.setEntityId(entityId);
+                    }
+                }
+
+            }
 		};
 	}
 

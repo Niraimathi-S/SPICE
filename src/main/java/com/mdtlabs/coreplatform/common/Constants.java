@@ -2,6 +2,7 @@ package com.mdtlabs.coreplatform.common;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import java.util.List;
 public final class Constants {
 
 	private Constants() {
-	};
+	}
 
 	public static final String PACKAGE_CORE_PLATFORM = "com.mdtlabs.coreplatform";
 	public static final String SPICE_LOGGER = "SpiceLogger";
@@ -86,8 +87,8 @@ public final class Constants {
 	public static final String LOG_PREFIX_RESPONSE = "|<";
 	public static final String SPLIT_CONTENT = "\r\n|\r|\n";
 	public static final String BEARER = "Bearer ";
-	public static final long AUTH_TOKEN_EXPIRY_MINUTES = 30;
-	public static final long REFRESH_TOKEN_EXPIRY_HOURS = 8;
+	public static final long AUTH_TOKEN_EXPIRY_MINUTES = 15; //30
+	public static final long REFRESH_TOKEN_EXPIRY_HOURS =30; //8
 	public static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 	public static final String MESSAGE = "message";
 	public static final String INFO_USER_EXIST = "Login employee isEnabled : ";
@@ -258,7 +259,7 @@ public final class Constants {
 	public static final String KNOWN_DIABETES_PATIENT = "known";
 	public static final String GLUCOSE_UNIT_MG_DL = "mg/dL";
 	public static final String GLUCOSE_UNIT_MMOL_L = "mmol/L";
-	public static final String OTHER = "other";
+	public static final String OTHER = "Other";
 	public static final String ROLE_LAB_TECHNICIAN = "LAB_TECHNICIAN";
 	public static final String UNIT = "unit";
 
@@ -287,9 +288,26 @@ public final class Constants {
 	public static final Integer RBS_MMOL_L = 11;
 	public static final Integer FBS_MG_DL = 126;
 	public static final Integer RBS_MG_DL = 198;
+	public static final Map<String, Map<String, String>> FREQUENCIES = Map.of("MEDICAL_REVIEW",
+			Map.of("TYPE", "Medical Review", "LABEL", "Medical Review Frequency", "FREQUENCY_KEY",
+					"medical_review_freq"),
+			"BP_CHECK",
+			Map.of("TYPE", "BP Check", "LABEL", "Blood Pressure Check Frequency", "FREQUENCY_KEY", "bp_check_freq"),
+			"BG_CHECK",
+			Map.of("TYPE", "BG Check", "LABEL", "Blood Glucose Check Frequency", "FREQUENCY_KEY", "bg_check_freq"),
+			"HBA1C_CHECK",
+			Map.of("TYPE", "Hba1c Check", "LABEL", "HbA1c Check Frequency", "FREQUENCY_KEY", "HbA1c_check_freq"));
+	public static final String MODULE = "Module";
+	public static final String INPUT_FORM = "Input_form";
+	public static final String CONSENT_FORM = "Consent_form";
 
 	public static final String TABLE_USER_TOKEN = "user_token";
 	public static final String LAST_SESSION_TIME = "last_session_time";
 
-	public static final long EXPIRY_MINUTES = 15;
+	public static final long EXPIRY_MINUTES = 5;
+	public static final String TYPE = "type";
+	public static final String FORMS = "forms";
+	public static final String OPTIONS = "options";
+	public static final String QUESTIONS = "questions";
+
 }

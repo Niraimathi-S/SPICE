@@ -31,7 +31,7 @@ public final class TableConstants {
 	public static final String TABLE_MEDICATION_COUNTRY_DETAIL = "medicationcountrydetail";
 	public static final String TABLE_BRAND = "brand"; // brand table
 	public static final String TABLE_CLASSIFICATION = "classification";// classification table
-	public static final String TABLE_DOSAGE_FORM = "dosageform";
+	public static final String TABLE_DOSAGE_FORM = "dosage_form";
 	public static final String TABLE_LAB_TEST_RESULT = "lab_test_result";
 	public static final String TABLE_LAB_TEST = "lab_test";
 	public static final String TABLE_SUB_COUNTY = "sub_county";
@@ -52,7 +52,7 @@ public final class TableConstants {
 	public static final String TABLE_PROGRAM = "program";
 	public static final String TABLE_FREQUENCY = "frequency";
 
-	public static final String TABLE_ACCOUNT_WORKFLOW = "account_workflow";
+	public static final String TABLE_ACCOUNT_WORKFLOW = "clinical_workflow";
 	public static final String TABLE_ACCOUNT = "account";
 	public static final String TABLE_ACCOUNT_CUSTOMIZATION = "account_customization";
 	public static final String TABLE_SITE = "site";
@@ -80,7 +80,6 @@ public final class TableConstants {
 	public static final String TABLE_ACCOUNT_CUSTOMIZED_WORKFLOW = "account_customized_workflow";
 	public static final String TABLE_SITE_PROGRAM = "site_program";
 
-
 	public static final String TABLE_OPERATING_UNIT = "operating_unit";
 
 	public static final String TABLE_PATIENT_LAB_TEST = "patient_lab_test";
@@ -92,7 +91,7 @@ public final class TableConstants {
 	public static final String TABLE_NUTRITION_LIFESTYLE = "nutrition_lifestyle";
 	public static final String TABLE_LIFESTYLE = "lifestyle";
 	public static final String TABLE_PATIENT_NUTRITION_LIFESTYLE = "patient_nutrition_lifestyle";
-	public static final String TABLE_PATIENT_NUTRITION_LIFESTYLE_LIFESTYLE  = "patient_nutrition_lifestyle_lifestyle";
+	public static final String TABLE_PATIENT_NUTRITION_LIFESTYLE_LIFESTYLE = "patient_nutrition_lifestyle_lifestyle";
 	public static final String TABLE_COMPLICATION = "complication";
 	public static final String TABLE_DIAGNOSIS = "diagnosis";
 	public static final String TABLE_COMORBIDITY = "comorbidity";
@@ -104,7 +103,13 @@ public final class TableConstants {
 	public static final String TABLE_TEMPLATES = "templates";
 	public static final String TABLE_OUTBOUND_SMS = "templates";
 	public static final String TABLE_OUTBOUND_EMAIL = "outbound_email";
-
+	public static final String TABLE_RISK_ALGORITHM = "risk_algorithm";
+	public static final String TABLE_REASON = "reason";
+	public static final String TABLE_SIDE_MENU = "side_menu";
+	public static final String DOSAGE_FREQUENCY = "dosage_frequency";
+	public static final String TABLE_MENU = "menu";
+	public static final String MODEL_QUESTIONS = "model_questions";
+	public static final String MODEL_ANSWERS = "model_answers";
 
 	public static final String TABLE_USER_TOKEN = "user_token";
 

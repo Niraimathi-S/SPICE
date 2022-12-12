@@ -52,7 +52,7 @@ public class Account extends BaseEntity {
 	@NotNull(message = ErrorConstants.CLINICAL_WORKFLOW_NOT_NULL)
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	// @Fetch(FetchMode.SELECT)
-	@JoinTable(name = TableConstants.TABLE_ACCOUNT_CLINICAL_WORKFLOW, joinColumns = {
+	@JoinTable(name = TableConstants.TABLE_ACCOUNT_CUSTOMIZED_WORKFLOW, joinColumns = {
 			@JoinColumn(name = FieldConstants.ACCOUNT_ID) }, inverseJoinColumns = { @JoinColumn(name = FieldConstants.CUSTOMIZED_WORFKLOW_ID) })
 	private List<AccountWorkflow> customizedWorkflows;
 
