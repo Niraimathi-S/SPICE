@@ -60,6 +60,8 @@ public final class Constants {
 	public static final String NEW_USER_CREATION = "User_Creation";
 	public static final String FORGOT_PASSWORD_USER = "Forgot_Password";
 	public static final String NOTIFICAION_STATUS_PROCESSED = "Notification status processed";
+	public static final String NOTIFICAION_STATUS_FAILED = "Notification status failed";
+	public static final String SAVING_EMAIL_NOTIFICATION_ERROR = "Error while saving notification for email";
 
 	// AESKEY
 	public static final String AES_KEY = "Telec0unseL0r";
@@ -87,8 +89,8 @@ public final class Constants {
 	public static final String LOG_PREFIX_RESPONSE = "|<";
 	public static final String SPLIT_CONTENT = "\r\n|\r|\n";
 	public static final String BEARER = "Bearer ";
-	public static final long AUTH_TOKEN_EXPIRY_MINUTES = 15; //30
-	public static final long REFRESH_TOKEN_EXPIRY_HOURS =30; //8
+	public static final long AUTH_TOKEN_EXPIRY_MINUTES = 15; // 30
+	public static final long REFRESH_TOKEN_EXPIRY_HOURS = 30; // 8
 	public static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 	public static final String MESSAGE = "message";
 	public static final String INFO_USER_EXIST = "Login employee isEnabled : ";
@@ -303,11 +305,18 @@ public final class Constants {
 
 	public static final String TABLE_USER_TOKEN = "user_token";
 	public static final String LAST_SESSION_TIME = "last_session_time";
-
-	public static final long EXPIRY_MINUTES = 5;
 	public static final String TYPE = "type";
 	public static final String FORMS = "forms";
 	public static final String OPTIONS = "options";
 	public static final String QUESTIONS = "questions";
+	public static final String PATIENT_SCREENING_MESSAGE = "Hi <NAME>, thank you for getting screened by Spice health worker from <ORGNAME> site. Your registration code is <PATIENTID>.";
+	public static final Object ENTITY = "entity";
+	public static final String RED_RISK_MESSAGE = "A Red Alert Notification was received for one of your patients. Log into the SPICE application to review patient details.";
+
+	// Lifestyle type
+	public static final String SMOKE = "smoke";
+	public static final String ALCOHOL = "alcohol";
+	public static final String NUT = "nut";
+	public static final String HOURS_PER_WEEK = "hrs/week";
 
 }

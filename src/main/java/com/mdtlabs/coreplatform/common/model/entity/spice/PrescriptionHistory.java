@@ -78,6 +78,17 @@ public class PrescriptionHistory extends BaseEntity {
 	@Column(name = FieldConstants.SIGNATURE)
 	private String signature;
 
+	private Integer remainingPrescriptionDays;
+
+	@Column(name = FieldConstants.PRESCRIPTION_FILLED_DAYS)
+	private Integer prescriptionFilledDays = 0;
+
+	@Column(name = FieldConstants.REASON)
+	private String reason;
+
+	@Column(name = FieldConstants.LAST_REFILL_DATE, columnDefinition = "TIMESTAMP")
+	private Date lastRefillDate;
+
 	@Column(name = FieldConstants.IS_ACTIVE)
 	private Boolean isActive = true;
 

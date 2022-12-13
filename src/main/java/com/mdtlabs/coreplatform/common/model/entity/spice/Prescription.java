@@ -87,6 +87,15 @@ public class Prescription extends BaseEntity {
 	@Column(name = FieldConstants.DISCONTINUED_ON, columnDefinition = "TIMESTAMP")
 	private Date discontinuedOn;
 
+	@Column(name = FieldConstants.REMAINING_PRESCRIPTION_DAYS)
+	private Integer remainingPrescriptionDays;
+
+	@Column(name = FieldConstants.PRESCRIPTION_FILLED_DAYS)
+	private Integer prescriptionFilledDays = 0;
+
+	@Column(name = FieldConstants.REASON)
+	private String reason;
+
 	@Column(name = FieldConstants.IS_ACTIVE, columnDefinition = "default true")
 	private Boolean isActive = true;
 

@@ -29,6 +29,8 @@ public class PatientRequestDTO {
 
 	private Boolean isLabtestReferred;
 
+	private Boolean isMedicationPrescribed;
+
 	private PatientFilterDTO patientFilterDTO;
 
 	private PatientSortDTO patientSortDTO;
