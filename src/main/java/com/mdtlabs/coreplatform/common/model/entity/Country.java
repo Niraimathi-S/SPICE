@@ -23,6 +23,8 @@ import lombok.Data;
 @Table(name = TableConstants.TABLE_COUNTRY)
 public class Country extends BaseEntity {
 
+	private static final long serialVersionUID = 1L;
+
 	@NotEmpty(message = ErrorConstants.COUNTRY_NAME_NOT_NULL)
 	@Column(name = FieldConstants.NAME)
 	private String name;

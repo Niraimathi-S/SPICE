@@ -97,6 +97,7 @@ public final class ErrorConstants {
 	public static final String RESOLVER_ERROR = "Error message construction using resolver Error Message";
 	public static final String LINK_EXPIRED = "Link has expired.";
 	public static final String SAVING_EMAIL_NOTIFICATION_ERROR = "Error while saving notification for email";
+	public static final String EMAIL_NOT_NULL = "Username/email Id should not be empty";
 
 
 

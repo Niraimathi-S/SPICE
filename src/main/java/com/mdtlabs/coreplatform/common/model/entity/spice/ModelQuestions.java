@@ -39,7 +39,7 @@ public class ModelQuestions extends BaseEntity {
     private String type;
 
     @Column(name = FieldConstants.IS_MANDATORY)
-    private String isMandatory;
+    private boolean isMandatory;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = FieldConstants.QUESTION_ID)

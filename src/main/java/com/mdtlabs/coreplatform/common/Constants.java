@@ -318,5 +318,7 @@ public final class Constants {
 	public static final String ALCOHOL = "alcohol";
 	public static final String NUT = "nut";
 	public static final String HOURS_PER_WEEK = "hrs/week";
+	
+	public static final String ROLE_REGION_ADMIN = "REGION_ADMIN";
 
 }

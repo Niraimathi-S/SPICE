@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Data;
-import org.springframework.validation.annotation.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.model.entity.spice.BpLog;
@@ -13,8 +14,7 @@ import com.mdtlabs.coreplatform.common.model.entity.spice.GlucoseLog;
 import com.mdtlabs.coreplatform.common.model.entity.spice.MentalHealth;
 import com.mdtlabs.coreplatform.common.util.ScreeningInfo;
 
-import javax.validation.*;
-import javax.validation.constraints.*;
+import lombok.Data;
 
 /**
  * This class is an Request DTO class for screeninglog.

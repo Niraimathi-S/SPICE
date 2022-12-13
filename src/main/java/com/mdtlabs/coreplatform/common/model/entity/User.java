@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Fetch;
@@ -30,6 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.mdtlabs.coreplatform.common.CustomAuthorityDeserializer;
+import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 
@@ -50,24 +52,28 @@ public class User extends BaseEntity implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotEmpty(message = ErrorConstants.FIRST_NAME_NOT_NULL)
 	@Column(name = FieldConstants.FIRST_NAME)
 	private String firstName;
 
 	@Column(name = FieldConstants.MIDDLE_NAME)
 	private String middleName;
 
+	@NotEmpty(message = ErrorConstants.LAST_NAME_NOT_NULL)
 	@Column(name = FieldConstants.LAST_NAME)
 	private String lastName;
 
 	@Column(name = FieldConstants.GENDER)
 	private String gender;
 
+	@NotEmpty(message = ErrorConstants.PHONE_NUMBER_NOT_NULL)
 	@Column(name = FieldConstants.PHONE_NUMBER)
 	private String phoneNumber;
 
 	@Column(name = FieldConstants.ADDRESS)
 	private String address;
 
+	@NotEmpty(message = ErrorConstants.EMAIL_NOT_NULL)
 	@Column(name = FieldConstants.USERNAME)
 	private String username;
 

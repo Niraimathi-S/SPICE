@@ -52,6 +52,5 @@ public class StaticDataDTO {
 	private Map<String, String> enrollment;
 	private Map<String, String> screening;
 	private Map<String, String> assessment;
-//	private Map<String, List<ModelQuestions>> mentalHealth;
 	private List<Map<String, String>> mentalHealth;
 }

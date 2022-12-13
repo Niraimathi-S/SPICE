@@ -57,4 +57,12 @@ public class Role extends BaseEntity implements Serializable, GrantedAuthority {
 		Role role = (Role) object;
 		return this.getId() == role.getId();
 	}
+
+	public Role(String name) {
+		super();
+		this.name = name;
+	}
+
+	public Role() {}
+
 }
