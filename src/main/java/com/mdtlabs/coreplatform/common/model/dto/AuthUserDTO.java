@@ -67,5 +67,15 @@ public class AuthUserDTO {
 	public Set<RoleDTO> getRoles() {
 		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());
 	}
+
+	public TimezoneDTO getTimezone() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(timezone, TimezoneDTO.class);
+	}
+	
+	public CountryDTO getCountry() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(country, CountryDTO.class);
+	}
 	
 }

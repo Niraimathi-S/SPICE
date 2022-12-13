@@ -3,14 +3,15 @@ package com.mdtlabs.coreplatform.common.model.dto.spice;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
 
 import com.mdtlabs.coreplatform.common.model.entity.EmailTemplate;
 import com.mdtlabs.coreplatform.common.model.entity.EmailTemplateValue;
 import com.mdtlabs.coreplatform.common.model.entity.Notification;
 
 import lombok.Data;
-
-
 
 /**
  * This is a DTO class for email entity.
@@ -70,9 +71,9 @@ public class EmailDTO implements Serializable {
 	private boolean isHaveAttachment = false;
 
 	private List<String> fileNames;
-	
+
 	private List<EmailTemplateValue> emailTemplateValues;
-	
+
 	private String vmContent;
 
 	public EmailDTO() {
@@ -92,7 +93,7 @@ public class EmailDTO implements Serializable {
 		this.body = body;
 		this.to = to;
 	}
-	
+
 	public EmailDTO(String subject, String body, String to, String from) {
 		this.subject = subject;
 		this.body = body;
@@ -105,5 +106,19 @@ public class EmailDTO implements Serializable {
 		this.inputData = inputData;
 	}
 
+	public NotificationDTO getNotification() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(notification, NotificationDTO.class);
+	}
+
+	public EmailTemplateDTO getEmailTemplate() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(emailTemplate, EmailTemplateDTO.class);
+	}
+
+	public List<EmailTemplateValueDTO> getEmailTemplateValues() {
+		return emailTemplateValues.stream().map(value -> new ModelMapper().map(value, EmailTemplateValueDTO.class))
+				.collect(Collectors.toList());
+	}
 
 }

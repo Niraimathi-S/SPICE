@@ -63,13 +63,18 @@ public class UserDTO {
 
     private Long deviceInfoId;
 
-//	public TimezoneDTO getTimezone() {
-//		ModelMapper modelMapper = new ModelMapper();
-//		return modelMapper.map(timezone, TimezoneDTO.class);
-//	}
+	public TimezoneDTO getTimezone() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(timezone, TimezoneDTO.class);
+	}
 	
 	public Set<RoleDTO> getRoles() {
 		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());
+	}
+
+	public CountryDTO getCountry() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(country, CountryDTO.class);
 	}
 
 }
