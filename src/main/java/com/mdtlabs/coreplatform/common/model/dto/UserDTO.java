@@ -51,7 +51,7 @@ public class UserDTO {
 
 	private String phonenumber;
 
-	private Country country	;
+	private Country country;
 
 	private Timezone timezone;
 
@@ -72,9 +72,9 @@ public class UserDTO {
 		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());
 	}
 
-	public CountryDTO getCountry() {
-		ModelMapper modelMapper = new ModelMapper();
-		return modelMapper.map(country, CountryDTO.class);
-	}
+//	public CountryDTO getCountry() {
+//		ModelMapper modelMapper = new ModelMapper();
+//		return modelMapper.map(country, CountryDTO.class);
+//	}
 
 }

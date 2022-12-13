@@ -16,9 +16,9 @@ public class CountryDTO {
 
     private long id;
 
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
-	private Boolean isActive;
+	private boolean isActive;
 	
 	@NotEmpty(message = ErrorConstants.COUNTRY_NAME_NOT_NULL)
 	private String name;
@@ -29,9 +29,9 @@ public class CountryDTO {
 	@NotEmpty(message = ErrorConstants.UNIT_MEASUREMENT_NOT_NULL)
 	private String unitMeasurement;
 
-	@NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
-	private Long tenantId;
+	// @NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
+	// private Long tenantId;
 
-	@Transient
-	private List<User> users;
+	// @Transient
+	// private List<User> users;
 }

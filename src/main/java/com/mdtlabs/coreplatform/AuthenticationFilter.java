@@ -159,18 +159,20 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 						}
 					}
 
-					commonRepository.getApiRolePermission().stream().forEach(api -> {
-						if (StringUtils.isNotBlank(api.getRoles())) {
-							Map<String, List<String>> apiRoleMap = new HashMap<>();
-							if (apiPermissionMap.get(api.getMethod()) == null) {
-								apiRoleMap = new HashMap<>();
-							} else {
-								apiRoleMap = apiPermissionMap.get(api.getMethod());
+					if (apiPermissionMap.isEmpty()) {
+						commonRepository.getApiRolePermission().stream().forEach(api -> {
+							if (StringUtils.isNotBlank(api.getRoles())) {
+								Map<String, List<String>> apiRoleMap = new HashMap<>();
+								if (apiPermissionMap.get(api.getMethod()) == null) {
+									apiRoleMap = new HashMap<>();
+								} else {
+									apiRoleMap = apiPermissionMap.get(api.getMethod());
+								}
+								apiRoleMap.put(api.getApi(), Arrays.asList(api.getRoles().split("\\s*,\\s*")));
+								apiPermissionMap.put(api.getMethod(), apiRoleMap);
 							}
-							apiRoleMap.put(api.getApi(), Arrays.asList(api.getRoles().split("\\s*,\\s*")));
-							apiPermissionMap.put(api.getMethod(), apiRoleMap);
-						}
-					});
+						});
+					}
 					Set<String> requestTypeSet = apiPermissionMap.get(request.getMethod()).keySet();
 					requestTypeSet.stream().forEach(requestType -> {
 						if (request.getRequestURI().contains(requestType)) {

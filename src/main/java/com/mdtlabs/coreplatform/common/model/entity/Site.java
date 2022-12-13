@@ -82,12 +82,4 @@ public class Site extends BaseEntity{
 
     @Column(name = FieldConstants.TENANT_ID)
     private Long tenantId;
-   
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	// @Fetch(FetchMode.SELECT)
-	@JoinTable(name = TableConstants.TABLE_SITE_PROGRAM, joinColumns = {
-			@JoinColumn(name = FieldConstants.SITE_ID) }, inverseJoinColumns = { @JoinColumn(name = FieldConstants.PROGRAM_ID) })
-    private List<Program> program;
-
-
 }
