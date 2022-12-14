@@ -43,7 +43,7 @@ public class ScreeningResponseDTO {
 
     private Float bmi;
 
-    private Boolean isRegularSmoker;
+    private boolean isRegularSmoker;
 
     private Long countryId;
 
@@ -122,5 +122,8 @@ public class ScreeningResponseDTO {
     private List<BpLogDetails> bpLogDetails;
 
     private GlucoseLogDTO glucoseLog;
+
+    private Long bpLogId;
+
 
 }

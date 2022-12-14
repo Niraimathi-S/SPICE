@@ -51,7 +51,7 @@ public class PatientTreatmentPlan extends BaseEntity {
     @Column(name = FieldConstants.RISK_LEVEL)
     private String riskLevel;
 
-    @NotNull(message = ErrorConstants.PATIENT_VISIT_ID_NOT_NULL)
+//    @NotNull(message = ErrorConstants.PATIENT_VISIT_ID_NOT_NULL)
     @Column(name = FieldConstants.PATIENT_VISIT_ID)
     private Long patientVisitId;
 

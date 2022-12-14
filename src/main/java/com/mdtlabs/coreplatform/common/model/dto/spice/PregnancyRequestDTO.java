@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class PregnancyRequestDTO {
+    private Long id;
     private List<String> diagnosis;
     private Date diagnosisTime;
     private Date estimatedDeliveryDate;

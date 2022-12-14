@@ -11,7 +11,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MentalHealthDTO {
 
-    private Long id;
+	private Long id;
 
     private List<MentalHealthDetails> phq9MentalHealth;
 
@@ -34,5 +34,14 @@ public class MentalHealthDTO {
     private Integer phq4FirstScore;
 
     private Integer phq4SecondScore;
+
+    public MentalHealthDTO(String phq4RiskLevel, Integer phq4Score) {
+        this.phq4RiskLevel = phq4RiskLevel;
+        this.phq4Score = phq4Score;
+    }
+
+    public MentalHealthDTO() {
+    }
+
 
 }
