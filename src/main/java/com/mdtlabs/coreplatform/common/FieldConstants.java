@@ -461,5 +461,8 @@ public final class FieldConstants {
 
 	public static final String LAST_REFILL_DATE = "last_refill_date";
 	public static final String REASON = "reason";
+	public static final String ASSESSMENT_TENANT_ID = "assessment_tenant_id";
+	public static final String BG_TAKEN_ON = "bg_take_on";
+	public static final String BP_TAKEN_ON = "bp_taken_on";
 
 }

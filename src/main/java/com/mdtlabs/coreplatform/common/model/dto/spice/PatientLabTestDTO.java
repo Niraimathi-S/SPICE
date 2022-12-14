@@ -34,4 +34,5 @@ public class PatientLabTestDTO extends CommonRequestDTO {
 	private Boolean isDeleted = Constants.BOOLEAN_FALSE;
 
 	private Long resultUpdateBy;
+
 }

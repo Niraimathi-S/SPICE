@@ -1,6 +1,5 @@
 package com.mdtlabs.coreplatform.common.model.dto.spice;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,4 +64,5 @@ public class AssessmentDTO extends CommonRequestDTO {
 	private List<Map<String, Object>> customizedWorkflows;
 
 	private List<String> provisionalDiagnosis;
+
 }
