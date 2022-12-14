@@ -194,6 +194,9 @@ public class ScreeningLog extends BaseEntity {
 
     @Column(name = FieldConstants.PREFERRED_NAME)
     private String preferredName;
+    
+    @Column(name = FieldConstants.SCREENING_DATE_TIME)
+    private Date screeningDateTime;
 
     @Type(type = "jsonb")
     @Column(name = FieldConstants.BPLOG_DETAILS, columnDefinition = "jsonb")

@@ -65,5 +65,7 @@ public class ScreeningLogDTO {
     private String type;
 
     private boolean isUpdatedFromEnrollment;
+    
+    private Date screeningDateTime;
 
 }

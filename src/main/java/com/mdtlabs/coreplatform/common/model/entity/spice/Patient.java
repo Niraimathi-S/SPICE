@@ -78,7 +78,7 @@ public class Patient extends BaseEntity {
     private String levelOfEducation;
 
     @Column(name = FieldConstants.INSURANCE_STATUS)
-    private Boolean insuranceStatus;
+    private String insuranceStatus;
 
     @Column(name = FieldConstants.INSURANCE_TYPE)
     private String insuranceType;

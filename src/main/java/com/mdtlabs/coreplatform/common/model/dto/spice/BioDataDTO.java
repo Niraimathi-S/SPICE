@@ -33,12 +33,14 @@ public class BioDataDTO {
     private String levelOfEducation;
 
     private String idType;
+    
+    private String otherIdType;
 
     private String preferredName;
 
     private String insuranceId;
 
-    private Boolean insuranceStatus;
+    private String insuranceStatus;
 
     private String insuranceType;
 

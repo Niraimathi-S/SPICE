@@ -318,7 +318,14 @@ public final class Constants {
 	public static final String ALCOHOL = "alcohol";
 	public static final String NUT = "nut";
 	public static final String HOURS_PER_WEEK = "hrs/week";
-	
+
 	public static final String ROLE_REGION_ADMIN = "REGION_ADMIN";
+	public static final String ROLE_ACCOUNT_ADMIN = "ACCOUNT_ADMIN";
+	public static final String ROLE_OU_ADMIN = "OPERATING_UNIT_ADMIN";
+	public static final String ACCOUNT = "Account";
+	public static final String REGION = "Country";
+	public static final String OPERATING_UNIT = "Operating Unit";
+	public static final String COUNTRY = "country";
+	public static final String SESSSION_ALIVE = "Session alive";
 
 }

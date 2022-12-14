@@ -2,18 +2,13 @@ package com.mdtlabs.coreplatform.common.model.entity.spice;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;

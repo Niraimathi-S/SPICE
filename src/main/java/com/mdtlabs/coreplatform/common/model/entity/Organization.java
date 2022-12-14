@@ -20,6 +20,8 @@ import lombok.Data;
 @Table(name = "organization")
 public class Organization extends BaseEntity {
 
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = FieldConstants.FORM_DATA_ID)
 	private Long formDataId;
 

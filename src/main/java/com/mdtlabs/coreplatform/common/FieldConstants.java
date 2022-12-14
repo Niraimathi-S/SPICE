@@ -438,6 +438,8 @@ public final class FieldConstants {
 	public static final String IS_FAMILY_DIABETES_HISTORY = "is_family_diabetes_history";
 	public static final String PREFERRED_NAME = "preferred_name";
 	public static final String DEVICE_INFO_ID = "device_info_id";
+	public static final String SCREENING_DATE_TIME = "screening_date_time";
+
 
 	// BPLOG
 	public static final String NOTES = "notes";
