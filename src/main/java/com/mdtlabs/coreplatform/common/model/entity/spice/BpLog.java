@@ -59,7 +59,7 @@ public class BpLog extends BaseEntity {
 	private Float bmi;
 
 	@Column(name = FieldConstants.TEMPERATURE)
-	private Integer temperature;
+	private Float temperature;
 
 	@Column(name = FieldConstants.CVD_RISK_LEVEL)
 	private String cvdRiskLevel;
@@ -132,12 +132,11 @@ public class BpLog extends BaseEntity {
 	@Column(name = FieldConstants.ASSESSMENT_TENANT_ID)
 	private Long assessmentTenantId;
 
-	@Transient
-	private Long bpLogId;
-
-	@Transient
+	@Column(name = FieldConstants.IS_RED_RISK_PATIENT)
 	private boolean isRedRiskPatient;
 
+	@Transient
+	private String unitMeasurement;
 	/*
 	 * "insurance_id", "patient_id", "bp_arm", "insurance_status",
 	 * "is_updated_from_enrollment", "other_insurance", "insurance_type", "notes",

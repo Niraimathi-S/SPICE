@@ -4,7 +4,7 @@ public final class TableConstants {
 
 	private TableConstants() {
 	};
-	
+
 	public static final String TABLE_OPERATINGUNIT = "operatingunit";
 	public static final String TABLE_SUBCOUNTY = "subcounty";
 	public static final String TABLE_ORGANIZATIONS = "organizations";
@@ -101,7 +101,7 @@ public final class TableConstants {
 	// OutBoundsms
 
 	public static final String TABLE_TEMPLATES = "templates";
-	public static final String TABLE_OUTBOUND_SMS = "templates";
+	public static final String TABLE_OUTBOUND_SMS = "outbound_sms";
 	public static final String TABLE_OUTBOUND_EMAIL = "outbound_email";
 	public static final String TABLE_RISK_ALGORITHM = "risk_algorithm";
 	public static final String TABLE_REASON = "reason";
@@ -112,5 +112,7 @@ public final class TableConstants {
 	public static final String MODEL_ANSWERS = "model_answers";
 
 	public static final String TABLE_USER_TOKEN = "user_token";
+	public static final String TABLE_SMS_TEMPLATES = "sms_templates";
+	public static final String TABLE_SMS_TEMPLATE_VALUES = "sms_template_values";
 
 }

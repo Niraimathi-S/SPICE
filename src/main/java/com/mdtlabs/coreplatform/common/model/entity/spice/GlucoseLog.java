@@ -65,6 +65,12 @@ public class GlucoseLog extends BaseEntity {
 	@Column(name = FieldConstants.BG_TAKEN_ON)
 	private Date bgTakenOn;
 
+	@Column(name = FieldConstants.IS_RED_RISK_PATIENT)
+	private boolean isRedRiskPatient;
+
+	@Column(name = FieldConstants.RISK_LEVEL)
+	private String riskLevel;
+
 	@Transient
 	private Long glocoseLogId;
 

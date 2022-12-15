@@ -1,5 +1,6 @@
 package com.mdtlabs.coreplatform.common.model.dto.spice;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

@@ -57,17 +57,11 @@ public class OutBoundSMS implements Serializable {
 	@Column(name = FieldConstants.RETRY_ATTEMPTS)
 	private int retryAttempts = 0;
 
-	@Column(name = FieldConstants.FORM_NAME)
-	private String formName;
-
 	@Column(name = FieldConstants.USERNAME)
 	private String userName;
 
-	@Column(name = FieldConstants.STATUS)
-	private boolean status;
-
-	@Column(name = FieldConstants.MOBILE_NUMBER)
-	private String mobileNumber;
+	@Column(name = FieldConstants.PHONE_NUMBER)
+	private String phoneNumber;
 
 	@Column(name = FieldConstants.BODY)
 	private String body;
