@@ -310,9 +310,9 @@ public final class Constants {
 	public static final String FORMS = "forms";
 	public static final String OPTIONS = "options";
 	public static final String QUESTIONS = "questions";
-	public static final String PATIENT_SCREENING_MESSAGE = "Hi <NAME>, thank you for getting screened by Spice health worker from <ORGNAME> site. Your registration code is <PATIENTID>.";
+	public static final String TEMPLATE_TYPE_ENROLL_PATIENT = "ENROLL_PATIENT";
 	public static final Object ENTITY = "entity";
-	public static final String RED_RISK_MESSAGE = "A Red Alert Notification was received for one of your patients. Log into the SPICE application to review patient details.";
+	public static final String TEMPLATE_TYPE_RED_RISK = "RED_RISK";
 
 	// Lifestyle type
 	public static final String SMOKE = "smoke";

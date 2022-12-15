@@ -440,7 +440,6 @@ public final class FieldConstants {
 	public static final String DEVICE_INFO_ID = "device_info_id";
 	public static final String SCREENING_DATE_TIME = "screening_date_time";
 
-
 	// BPLOG
 	public static final String NOTES = "notes";
 	public static final String COVID_VACC_STATUS = "covid_vacc_status";
@@ -464,7 +463,8 @@ public final class FieldConstants {
 	public static final String LAST_REFILL_DATE = "last_refill_date";
 	public static final String REASON = "reason";
 	public static final String ASSESSMENT_TENANT_ID = "assessment_tenant_id";
-	public static final String BG_TAKEN_ON = "bg_take_on";
+	public static final String BG_TAKEN_ON = "bg_taken_on";
 	public static final String BP_TAKEN_ON = "bp_taken_on";
+	public static final String KEY = "key";
 
 }

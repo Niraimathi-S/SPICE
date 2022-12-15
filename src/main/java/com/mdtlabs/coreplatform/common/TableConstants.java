@@ -112,7 +112,7 @@ public final class TableConstants {
 	public static final String MODEL_ANSWERS = "model_answers";
 
 	public static final String TABLE_USER_TOKEN = "user_token";
-	public static final String TABLE_SMS_TEMPLATES = "sms_templates";
+	public static final String TABLE_SMS_TEMPLATE = "sms_template";
 	public static final String TABLE_SMS_TEMPLATE_VALUES = "sms_template_values";
 
 }
