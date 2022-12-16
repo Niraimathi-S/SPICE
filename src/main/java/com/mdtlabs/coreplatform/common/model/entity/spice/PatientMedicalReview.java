@@ -6,19 +6,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;
-
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -30,12 +25,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_MEDICAL_REVIEW)
-public class PatientMedicalReview extends BaseEntity {
+public class PatientMedicalReview extends TenantBaseEntity {
 
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
+    private static final long serialVersionUID = 1L;
 
-    @Column(name = FieldConstants.PATIENT_TRACK_ID)
+	@Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;
 
     @Column(name = FieldConstants.PATIENT_VISIT_ID)

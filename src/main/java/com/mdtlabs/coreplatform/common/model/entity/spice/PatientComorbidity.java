@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -18,16 +18,15 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_COMORBIDITY)
-public class PatientComorbidity extends BaseEntity {
+public class PatientComorbidity extends TenantBaseEntity {
 
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
+    private static final long serialVersionUID = 1L;
 
-    @Column(name = FieldConstants.PATIENT_TRACK_ID)
+	@Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;
 
     @Column(name = FieldConstants.PATIENT_VISIT_ID)
-    private Long patinetVisitId;
+    private Long patientVisitId;
 
     @Column(name = FieldConstants.COMORBIDITY_ID)
     private Long comorbidityId;
@@ -43,15 +42,15 @@ public class PatientComorbidity extends BaseEntity {
             String otherComorbidity) {
         this.tenantId = tenantId;
         this.patientTrackId = patientTrackId;
-        this.patinetVisitId = patinetVisitId;
+        this.patientVisitId = patinetVisitId;
         this.comorbidityId = comorbidityId;
         this.otherComorbidity = otherComorbidity;
     }
 
-    public void setIds(Long tenantId, Long patientTrackId, Long patinetVisitId) {
+    public void setIds(Long tenantId, Long patientTrackId, Long patientVisitId) {
         this.tenantId = tenantId;
         this.patientTrackId = patientTrackId;
-        this.patinetVisitId = patinetVisitId;
+        this.patientVisitId = patientVisitId;
     }
 
 }

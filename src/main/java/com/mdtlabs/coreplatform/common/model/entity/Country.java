@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_COUNTRY)
-public class Country extends BaseEntity {
+public class Country extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +36,4 @@ public class Country extends BaseEntity {
 	@NotEmpty(message = ErrorConstants.UNIT_MEASUREMENT_NOT_NULL)
 	@Column(name = FieldConstants.UNIT_MEASUREMENT)
 	private String unitMeasurement;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 }

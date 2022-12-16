@@ -117,7 +117,7 @@ public final class Constants {
 	public static final String ROLE_IDS = "roleIds";
 	public static final String JWE_TOKEN = "jweToken";
 	public static final String JWE_REFRESH_TOKEN = "jweRefreshToken";
-	public static final String NOTIFICATION_INSTANCE = "NOTIFICATION";
+	public static final String NOTIFICATION_INSTANCE = "NOTIFICATION-SERVICE";
 	public static final String LOGGER = "Logger";
 	public static final int ZERO = 0;
 	public static final int ONE = 1;
@@ -170,6 +170,7 @@ public final class Constants {
 	public static final String TENANT_IDS_CLAIM = "tenantId";
 	public static final String ROLE_ID_CLAIM = "roleId";
 	public static final String ROLE_NAME_CLAIM = "roleName";
+	public static final String HEADER_TENANT_ID = "TenantId";
 
 	public static final String TENANT_FILTER_NAME = "tenantFilter";
 	public static final String TENANT_PARAMETER_NAME = "tenantId";
@@ -330,5 +331,7 @@ public final class Constants {
 	public static final String SESSSION_ALIVE = "Session alive";
 	public static final String COUNT = "count";
 	public static final String DATA = "data";
+	public static final String REFRESH_TOKEN = "RefreshToken";
+	public static final String EMAIL_FORM_USER = "User";
 
 }

@@ -6,19 +6,16 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_FILL_PRESCRIPTION_HISTORY)
-public class FillPrescriptionHistory extends BaseEntity {
+public class FillPrescriptionHistory extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 7655950249992086103L;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@Column(name = FieldConstants.FILL_PRESCRIPTION_ID)
 	private Long fillPrescriptionId;

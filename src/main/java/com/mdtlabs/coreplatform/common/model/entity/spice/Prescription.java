@@ -11,22 +11,17 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 @Entity
 @DynamicUpdate
 @Table(name = TableConstants.TABLE_PRESCIPTION)
-public class Prescription extends BaseEntity {
+public class Prescription extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 5953566040431779092L;
-
-	@NotNull
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@NotNull
 	@Column(name = FieldConstants.PATIENT_VISIT_ID)
@@ -95,11 +90,5 @@ public class Prescription extends BaseEntity {
 
 	@Column(name = FieldConstants.REASON)
 	private String reason;
-
-	@Column(name = FieldConstants.IS_ACTIVE, columnDefinition = "default true")
-	private Boolean isActive = true;
-
-	@Column(name = FieldConstants.IS_DELETED, columnDefinition = "default false")
-	private Boolean isDeleted = false;
 
 }

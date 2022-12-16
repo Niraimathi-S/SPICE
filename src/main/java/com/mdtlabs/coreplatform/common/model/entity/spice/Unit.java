@@ -13,9 +13,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_UNIT)
-public class Unit extends BaseEntity{
+public class Unit extends BaseEntity {
     
-    @Column(name = FieldConstants.NAME)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NAME)
     private String name;
 
     @Column(name = FieldConstants.TYPE)

@@ -1,32 +1,38 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import lombok.Data;
+import java.util.Date;
+import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
-import java.util.Date;
-import java.util.Set;
+import lombok.Data;
 
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_NUTRITION_LIFESTYLE)
-public class PatientNutritionLifestyle extends BaseEntity {
+public class PatientNutritionLifestyle extends TenantBaseEntity {
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private static final long serialVersionUID = 1L;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = TableConstants.TABLE_PATIENT_NUTRITION_LIFESTYLE_LIFESTYLE, joinColumns = {
             @JoinColumn(name = FieldConstants.PATIENT_NUTRITION_LIFESTYLE_ID) }, inverseJoinColumns = { @JoinColumn(name = FieldConstants.NUTRITION_LIFESTYLE_ID) })
     private Set<NutritionLifestyle> lifestyles;
 
     @Column(name = FieldConstants.LIFESTYLE_ASSESSMENT)
     private String lifestyleAssessment;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;

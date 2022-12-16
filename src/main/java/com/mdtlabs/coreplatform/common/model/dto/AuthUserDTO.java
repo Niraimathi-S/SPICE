@@ -56,6 +56,8 @@ public class AuthUserDTO {
 
 	private Set<Organization> tenants;
 	
+	private long tenantId;
+	
 	private String countryCode;
 	
 	private Boolean isBlocked;

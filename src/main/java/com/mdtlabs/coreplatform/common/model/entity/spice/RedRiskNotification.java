@@ -6,17 +6,14 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Table(name = TableConstants.TABLE_RED_RISK_NOTIFICATION)
 @Entity
-public class RedRiskNotification extends BaseEntity {
-    
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenentId;
+public class RedRiskNotification extends TenantBaseEntity {
 
     @Column(name = FieldConstants.BP_LOG_ID)
     private Long BpLogId;

@@ -18,7 +18,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "organization")
-public class Organization extends BaseEntity {
+public class Organization extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,8 +36,5 @@ public class Organization extends BaseEntity {
 
 	@Column(name = FieldConstants.PARENT_ORGANIZATION_ID)
 	private Long parentOrganizationId;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 }

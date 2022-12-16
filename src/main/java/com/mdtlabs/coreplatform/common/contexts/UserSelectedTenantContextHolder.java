@@ -28,13 +28,13 @@ package com.mdtlabs.coreplatform.common.contexts;
 
 public class UserSelectedTenantContextHolder {
 
-	private static final ThreadLocal<Integer> USER_TENANT_CONTEXT = new ThreadLocal<>();
+	private static final ThreadLocal<Long> USER_TENANT_CONTEXT = new ThreadLocal<>();
 
-	public static void set(Integer tenantId) {
+	public static void set(Long tenantId) {
 		USER_TENANT_CONTEXT.set(tenantId);
 	}
 
-	public static Integer get() {
+	public static Long get() {
 		return USER_TENANT_CONTEXT.get();
 	}
 

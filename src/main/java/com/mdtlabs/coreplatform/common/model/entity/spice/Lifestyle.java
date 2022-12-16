@@ -27,7 +27,9 @@ import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 )
 public class Lifestyle extends BaseEntity {
 
-    @Column(name = FieldConstants.NAME)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NAME)
     private String name;
 
     @Column(name = FieldConstants.TYPE)

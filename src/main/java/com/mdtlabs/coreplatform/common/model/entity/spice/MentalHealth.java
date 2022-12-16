@@ -11,7 +11,7 @@ import org.hibernate.annotations.TypeDef;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
 import lombok.Data;
@@ -23,9 +23,11 @@ import lombok.Data;
 	name = "jsonb",
 	typeClass = JsonBinaryType.class
 )
-public class MentalHealth extends BaseEntity {
+public class MentalHealth extends TenantBaseEntity {
 
-    @Column(name = FieldConstants.IS_LATEST)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.IS_LATEST)
     private boolean isLatest;
 
     @Column(name = FieldConstants.PHQ9_RISK_LEVEL)
@@ -52,9 +54,6 @@ public class MentalHealth extends BaseEntity {
 
     @Column(name = FieldConstants.PHQ4_SECOND_SCORE)
     private int phq4SecondScore;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;

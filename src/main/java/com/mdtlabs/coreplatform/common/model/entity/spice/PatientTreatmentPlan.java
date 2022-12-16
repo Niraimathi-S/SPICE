@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -21,9 +21,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_TREATMENT_PLAN)
-public class PatientTreatmentPlan extends BaseEntity {
+public class PatientTreatmentPlan extends TenantBaseEntity {
     
-    @Column(name = FieldConstants.MEDICAL_REVIEW_FREQUENCY)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.MEDICAL_REVIEW_FREQUENCY)
     private String medicalReviewFrequency;
 
     @Column(name = FieldConstants.BP_CHECK_FREQUENCY)
@@ -34,15 +36,6 @@ public class PatientTreatmentPlan extends BaseEntity {
 
     @Column(name = FieldConstants.HBA1C_CHECK_FREQUENCY)
     private String hba1cCheckFrequency;
-//
-    // @Column(name = FieldConstants.MENTAL_HEALTH_CHECK_FREQUENCY)
-//     private String mentalHealthCheckFrequency;
-//
-//     @Column(name = FieldConstants.DIABETIC_FOOT_CHECK_FREQUENCY)
-//     private String diabeticFootCheckFrequency;
-//
-//     @Column(name = FieldConstants.ANTENATAL_CHECK_FREQUENCY)
-//     private String antenatalCheckFrequency;
 
     @NotNull(message = ErrorConstants.IS_PROVISIONAL_NOT_NULL)
     @Column(name = FieldConstants.IS_PROVISIONAL)
@@ -58,9 +51,6 @@ public class PatientTreatmentPlan extends BaseEntity {
     @NotNull(message = ErrorConstants.PATIENT_TRACK_ID_NOT_NULL)
     @Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @Column(name = FieldConstants.IS_LATEST)
     private boolean isLatest;

@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -18,9 +18,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_LIFESTYLE)
-public class PatientLifestyle extends BaseEntity {
+public class PatientLifestyle extends TenantBaseEntity {
 
-    public PatientLifestyle() {}
+    private static final long serialVersionUID = 1L;
+
+	public PatientLifestyle() {}
     
     public PatientLifestyle(Long tenantId, Long patientTrackId, Long patinetVisitId, Long lifestyleId,
             String answer, String comments) {
@@ -31,9 +33,6 @@ public class PatientLifestyle extends BaseEntity {
         this.answer = answer;
         this.comments = comments;
     }
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;

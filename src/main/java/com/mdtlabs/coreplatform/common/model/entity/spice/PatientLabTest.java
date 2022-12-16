@@ -1,6 +1,5 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,16 +9,18 @@ import javax.validation.constraints.NotNull;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_LAB_TEST)
-public class PatientLabTest extends BaseEntity {
+public class PatientLabTest extends TenantBaseEntity {
 
-    @NotNull
+    private static final long serialVersionUID = 1L;
+
+	@NotNull
     @Column(name = FieldConstants.LAB_TEST_ID)
     private Long labTestId;
     
@@ -32,7 +33,7 @@ public class PatientLabTest extends BaseEntity {
     @Column(name = FieldConstants.REFERRED_BY)
     private Long referredBy;
     
-//    @NotNull
+    //@NotNull
     @Column(name = FieldConstants.IS_REVIEWED)
     private Boolean isReviewed;
 
@@ -41,9 +42,6 @@ public class PatientLabTest extends BaseEntity {
 
     @Column(name = FieldConstants.IS_ABNORMAL)
     private boolean isAbnormal;
-    
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
     
     @NotNull
     @Column(name = FieldConstants.PATIENT_TRACK_ID)

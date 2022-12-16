@@ -1,29 +1,22 @@
 package com.mdtlabs.coreplatform.common.model.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-
-import javax.persistence.JoinColumn;
-
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_SITE)
-public class Site extends BaseEntity{
+public class Site extends TenantBaseEntity{
     
-    @Column(name = FieldConstants.NAME)
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NAME)
     private String name;
 
     @Column(name = FieldConstants.EMAIL)
@@ -80,6 +73,4 @@ public class Site extends BaseEntity{
     @Column(name = FieldConstants.CULTURE_ID)
     private Long cultureId;
 
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 }

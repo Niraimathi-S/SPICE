@@ -9,23 +9,25 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.*;
-import javax.validation.constraints.Min;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import lombok.Data;
-import org.springframework.validation.annotation.*;
+import org.springframework.validation.annotation.Validated;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
+
+import lombok.Data;
 
 @Data
 @Entity
 @Validated
 @Table(name = TableConstants.TABLE_LAB_TEST)
-public class LabTest extends BaseEntity {
+public class LabTest extends TenantBaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@NotBlank(message = "Labtest name should not be empty")
 	@Column(name = FieldConstants.NAME)
@@ -45,11 +47,5 @@ public class LabTest extends BaseEntity {
 	@NotNull(message = "CountryId should not be empty")
 	@Column(name = FieldConstants.COUNTRY_ID)
 	private Long countryId;
-
-	@NotNull(message = "tenantId should not be empty")
-	@Min(1)
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
-
 
 }

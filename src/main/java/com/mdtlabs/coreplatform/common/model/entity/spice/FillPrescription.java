@@ -7,19 +7,16 @@ import javax.persistence.Transient;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_FILL_PRESCRIPTION)
-public class FillPrescription extends BaseEntity {
+public class FillPrescription extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 5904531222309344526L;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@Column(name = FieldConstants.PATIENT_VISIT_ID)
 	private Long patientVisitId;

@@ -14,6 +14,8 @@ import com.mdtlabs.coreplatform.common.TableConstants;
 @Table(name = TableConstants.TABLE_SUB_COUNTY)
 public class Subcounty extends BaseEntity {
 
+	private static final long serialVersionUID = 1L;
+
 	@NotEmpty(message = ErrorConstants.SUB_COUNTY_NAME_NOT_NULL)
 	@Column(name = FieldConstants.NAME)
 	private String name;

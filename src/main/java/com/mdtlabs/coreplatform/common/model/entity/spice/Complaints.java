@@ -16,7 +16,9 @@ import lombok.Data;
 @Table(name = TableConstants.TABLE_COMPLAINTS)
 public class Complaints extends BaseEntity {
     
-    @Column(name = FieldConstants.PARENT_COMPLIANCE_ID)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.PARENT_COMPLIANCE_ID)
     private Long parentComplianceId;
 
     @Column(name = FieldConstants.NAME)

@@ -13,7 +13,9 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BpLogDetails implements Serializable{
     
-    @NotNull
+    private static final long serialVersionUID = 1L;
+
+	@NotNull
     private Integer systolic;
 
     @NotNull

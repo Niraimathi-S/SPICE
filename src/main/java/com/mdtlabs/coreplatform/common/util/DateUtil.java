@@ -1,18 +1,12 @@
 package com.mdtlabs.coreplatform.common.util;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.mdtlabs.coreplatform.common.Constants;
-import com.mdtlabs.coreplatform.common.FieldConstants;
-import com.mdtlabs.coreplatform.common.exception.Validation;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -20,6 +14,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
 
 /**
  * This is used to calculate the past day from particular date
@@ -371,6 +370,21 @@ public class DateUtil {
 		return cal.getTime();
 	}
 
+	public static long getDateDiffInMinutes(Date dateFrom, Date dateTo) {
 
+		if (null == dateFrom || null == dateTo) {
+			return 0;
+		}
+
+		long differenceInTime = dateTo.getTime() - dateFrom.getTime();
+
+		long differenceInYears = TimeUnit.MILLISECONDS.toDays(differenceInTime) / 365;
+		long differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 365;
+		long differenceInHours = TimeUnit.MILLISECONDS.toHours(differenceInTime) % 24;
+		long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInTime) % 60;
+
+		return ((differenceInYears * 365 * 24 * 60) + (differenceInDays * 24 * 60) + (differenceInHours * 60)
+				+ differenceInMinutes);
+	}
 
 }

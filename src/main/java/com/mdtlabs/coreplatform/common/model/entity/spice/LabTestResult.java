@@ -8,17 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
-import lombok.Data;
-import org.springframework.validation.annotation.*;
+import org.springframework.validation.annotation.Validated;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
+
+import lombok.Data;
 
 /**
  * 
@@ -31,16 +29,13 @@ import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 @Entity
 @Table(name = TableConstants.TABLE_LAB_TEST_RESULT)
 @Validated
-public class LabTestResult extends BaseEntity {
+public class LabTestResult extends TenantBaseEntity {
+	
 	private static final long serialVersionUID = -6234779218896037042L;
 
 	@NotBlank(message = "LabTest Result name should not be empty")
 	@Column(name = FieldConstants.NAME)
 	private String name; 
-
-	// @NotNull
-	@Column(name = FieldConstants.TENANT_ID)
-	private long tenantId;
 
 	@Column(name = FieldConstants.LAB_TEST_ID)
 	private Long labTestId;

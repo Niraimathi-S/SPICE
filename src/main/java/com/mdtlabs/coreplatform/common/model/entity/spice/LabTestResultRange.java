@@ -3,14 +3,15 @@ package com.mdtlabs.coreplatform.common.model.entity.spice;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -19,10 +20,9 @@ import lombok.Data;
 @Table(name = TableConstants.TABLE_LAB_TEST_RESULT_RANGE)
 @DynamicUpdate
 @JsonFilter("labTestResultRangeFilter")
-public class LabTestResultRange extends BaseEntity {
+public class LabTestResultRange extends TenantBaseEntity {
 
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
+	private static final long serialVersionUID = 1L;
 
 	@NotNull
 	@Column(name = FieldConstants.LAB_TEST_ID)

@@ -1,18 +1,17 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import lombok.Data;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
+
+import lombok.Data;
 
 /**
  * 
@@ -24,8 +23,10 @@ import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_MEDICATION_COUNTRY_DETAIL)
-public class Medication extends BaseEntity {
+public class Medication extends TenantBaseEntity {
     
+	private static final long serialVersionUID = 1L;
+
 	@NotBlank(message = ErrorConstants.MEDICATION_NAME_NOT_NULL)
 	@Column(name = FieldConstants.MEDICATION_NAME)
 	private String medicationName;
@@ -60,10 +61,6 @@ public class Medication extends BaseEntity {
 	@NotNull(message = ErrorConstants.BRAND_ID_NOT_NULL)
 	@Column(name = FieldConstants.BRAND_ID)
 	private Long brandId;
-
-	@NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@Column(name = FieldConstants.DISPLAY_ORDER)
 	private int displayOrder;

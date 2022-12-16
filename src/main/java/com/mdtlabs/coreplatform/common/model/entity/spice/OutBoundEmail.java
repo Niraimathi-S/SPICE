@@ -50,10 +50,10 @@ public class OutBoundEmail implements Serializable {
 	private Long formDataId;
 
 	@Column(name = FieldConstants.IS_PROCESSED)
-	private boolean isProcessed;
+	private boolean isProcessed = false;
 
 	@Column(name = FieldConstants.RETRY_ATTEMPTS)
-	private int retryAttempts;
+	private int retryAttempts = 0;
 
 	@Column(name = FieldConstants.FORM_NAME)
 	private String formName;

@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -18,10 +18,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_DIAGNOSIS)
-public class PatientDiagnosis extends BaseEntity {
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
+public class PatientDiagnosis extends TenantBaseEntity {
 
     @Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;

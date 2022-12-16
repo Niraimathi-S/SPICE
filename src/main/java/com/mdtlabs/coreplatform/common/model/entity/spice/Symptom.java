@@ -1,22 +1,20 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import lombok.Data;
+import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity
@@ -27,7 +25,9 @@ import javax.persistence.Table;
 )
 public class Symptom extends BaseEntity {
 
-    @Column(name = FieldConstants.NAME)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NAME)
     private String name;
 
     @Column(name = FieldConstants.DESCRIPTION)

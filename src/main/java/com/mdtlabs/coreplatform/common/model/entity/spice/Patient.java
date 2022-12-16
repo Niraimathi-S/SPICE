@@ -5,21 +5,22 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT)
-public class Patient extends BaseEntity {
+public class Patient extends TenantBaseEntity {
 
-    @Column(name = FieldConstants.NATIONAL_ID)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NATIONAL_ID)
     private String nationalId;
 
     @Column(name = FieldConstants.FIRST_NAME)
@@ -64,9 +65,6 @@ public class Patient extends BaseEntity {
     @NotNull
     @Column(name = FieldConstants.SITE_ID)
     private Long siteId;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @Column(name = FieldConstants.LANDMARK)
     private String landmark;
@@ -141,43 +139,3 @@ public class Patient extends BaseEntity {
     private long zipCode;
 
 }
-
-/*national_id VARCHAR,
-  first_name VARCHAR,
-  middle_name VARCHAR,
-  last_Name VARCHAR,
-  gender VARCHAR,
-  date_of_birth DATE,
-  age INT,
-  is_pregnant BOOLEAN,
-  phone_number VARCHAR,
-  phone_number_category VARCHAR,
-  landmark VARCHAR,
-  occupation VARCHAR,
-  level_of_education VARCHAR,
-  insurance_status BOOLEAN,
-  insurance_type VARCHAR,
-  other_insurance VARCHAR,
-  insurance_id VARCHAR,
-  is_support_group BOOLEAN,
-  support_group VARCHAR,
-  is_regular_smoker BOOLEAN,
-  initial VARCHAR,
-  other_id_type VARCHAR,
-  ethnicity VARCHAR,
-  languages VARCHAR,
-  id_type VARCHAR,
-  other_languages VARCHAR,
-  er_visit_reason VARCHAR,
-  lote BOOLEAN,
-  home_medical_devices VARCHAR,
-  er_visit_frequency int,
-  emr_number BIGINT,
-  er_visit_history BOOLEAN,
-  zip_code BIGINT,
-  site_id BIGINT, FOREIGN KEY (site_id) REFERENCES site(id),
-  program_id BIGINT,
-  country_id BIGINT, FOREIGN KEY (country_id) REFERENCES country(id),
-  county_id BIGINT, FOREIGN KEY (county_id) REFERENCES county(id),
-  sub_county_id BIGINT, FOREIGN KEY (sub_county_id) REFERENCES sub_county(id),
-  tenant_id BIGINT, FOREIGN KEY (tenant_id) REFERENCES organization(id), */

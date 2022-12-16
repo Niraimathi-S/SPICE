@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -17,13 +17,12 @@ import lombok.Data;
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_VISIT)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PatientVisit extends BaseEntity{
+public class PatientVisit extends TenantBaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@Column(name = FieldConstants.PATIENT_TRACK_ID)
     private Long patientTrackId;
-    
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @Column(name = FieldConstants.VISIT_DATE,  columnDefinition = "TIMESTAMP")
     private Date visitDate;

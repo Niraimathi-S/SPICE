@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
@@ -18,13 +18,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_CURRENT_MEDICATION)
-public class PatientCurrentMedication extends BaseEntity {
+public class PatientCurrentMedication extends TenantBaseEntity {
 
-    
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
+    private static final long serialVersionUID = 1L;
 
-    @Column(name = FieldConstants.CURRENT_MEDICATION_ID)
+	@Column(name = FieldConstants.CURRENT_MEDICATION_ID)
     private Long currentMedicationId;
     
     @Column(name = FieldConstants.PATIENT_TRACK_ID)

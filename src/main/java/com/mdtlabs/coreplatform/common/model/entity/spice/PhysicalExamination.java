@@ -6,16 +6,18 @@ import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PHYSICAL_EXAMINATION)
-public class PhysicalExamination extends BaseEntity {
+public class PhysicalExamination extends TenantBaseEntity {
     
-    @Column(name = FieldConstants.NAME)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NAME)
     private String name;
 
     @Column(name = FieldConstants.DESCRIPTION)

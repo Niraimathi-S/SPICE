@@ -23,7 +23,9 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_ACCOUNT)
-public class Account extends BaseEntity {
+public class Account extends TenantBaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@NotBlank(message = ErrorConstants.ACCOUNT_NAME_NOT_NULL)
 	@Column(name = FieldConstants.NAME, unique = true)
@@ -38,9 +40,6 @@ public class Account extends BaseEntity {
 	@NotNull(message = ErrorConstants.COUNTRY_ID_NOT_NULL)
 	@Column(name = FieldConstants.COUNTRY_ID)
 	private Long countryId;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@NotNull(message = ErrorConstants.CLINICAL_WORKFLOW_NOT_NULL)
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

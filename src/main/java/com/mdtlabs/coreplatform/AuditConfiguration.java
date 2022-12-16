@@ -85,29 +85,31 @@ public class AuditConfiguration {
 			 */
 			private void createAudit(Object entity, Audit audit, Serializable id)
 					throws IllegalAccessException, InvocationTargetException {
-				Class userClass = entity.getClass();
-				Method[] userClassMethods = userClass.getMethods();
-				List<Audit> auditListToBeSaved = new ArrayList<>();
-				for (int userMethod = Constants.ZERO; userMethod < userClassMethods.length; userMethod++) {
-					Method userClassMethod = userClassMethods[userMethod];
-					if (userClassMethod.getName().startsWith(Constants.GET)
-							&& ((userClassMethod.getParameterTypes()).length == Constants.ZERO)
-							&& (!(userClassMethod.getName().equals(Constants.GET_CLASS)))) {
-						Object userClassValue;
-						userClassValue = userClassMethod.invoke(entity, null);
-						if (userClassValue != null) {
-							audit = new Audit();
-							audit.setAction(Constants.CREATE.toUpperCase());
-							audit.setColumnName(userClassMethod.getName().substring(Constants.NUMBER_THREE));
-							audit.setEntity(entity.getClass().getSimpleName());
-							audit.setNewValue(userClassValue.toString());
-							//audit.setEntityId(baseEntity.getId());
-							auditListToBeSaved.add(audit);
+				if (!entity.getClass().getSimpleName().equals(Constants.AUDIT)) {
+					Class userClass = entity.getClass();
+					Method[] userClassMethods = userClass.getMethods();
+					List<Audit> auditListToBeSaved = new ArrayList<>();
+					for (int userMethod = Constants.ZERO; userMethod < userClassMethods.length; userMethod++) {
+						Method userClassMethod = userClassMethods[userMethod];
+						if (userClassMethod.getName().startsWith(Constants.GET)
+								&& ((userClassMethod.getParameterTypes()).length == Constants.ZERO)
+								&& (!(userClassMethod.getName().equals(Constants.GET_CLASS)))) {
+							Object userClassValue;
+							userClassValue = userClassMethod.invoke(entity, null);
+							if (userClassValue != null) {
+								audit = new Audit();
+								audit.setAction(Constants.CREATE.toUpperCase());
+								audit.setColumnName(userClassMethod.getName().substring(Constants.NUMBER_THREE));
+								audit.setEntity(entity.getClass().getSimpleName());
+								audit.setNewValue(userClassValue.toString());
+								//audit.setEntityId(baseEntity.getId());
+								auditListToBeSaved.add(audit);
+							}
 						}
 					}
+					AuditContextHolder.set(auditListToBeSaved);
+					//authenticationFilter().commonRepository.saveAll(auditListToBeSaved);
 				}
-				AuditContextHolder.set(auditListToBeSaved);
-				//authenticationFilter().commonRepository.saveAll(auditListToBeSaved);
 
 			}
 

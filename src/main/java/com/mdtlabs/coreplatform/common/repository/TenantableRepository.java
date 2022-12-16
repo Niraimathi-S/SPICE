@@ -16,7 +16,7 @@ import java.util.Optional;
  *
  */
 @NoRepositoryBean
-public interface TenantableRepository<T> extends JpaRepository<T, Integer> {
+public interface TenantableRepository<T> extends JpaRepository<T, Long> {
 
 	/**
 	 * get the tenantable value by id.
@@ -24,5 +24,5 @@ public interface TenantableRepository<T> extends JpaRepository<T, Integer> {
 	 * @param id - tenant id
 	 * @return Optional<T> - tenant entity
 	 */
-	Optional<T> findOneById(int id);
+	Optional<T> findOneById(long id);
 }

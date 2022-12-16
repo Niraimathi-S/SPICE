@@ -1,24 +1,24 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import lombok.Data;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
+
+import lombok.Data;
 
 @Data
 @Table(name = TableConstants.TABLE_PATIENT_LAB_TEST_RESULT)
 @Entity
-public class PatientLabTestResult extends BaseEntity {
+public class PatientLabTestResult extends TenantBaseEntity {
 
-    @NotBlank
+    private static final long serialVersionUID = 1L;
+
+	@NotBlank
     @Column(name = FieldConstants.RESULT_NAME)
     private String resultName;
 
@@ -53,9 +53,6 @@ public class PatientLabTestResult extends BaseEntity {
 
     @Column(name = FieldConstants.PATIENT_VISIT_ID)
     private Long patientVisitId;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @Column(name = FieldConstants.DISPLAY_ORDER)
     private Integer displayOrder;

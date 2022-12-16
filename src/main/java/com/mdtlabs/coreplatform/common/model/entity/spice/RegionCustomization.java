@@ -9,18 +9,15 @@ import javax.validation.constraints.NotNull;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_REGION_CUSTOMISATION)
-public class RegionCustomization extends BaseEntity {
+public class RegionCustomization extends TenantBaseEntity {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -8642271760727722638L;
 
     @NotBlank(message = ErrorConstants.TYPE_NOT_NULL)
@@ -45,7 +42,4 @@ public class RegionCustomization extends BaseEntity {
     @Column(name = FieldConstants.IS_ACTIVE)
     private Boolean isActive = true;
 
-    @NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
-    @Column(name = FieldConstants.TENANT_ID)
-    private long tenantId;
 }

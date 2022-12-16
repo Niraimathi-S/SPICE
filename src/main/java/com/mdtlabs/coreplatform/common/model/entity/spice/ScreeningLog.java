@@ -15,7 +15,7 @@ import org.hibernate.annotations.TypeDef;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.model.dto.spice.GlucoseLogDTO;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
 import lombok.Data;
@@ -28,12 +28,11 @@ import lombok.Data;
 	name = "jsonb",
 	typeClass = JsonBinaryType.class
 )
-public class ScreeningLog extends BaseEntity {
+public class ScreeningLog extends TenantBaseEntity {
 
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
+    private static final long serialVersionUID = 1L;
 
-    @NotNull
+	@NotNull
     @Column(name = FieldConstants.LATITUDE)
     private String latitude;
 

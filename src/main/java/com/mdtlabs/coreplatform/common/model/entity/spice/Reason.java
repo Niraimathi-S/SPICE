@@ -14,10 +14,15 @@ import lombok.Data;
 @Table(name = TableConstants.TABLE_REASON)
 @Data
 public class Reason extends BaseEntity {
+	
+	private static final long serialVersionUID = 1L;
+	
 	@Column(name = FieldConstants.NAME)
 	private String name;
+	
 	@Column(name = FieldConstants.TYPE)
 	private String type;
+	
 	@Column(name = FieldConstants.DISPLAY_ORDER)
 	private int displayOrder;
 }

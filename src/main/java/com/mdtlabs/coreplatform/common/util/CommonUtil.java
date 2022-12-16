@@ -324,7 +324,7 @@ public class CommonUtil {
 	 */
 	public static HttpEntity<String> getCurrentEntity() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.AUTHORIZATION, UserContextHolder.getUserDto().getAuthorization());
+		headers.add(HttpHeaders.AUTHORIZATION, StringUtil.concatString(Constants.BEARER, UserContextHolder.getUserDto().getAuthorization()));
 		return new HttpEntity<>(headers);
 	}
 

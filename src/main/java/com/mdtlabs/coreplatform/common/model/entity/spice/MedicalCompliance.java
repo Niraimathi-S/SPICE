@@ -15,7 +15,9 @@ import lombok.Data;
 @Table(name = TableConstants.TABLE_MEDICAL_COMPLIANCE)
 public class MedicalCompliance extends BaseEntity {
     
-    @Column(name = FieldConstants.NAME)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NAME)
     private String name;
     
     @Column(name = FieldConstants.STATUS)

@@ -16,7 +16,7 @@ import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
-
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
 
 import lombok.Data;
@@ -28,7 +28,9 @@ import lombok.Data;
 				FieldConstants.COUNTRY_ID }) })
 @TypeDef(name = "list-array", typeClass = ListArrayType.class)
 @DynamicUpdate
-public class AccountWorkflow extends BaseEntity {
+public class AccountWorkflow extends TenantBaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@NotBlank(message = ErrorConstants.ACCOUNT_WORKFLOW_NAME_NOT_EMPTY)
 	@Column(name = FieldConstants.NAME)
@@ -49,8 +51,4 @@ public class AccountWorkflow extends BaseEntity {
 	@NotNull(message = ErrorConstants.COUNTRY_ID_NOT_NULL)
 	@Column(name = FieldConstants.COUNTRY_ID)
 	private Long countryId;
-
-	@NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 }

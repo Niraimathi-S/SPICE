@@ -33,9 +33,6 @@ public class Role extends BaseEntity implements Serializable, GrantedAuthority {
 	@Column(name = FieldConstants.LEVEL)
 	private String level;
 
-	
-
-
 	/** 
 	 * @return the name property (getAuthority required by Acegi's GrantedAuthority
 	 *         interface)

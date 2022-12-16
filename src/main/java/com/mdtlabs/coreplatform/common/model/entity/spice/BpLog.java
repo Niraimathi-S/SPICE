@@ -7,23 +7,24 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.*;
-import javax.validation.groups.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 import com.mdtlabs.coreplatform.common.util.EnrollmentInfo;
 import com.mdtlabs.coreplatform.common.util.ScreeningInfo;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
 import lombok.Data;
-import org.springframework.validation.annotation.*;
 
 @Data
 @Entity
@@ -31,10 +32,9 @@ import org.springframework.validation.annotation.*;
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Validated
-public class BpLog extends BaseEntity {
+public class BpLog extends TenantBaseEntity {
 
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
+	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = ErrorConstants.AVG_SYSTOLIC_NOT_NULL, groups = { Default.class, ScreeningInfo.class,
 			EnrollmentInfo.class })
@@ -140,11 +140,5 @@ public class BpLog extends BaseEntity {
 
 	@Transient
 	private String unitMeasurement;
-	/*
-	 * "insurance_id", "patient_id", "bp_arm", "insurance_status",
-	 * "is_updated_from_enrollment", "other_insurance", "insurance_type", "notes",
-	 * "covid_vacc_status", "assessment_category", "assessment_landmark",
-	 * "bp_position",
-	 */
 
 }

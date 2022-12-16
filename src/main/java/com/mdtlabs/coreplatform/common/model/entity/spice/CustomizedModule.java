@@ -1,21 +1,22 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import lombok.Data;
+import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.Map;
+import lombok.Data;
 
 @Table(name = TableConstants.TABLE_CUSTOMIZED_MODULES)
 @Entity
@@ -24,8 +25,11 @@ import java.util.Map;
         name = "jsonb",
         typeClass = JsonBinaryType.class
 )
-public class CustomizedModule extends BaseEntity {
-    @NotNull
+public class CustomizedModule extends TenantBaseEntity {
+	
+    private static final long serialVersionUID = 1L;
+
+	@NotNull
     @Column(name = FieldConstants.MODULE_VALUE, columnDefinition = "jsonb")
     @Type(type = "jsonb")
     private Map<String, Object> moduleValue;
@@ -41,8 +45,5 @@ public class CustomizedModule extends BaseEntity {
     // @Min(1)
     @Column(name = FieldConstants.CLINICAL_WORFKLOW_ID)
     private Long clinicalworkflowId;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
 }

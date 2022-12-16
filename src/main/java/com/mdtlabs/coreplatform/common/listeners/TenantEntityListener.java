@@ -1,6 +1,6 @@
 package com.mdtlabs.coreplatform.common.listeners;
 
-import com.mdtlabs.coreplatform.common.model.entity.Tenantable;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 
 import javax.persistence.EntityNotFoundException;
@@ -19,14 +19,18 @@ public class TenantEntityListener {
     @PrePersist
     @PreUpdate
     public void prePersistAndUpdate(Object object) {
-        if (object instanceof Tenantable) {
-            ((Tenantable) object).setTenantId(UserSelectedTenantContextHolder.get());
+        if (object instanceof TenantBaseEntity) {
+        	if (((TenantBaseEntity) object).getTenantId() != 0) {
+        		
+        	} else {
+        		((TenantBaseEntity) object).setTenantId(UserSelectedTenantContextHolder.get());
+        	}
         }
     }
 
     @PreRemove
     public void preRemove(Object object) {
-        if (object instanceof Tenantable && ((Tenantable) object).getTenantId() != UserSelectedTenantContextHolder.get()) {
+        if (object instanceof TenantBaseEntity && ((TenantBaseEntity) object).getTenantId() != UserSelectedTenantContextHolder.get()) {
             throw new EntityNotFoundException();
         }
     }

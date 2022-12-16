@@ -130,8 +130,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		if (request.getRequestURI().contains("/forgot-password") || request.getRequestURI().contains("/update-password")
 				|| request.getRequestURI().contains("/login-limit-exceed")
-				|| request.getRequestURI().contains("/forget-password-limit-exceed")
-				|| request.getRequestURI().contains("/reset-password-limit-exceed")
+				|| request.getRequestURI().contains("/is-forget-password-limit-exceed")
+				|| request.getRequestURI().contains("/is-reset-password-limit-exceed")
 				|| request.getRequestURI().contains("/webjars/swagger-ui")
 				|| request.getRequestURI().contains("/v3/api-docs")
 				|| request.getRequestURI().contains("/generate-token")) {
@@ -140,11 +140,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 		} else {
 			String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-			if (token.startsWith(Constants.BEARER)) {
-				if (null != request.getHeader(Constants.USER_SELECTED_TENANT)
-						&& request.getHeader(Constants.USER_SELECTED_TENANT).matches("[0-9]+")) {
-					String userTenant = request.getHeader(Constants.USER_SELECTED_TENANT);
-					UserSelectedTenantContextHolder.set(Integer.parseInt(userTenant));
+			if (!token.isBlank() && token.startsWith(Constants.BEARER)) {
+				String tenantId = request.getHeader(Constants.HEADER_TENANT_ID);
+				if (!tenantId.isBlank() && tenantId.matches("[0-9]+")) {
+					UserSelectedTenantContextHolder.set(Long.parseLong(tenantId));
 				}
 				UserDTO userDto = null;
 				try {
@@ -189,14 +188,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 					if (isExist) {
 						doLogApi(wrapRequest(request), wrapResponse(response), filterChain);
 					} else {
-						throw new Validation(3012);
+						throw new Validation(20001);
 					}
 				} catch (JsonProcessingException | ParseException e) {
 					Logger.logError(e);
-					throw new Validation(3012);
+					throw new Validation(20001);
 				}
 			} else {
-				throw new Validation(3012);
+				throw new Validation(20001);
 			}
 		}
 	}
@@ -225,14 +224,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			jwt = EncryptedJWT.parse(jwtToken);
 		} catch (ParseException e) {
 			Logger.logError(e);
-			throw new Validation(3013);
+			throw new Validation(20002);
 		}
 		RSADecrypter decrypter = new RSADecrypter(privateRsaKey);
 		try {
 			jwt.decrypt(decrypter);
 		} catch (JOSEException e) {
 			Logger.logError(e);
-			throw new Validation(3013);
+			throw new Validation(20002);
 		}
 		Object tenants = jwt.getJWTClaimsSet().getClaim(Constants.TENANT_IDS_CLAIM);
 		DateFormat pstFormat = new SimpleDateFormat(Constants.JSON_DATE_FORMAT);
@@ -268,7 +267,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		if ((expDateJwt.getTime() - currentDate.getTime()) / (60 * 1000) < Constants.ZERO) {
-			throw new Validation(3013);
+			throw new Validation(20002);
 //			ResponseEntity<Map> userResponse = restService.exchange(
 //					getUserInfo() + "/user-service/user/getRefreshToken/" + userDetail.getId(), HttpMethod.GET, null,
 //					Map.class);

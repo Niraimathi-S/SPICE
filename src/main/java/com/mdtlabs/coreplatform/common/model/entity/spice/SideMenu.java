@@ -26,10 +26,12 @@ import lombok.Data;
 @Entity
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class SideMenu extends BaseEntity {
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name = FieldConstants.ROLE_NAME)
 	private String roleName;
+	
 	@Column(name = FieldConstants.MENU, columnDefinition = "jsonb")
 	@Type(type = "jsonb")
 	private Map<String, String> menus;

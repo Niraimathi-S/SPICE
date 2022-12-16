@@ -14,6 +14,9 @@ import lombok.Data;
 @Entity
 @Table(name = TableConstants.TABLE_CLASSIFICATION)
 public class Classification extends BaseEntity {
+	
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = FieldConstants.NAME)
 	private String name;
 

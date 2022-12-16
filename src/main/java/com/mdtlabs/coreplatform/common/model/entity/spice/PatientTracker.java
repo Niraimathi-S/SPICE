@@ -7,19 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Min;
-
-import org.hibernate.annotations.Type;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
-
-import org.hibernate.annotations.Type;
 
 import lombok.Data;
 
@@ -27,7 +22,9 @@ import lombok.Data;
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_TRACKER)
 @TypeDef(name = "list-array", typeClass = ListArrayType.class)
-public class PatientTracker extends BaseEntity {
+public class PatientTracker extends TenantBaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@Column(name = FieldConstants.NATIONAL_ID)
 	private String nationalId;
@@ -64,9 +61,6 @@ public class PatientTracker extends BaseEntity {
 
 	@Column(name = FieldConstants.COUNTRY_ID)
 	private Long countryId;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@Column(name = FieldConstants.SITE_ID)
 	private Long siteId;

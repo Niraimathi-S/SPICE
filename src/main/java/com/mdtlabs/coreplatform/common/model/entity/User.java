@@ -48,7 +48,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_USER)
-public class User extends BaseEntity implements Serializable, UserDetails {
+public class User extends TenantBaseEntity implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = 1L;
 

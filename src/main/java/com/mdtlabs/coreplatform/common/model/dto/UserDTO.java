@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
+import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.Role;
 import com.mdtlabs.coreplatform.common.model.entity.Timezone;
 
@@ -55,13 +56,15 @@ public class UserDTO {
 
 	private Timezone timezone;
 
-	private String tenants;
+	private Set<Organization> tenants;
 	
 	private Boolean isBlocked;
 
     private String countryCode;
 
     private Long deviceInfoId;
+    
+    private long tenantId;
 
 	public TimezoneDTO getTimezone() {
 		ModelMapper modelMapper = new ModelMapper();

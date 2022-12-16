@@ -1,28 +1,32 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import lombok.Data;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import com.mdtlabs.coreplatform.common.FieldConstants;
-import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
-import com.vladmihalcea.hibernate.type.array.ListArrayType;
+import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
+
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
+import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.TableConstants;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
+import com.vladmihalcea.hibernate.type.array.ListArrayType;
+
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_PREGNANCY_DETAILS)
 @TypeDef(name = "list-array", typeClass = ListArrayType.class)
-public class PatientPregnancyDetails extends BaseEntity {
+public class PatientPregnancyDetails extends TenantBaseEntity {
 
-    @Column(name = FieldConstants.PREGNANCY_FETUSES_NUMBER)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.PREGNANCY_FETUSES_NUMBER)
     private int pregnancyFetusesNumber;
 
     @Column(name = FieldConstants.GRAVIDA)
@@ -49,9 +53,6 @@ public class PatientPregnancyDetails extends BaseEntity {
     @Column(name = FieldConstants.DIAGNOSIS, columnDefinition = "varchar[]")
     @Type(type = "list-array")
     private List<String> diagnosis;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
     @NotNull
     @Column(name = FieldConstants.PATIENT_TRACK_ID)

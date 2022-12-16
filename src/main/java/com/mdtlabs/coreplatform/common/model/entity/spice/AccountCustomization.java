@@ -9,14 +9,16 @@ import javax.validation.constraints.NotNull;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = TableConstants.TABLE_ACCOUNT_CUSTOMIZATION)
-public class AccountCustomization extends BaseEntity {
+public class AccountCustomization extends TenantBaseEntity {
+
+	private static final long serialVersionUID = 1L;
 
 	@NotBlank(message = ErrorConstants.TYPE_NOT_NULL)
 	@Column(name = FieldConstants.TYPE)
@@ -43,9 +45,5 @@ public class AccountCustomization extends BaseEntity {
 
 	@Column(name = FieldConstants.WORKFLOW)
 	private Long workflow;
-
-	@NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 }

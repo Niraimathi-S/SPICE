@@ -2,6 +2,7 @@ package com.mdtlabs.coreplatform.common.aspects;
 
 import com.mdtlabs.coreplatform.common.annotations.DisableTenantFilter;
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.contexts.UserTenantsContextHolder;
 
 import org.aspectj.lang.JoinPoint;
@@ -37,7 +38,8 @@ public class TenantAspect {
             entityManager
                     .unwrap(Session.class)
                     .enableFilter(Constants.TENANT_FILTER_NAME)
-                    .setParameterList(Constants.TENANT_PARAMETER_NAME, UserTenantsContextHolder.get());
+                    //.setParameterList(Constants.TENANT_PARAMETER_NAME, UserTenantsContextHolder.get());
+                    .setParameter(Constants.TENANT_PARAMETER_NAME, UserSelectedTenantContextHolder.get());
         }
     }
 }

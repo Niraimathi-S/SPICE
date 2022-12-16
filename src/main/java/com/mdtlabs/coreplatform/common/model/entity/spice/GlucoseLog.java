@@ -9,14 +9,14 @@ import javax.persistence.Transient;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_GLUCOSE_LOG)
-public class GlucoseLog extends BaseEntity {
+public class GlucoseLog extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -55,9 +55,6 @@ public class GlucoseLog extends BaseEntity {
 
 	@Column(name = FieldConstants.SCREENING_ID)
 	private Long screeningId;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@Column(name = FieldConstants.ASSESSMENT_TENANT_ID)
 	private Long assessmentTenantId;

@@ -1,19 +1,19 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_SYMPTOM)
-public class PatientSymptom extends BaseEntity {
+public class PatientSymptom extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 

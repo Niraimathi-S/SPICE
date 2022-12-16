@@ -26,7 +26,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PROGRAM)
-public class Program extends BaseEntity {
+public class Program extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,10 +37,6 @@ public class Program extends BaseEntity {
     @NotNull(message = ErrorConstants.COUNTRY_ID_NOT_NULL)
     @Column(name = FieldConstants.COUNTRY_ID)
     private Long countryId;
-
-    @NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)

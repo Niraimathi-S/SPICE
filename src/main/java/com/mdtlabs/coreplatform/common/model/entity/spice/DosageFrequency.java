@@ -14,14 +14,16 @@ import lombok.Data;
 @Entity
 @Table(name = TableConstants.DOSAGE_FREQUENCY)
 public class DosageFrequency extends BaseEntity {
+	
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = FieldConstants.NAME)
 	private String name;
+	
 	@Column(name = FieldConstants.DESCRIPTION)
 	private String description;
+	
 	@Column(name = FieldConstants.DISPLAY_ORDER)
 	private int displayOrder;
 }
 
-//"name",
-//"description",
-//"display_order", 

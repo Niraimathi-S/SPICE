@@ -9,22 +9,16 @@ import javax.validation.constraints.NotNull;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PRESCRIPTION_HISTORY)
-public class PrescriptionHistory extends BaseEntity {
+public class PrescriptionHistory extends TenantBaseEntity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3285039992579728818L;
-
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
 
 	@Column(name = FieldConstants.PRESCRIPTION_ID)
 	private Long prescriptionId;
@@ -90,10 +84,5 @@ public class PrescriptionHistory extends BaseEntity {
 	@Column(name = FieldConstants.LAST_REFILL_DATE, columnDefinition = "TIMESTAMP")
 	private Date lastRefillDate;
 
-	@Column(name = FieldConstants.IS_ACTIVE)
-	private Boolean isActive = true;
-
-	@Column(name = FieldConstants.IS_DELETED)
-	private Boolean isDeleted = false;
 
 }

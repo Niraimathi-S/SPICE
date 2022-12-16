@@ -36,21 +36,9 @@ public class EmailDTO implements Serializable {
 
 	private String type;
 
-	private String messageTitle;
-
-	private String messageBody;
-
-	private String notificationMessageBody;
-
-	private Map<String, String> inputData;
-
 	private Notification notification;
 
 	private String toMails;
-
-	private String bodyParseValue;
-
-	private String bodyParseName;
 
 	private EmailTemplate emailTemplate;
 
@@ -65,7 +53,11 @@ public class EmailDTO implements Serializable {
 	private String ccMails;
 	
 	private String bccMails;
+	
+	private long formDataId;
 
+	private String formName;
+	
 	public EmailDTO() {
 
 	}
@@ -81,11 +73,6 @@ public class EmailDTO implements Serializable {
 		this.body = body;
 		this.to = to;
 		this.from = from;
-	}
-
-	public EmailDTO(String notificationMessageBody, Map<String, String> inputData) {
-		this.notificationMessageBody = notificationMessageBody;
-		this.inputData = inputData;
 	}
 
 }

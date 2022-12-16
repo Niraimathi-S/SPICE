@@ -1,19 +1,23 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
-import com.mdtlabs.coreplatform.common.model.entity.BaseEntity;
+import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = TableConstants.TABLE_PATIENT_MEDICAL_COMPLIANCE)
-public class PatientMedicalCompliance extends BaseEntity {
+public class PatientMedicalCompliance extends TenantBaseEntity {
 
-    @Column(name = FieldConstants.NAME)
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = FieldConstants.NAME)
     private String name;
 
     @Column(name = FieldConstants.OTHER_COMPLIANCE)
@@ -30,8 +34,5 @@ public class PatientMedicalCompliance extends BaseEntity {
 
     @Column(name = FieldConstants.ASSESSMENT_LOG_ID)
     private Long assessmentLogId;
-
-    @Column(name = FieldConstants.TENANT_ID)
-    private Long tenantId;
 
 }
