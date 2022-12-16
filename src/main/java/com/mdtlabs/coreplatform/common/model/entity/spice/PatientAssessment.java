@@ -25,13 +25,28 @@ public class PatientAssessment extends BaseEntity {
     
     @Column(name = FieldConstants.TENANT_ID)
     private Long tenantId;
+    
+    @Column(name = FieldConstants.PATIENT_TRACK_ID)
+    private Long patientTrackId;
 
     public PatientAssessment(Long bpLogId, Long glucoseLogId) {
         this.bpLogId = bpLogId;
         this.glucoseLogId = glucoseLogId;
     }
+    
+    
 
     public PatientAssessment() {}
+
+
+
+	public PatientAssessment(Long bpLogId, Long glucoseLogId, Long tenantId, Long patientTrackId) {
+		super();
+		this.bpLogId = bpLogId;
+		this.glucoseLogId = glucoseLogId;
+		this.tenantId = tenantId;
+		this.patientTrackId = patientTrackId;
+	}
 
 
 }

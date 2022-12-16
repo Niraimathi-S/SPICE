@@ -26,6 +26,8 @@ public class UserProfileDTO {
 
 	private String lastName;
 	
+	private String username;
+	
 	public Set<RoleDTO> getRoles() {
 		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());
 	}

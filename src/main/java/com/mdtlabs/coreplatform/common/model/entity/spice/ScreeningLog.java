@@ -189,6 +189,9 @@ public class ScreeningLog extends BaseEntity {
     @Column(name = FieldConstants.ID_TYPE)
     private String idType;
 
+    @Column(name = FieldConstants.OTHER_ID_TYPE)
+    private String otherIdType;
+    
     @Column(name = FieldConstants.IS_FAMILY_DIABETES_HISTORY)
     private boolean isFamilyDiabetesHistory;
 

@@ -36,7 +36,7 @@ public class PatientTrackerDTO {
 	private boolean isScreening;
 	private Date enrollmentAt;
 	private Date lastAssessmentDate;
-	private boolean isConfirmDiagnosis;
+	private Boolean isConfirmDiagnosis;
 	private String diagnosisComments;
 	@Type(type = "com.mdtlabs.spice.common.util.CustomStringArrayType")
 	private String[] confirmDiagnosis;

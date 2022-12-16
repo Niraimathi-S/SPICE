@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -55,12 +56,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.CustomDateSerializer;
-import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
-import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.contexts.UserTenantsContextHolder;
 import com.mdtlabs.coreplatform.common.exception.Validation;
+import com.mdtlabs.coreplatform.common.logger.Logger;
+import com.mdtlabs.coreplatform.common.model.dto.RoleDTO;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
 import com.mdtlabs.coreplatform.common.repository.CommonRepository;
@@ -77,9 +79,6 @@ import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 
 import io.jsonwebtoken.ExpiredJwtException;
-
-import com.mdtlabs.coreplatform.common.logger.Logger;
-import org.apache.logging.log4j.LogManager;
 
 /**
  * Used to do internal filter on token validation
@@ -179,8 +178,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 							apiRequest = requestType;
 						}
 					});
-					if (apiPermissionMap.get(request.getMethod()).get(apiRequest).get(Constants.ZERO)
-							.equals(userDto.getRoles().iterator().next().getName())) {
+					boolean isExist = false;
+					for (RoleDTO role : userDto.getRoles()) {
+						if (apiPermissionMap.get(request.getMethod()).get(apiRequest).contains(
+								role.getName())) {
+							isExist = true;
+							break;
+						}
+					}
+					if (isExist) {
 						doLogApi(wrapRequest(request), wrapResponse(response), filterChain);
 					} else {
 						throw new Validation(3012);

@@ -78,6 +78,7 @@ public class PrescriptionHistory extends BaseEntity {
 	@Column(name = FieldConstants.SIGNATURE)
 	private String signature;
 
+	@Column(name = FieldConstants.REMAINING_PRESCRIPTION_DAYS)
 	private Integer remainingPrescriptionDays;
 
 	@Column(name = FieldConstants.PRESCRIPTION_FILLED_DAYS)

@@ -328,5 +328,7 @@ public final class Constants {
 	public static final String OPERATING_UNIT = "Operating Unit";
 	public static final String COUNTRY = "country";
 	public static final String SESSSION_ALIVE = "Session alive";
+	public static final String COUNT = "count";
+	public static final String DATA = "data";
 
 }

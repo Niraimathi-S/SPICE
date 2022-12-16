@@ -7,7 +7,7 @@ public class PatientGetRequestDTO {
     private Long id;
     private boolean assessmentRequired;
     private boolean isAssessmentDataRequired;
-    private boolean isConfirmDiagnosis;
+//    private boolean isConfirmDiagnosis;
     private boolean isGad7;
     private boolean isLifeStyleRequired;
     private boolean isPhq9;

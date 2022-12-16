@@ -134,6 +134,9 @@ public class BpLog extends BaseEntity {
 
 	@Column(name = FieldConstants.IS_RED_RISK_PATIENT)
 	private boolean isRedRiskPatient;
+	
+	@Transient
+	private Boolean isBeforeHtnDiagnosis;
 
 	@Transient
 	private String unitMeasurement;

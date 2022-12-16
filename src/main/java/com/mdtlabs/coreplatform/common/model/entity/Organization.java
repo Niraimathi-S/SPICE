@@ -32,7 +32,7 @@ public class Organization extends BaseEntity {
 	private String name;
 
 	@Column(name = FieldConstants.SEQUENCE)
-	private long sequence;
+	private Long sequence;
 
 	@Column(name = FieldConstants.PARENT_ORGANIZATION_ID)
 	private Long parentOrganizationId;

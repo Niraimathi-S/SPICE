@@ -15,31 +15,32 @@ import javax.validation.constraints.NotNull;
 @Table(name = TableConstants.TABLE_PATIENT_SYMPTOM)
 public class PatientSymptom extends BaseEntity {
 
-//    @NotNull
-    @Column(name = FieldConstants.NAME)
-    private String name;
+	private static final long serialVersionUID = 1L;
+
+	// @NotNull
+	@Column(name = FieldConstants.NAME)
+	private String name;
 
 //    @NotNull
-    @Column(name = FieldConstants.TYPE)
-    private String type;
+	@Column(name = FieldConstants.TYPE)
+	private String type;
 
-    @Column(name = FieldConstants.PATIENT_TRACK_ID)
-    private Long patientTrackerId;
+	@Column(name = FieldConstants.PATIENT_TRACK_ID)
+	private Long patientTrackerId;
 
-//    @NotNull
-    @Column(name = FieldConstants.SYMPTOM_ID)
-    private Long symptomId;
+	@Column(name = FieldConstants.SYMPTOM_ID)
+	private Long symptomId;
 
-    @Column(name = FieldConstants.OTHER_SYMPTOM)
-    private String otherSymptom;
+	@Column(name = FieldConstants.OTHER_SYMPTOM)
+	private String otherSymptom;
 
-    @Column(name = FieldConstants.BP_LOG_ID)
-    private Long bpLogId;
+	@Column(name = FieldConstants.BP_LOG_ID)
+	private Long bpLogId;
 
-    @Column(name = FieldConstants.GLUCOSE_LOG_ID)
-    private Long glucoseLogId;
+	@Column(name = FieldConstants.GLUCOSE_LOG_ID)
+	private Long glucoseLogId;
 
-    @Column(name = FieldConstants.ASSESSMENT_LOG_ID)
-    private Long assessmentLogId;
+	@Column(name = FieldConstants.ASSESSMENT_LOG_ID)
+	private Long assessmentLogId;
 
 }
