@@ -467,4 +467,13 @@ public final class FieldConstants {
 	public static final String BP_TAKEN_ON = "bp_taken_on";
 	public static final String KEY = "key";
 
+	// DEVICE DETAILS
+	public static final String MODEL = "model";
+	public static final String VERSION = "version";
+	public static final String AES_KEY = "aes_key";
+	public static final String RSA_PRIVATE_KEY = "rsa_private_key";
+	public static final String AUTH_TAG = "auth_tag";
+	public static final String DEVICE_ID = "device_id";
+	public static final String RSA_PUBLIC_KEY = "rsa_public_key";
+
 }
