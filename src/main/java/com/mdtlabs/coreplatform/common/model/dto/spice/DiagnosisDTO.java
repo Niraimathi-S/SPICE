@@ -5,20 +5,22 @@ import lombok.Data;
 @Data
 public class DiagnosisDTO {
 
-    private Integer htnYearOfDiagnosis;
+	private Integer htnYearOfDiagnosis;
 
-    private Integer diabetesYearOfDiagnosis;
+	private Integer diabetesYearOfDiagnosis;
 
-    private String htnPatientType;
+	private String htnPatientType;
 
-    private String diabetesPatientType;
+	private String diabetesPatientType;
 
-    private String diabetesDiagnosis;
+	private String diabetesDiagnosis;
 
-    private String diabetesDiagControlledType;
+	private String diabetesDiagControlledType;
 
-    private Boolean isHtnDiagnosis;
+	private Boolean isHtnDiagnosis;
 
-    private Boolean isDiabetesDiagnosis;
-    
+	private Boolean isDiabetesDiagnosis;
+
+	private String htnDiagnosis;
+
 }

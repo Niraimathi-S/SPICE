@@ -63,7 +63,7 @@ public class GlucoseLog extends TenantBaseEntity {
 	private Date bgTakenOn;
 
 	@Column(name = FieldConstants.IS_RED_RISK_PATIENT)
-	private boolean isRedRiskPatient;
+	private boolean isRedRiskPatient = false;
 
 	@Column(name = FieldConstants.RISK_LEVEL)
 	private String riskLevel;

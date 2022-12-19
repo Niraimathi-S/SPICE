@@ -133,8 +133,8 @@ public class BpLog extends TenantBaseEntity {
 	private Long assessmentTenantId;
 
 	@Column(name = FieldConstants.IS_RED_RISK_PATIENT)
-	private boolean isRedRiskPatient;
-	
+	private boolean isRedRiskPatient = false;
+
 	@Transient
 	private Boolean isBeforeHtnDiagnosis;
 

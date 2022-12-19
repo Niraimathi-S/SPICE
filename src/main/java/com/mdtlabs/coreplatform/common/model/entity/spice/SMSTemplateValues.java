@@ -40,9 +40,6 @@ public class SMSTemplateValues {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedAt;
 
-	@Column(name = FieldConstants.TEMPLATE_ID)
-	private long templateId;
-
 	@Column(name = FieldConstants.KEY)
 	private String key;
 

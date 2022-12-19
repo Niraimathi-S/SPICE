@@ -334,4 +334,14 @@ public final class Constants {
 	public static final String REFRESH_TOKEN = "RefreshToken";
 	public static final String EMAIL_FORM_USER = "User";
 
+	public static final String DIABETES_MELLITUS_TYPE_1 = "Diabetes Mellitus Type 1";
+	public static final String DIABETES_MELLITUS_TYPE_2 = "Diabetes Mellitus Type 2";
+
+	public static final String HYPER_TENSION = "Hypertenstion";
+	public static final String PRE_HYPER_TENSION = "Pre-Hypertension";
+
+	public static final List<String> DIABETES_CONFIRM_DIAGNOSIS = Arrays.asList(PRE_DIABETES, DIABETES_MELLITUS_TYPE_1,
+			DIABETES_MELLITUS_TYPE_2);
+	public static final List<String> HTM_CONFIRM_DIAGNOSIS = Arrays.asList(HYPER_TENSION, PRE_HYPER_TENSION);
+
 }

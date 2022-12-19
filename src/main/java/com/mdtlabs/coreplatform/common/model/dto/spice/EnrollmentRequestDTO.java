@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 import lombok.Data;
 
 import javax.validation.*;
@@ -47,5 +46,7 @@ public class EnrollmentRequestDTO {
 	private List<Map<String, Object>> customizedWorkflows;
 	@Valid
 	private BpLog bplog;
+
+	private DiagnosisDTO diagnosisDTO;
 
 }
