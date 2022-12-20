@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mdtlabs.coreplatform.AuthenticationFilter;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
@@ -35,6 +36,9 @@ public class AccountServiceImpl implements AccountService {
 	AccountRepository accountRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
+	
+	@Autowired
+	private AuthenticationFilter authenticationFilter;
 
 	/**
 	 * {@inheritDoc}
@@ -133,6 +137,11 @@ public class AccountServiceImpl implements AccountService {
 
 		List<Account> accounts = accountRepository.getDeactivatedAccounts(formattedSearchTerm);
 		return accounts;
+	}
+	
+	@Override
+	public void clearApiPermissions() {
+		authenticationFilter.apiPermissionMap.clear();
 	}
 
 }

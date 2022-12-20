@@ -30,7 +30,7 @@ CREATE TABLE country (
   ref_id VARCHAR
 );
 
-insert into country(created_by,updated_by, name, country_code, unit_measurement) values(1,1,'uk', '123', 'metric');
+insert into country(created_by,updated_by, name, country_code, unit_measurement ,tenant_id) values(1,1,'uk', '123', 'metric', 1);
 
 CREATE TABLE timezone (
   id SERIAL PRIMARY KEY,
@@ -1519,9 +1519,6 @@ CREATE TABLE email_template (
   title VARCHAR,
   app_url VARCHAR
 );
-INSERT INTO public.email_template (id,"type",vm_content,body,title,app_url) VALUES
-     (1,'Forgot_Password','vmContent','<p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/spiceEngage.png" style=\"height:70%;width:10%;"></p><p style=\"font-size: 11pt\>Dear Telecounseling Application User,<br><br>    <p>We have received a request to reset your Telecounseling account password. It was initiated after you selected “Forgot Password” in the Telecounseling software application.    <br><br>    <strong>Please click on this 
-<a href="${app_url_email}">LINK</a> to reset your password. The link will expire in 60 minutes.If it is expires before the reset is completed, 
 
 INSERT INTO public.email_template (id,type,vm_content,body,title,app_url) VALUES
      (1,'Forgot_Password','vmContent','<p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/spiceEngage.png" style=\"height:70%;width:10%;"></p><p style=\"font-size: 11pt\>Dear Telecounseling Application User,<br><br>    <p>We have received a request to reset your Telecounseling account password. It was initiated after you selected “Forgot Password” in the Telecounseling software application.    <br><br>    <strong>Please click on this 

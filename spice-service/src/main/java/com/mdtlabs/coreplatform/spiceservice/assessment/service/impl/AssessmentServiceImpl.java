@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.mdtlabs.coreplatform.AuthenticationFilter;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.UnitConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
@@ -108,6 +109,9 @@ public class AssessmentServiceImpl implements AssessmentService {
 
 	@Autowired
 	private UserApiInterface userApiInterface;
+	
+	@Autowired
+	private AuthenticationFilter authenticationFilter;
 
 	private ModelMapper mapper = new ModelMapper();
 
@@ -553,5 +557,10 @@ public class AssessmentServiceImpl implements AssessmentService {
 			}
 		}
 		return glucoseLog;
+	}
+	
+	@Override
+	public void clearApiPermissions() {
+		authenticationFilter.apiPermissionMap.clear();
 	}
 }

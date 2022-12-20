@@ -35,5 +35,11 @@ public interface AssessmentService {
 	 * @return
 	 */
 	public GlucoseLog createAssessmentGlucoseLog(GlucoseLog glucoseLog);
+	
+	/**
+	 * This method is used to clear the api role permission map
+	 * 
+	 */
+	void clearApiPermissions();
 
 }

@@ -127,4 +127,13 @@ public class AccountController {
 		return accountService.getAccountById(id);
 	}
 	
+	/**
+	 * This method is used to clear the api permission role map
+	 * 
+	 */
+	@GetMapping(value = "/clear")
+	public void clearApiPermissions() {
+		accountService.clearApiPermissions();
+	}
+	
 }

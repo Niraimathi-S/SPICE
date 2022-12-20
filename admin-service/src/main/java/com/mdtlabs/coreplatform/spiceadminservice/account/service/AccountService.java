@@ -59,4 +59,10 @@ public interface AccountService {
 	 * @author Jeyaharini T A
 	 */
 	public List<Account> getDeactivatedAccounts(SearchRequestDTO searchRequestDTO);
+	
+	/**
+	 * This method is used to clear the api role permission map
+	 * 
+	 */
+	void clearApiPermissions();
 }

@@ -5,11 +5,13 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.model.dto.spice.AssessmentDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.AssessmentResponseDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.BpLog;
@@ -70,6 +72,15 @@ public class AssessmentController {
 		assessmentService.createAssessmentGlucoseLog(glucoseLog);
 		return new SuccessResponse<String>(SuccessCode.ASSESSMENT_GLUCOSELOG_SAVE, HttpStatus.CREATED);
 
+	}
+	
+	/**
+	 * This method is used to clear the api permission role map
+	 * 
+	 */
+	@GetMapping(value = "/clear")
+	public void clearApiPermissions() {
+		assessmentService.clearApiPermissions();
 	}
 
 }
