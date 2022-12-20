@@ -3,13 +3,15 @@ package com.mdtlabs.coreplatform.common.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.Period;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -323,28 +325,32 @@ public class DateUtil {
 	}
 	
 	public static String getEndOfDay(String timeZone) {
-		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
+		Calendar calendar = getCalendar(timeZone);
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
 		calendar.set(Calendar.MILLISECOND, 999);
-		// DateFormat df = new SimpleDateFormat(Constants.JSON_DATE_FORMAT); // Quoted
-		// "Z" to indicate UTC, no timezone offset
-		// df.setTimeZone(TimeZone.getTimeZone(Constants.TIMEZONE_UTC));
-		// String nowAsISO = df.format(calendar.getTime());
-		// System.out.println(nowAsISO);
 		return getISOString(calendar);
 	}
 
-	public static String getStartOfDay(String timeZone) {
-		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
-		// calendar.setTime(calendar.getTime());
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
+	public static Calendar getCalendar (String timeZone) {
+        ZoneOffset zoneOffSet= ZoneOffset.of(timeZone);
+        OffsetDateTime currentOffSetDateTime = OffsetDateTime.now(zoneOffSet);
+        
+        Date currentDate = Date.from(currentOffSetDateTime.toInstant());
+        Calendar calendar = Calendar.getInstance();	
+        calendar.setTime(currentDate);
+        calendar.set(Calendar.ZONE_OFFSET, currentOffSetDateTime.getOffset().getTotalSeconds() * 1000);
+        return calendar;
+	}
 
-		return getISOString(calendar);
+	public static String getStartOfDay(String timeZone) {
+        Calendar calendar = getCalendar(timeZone);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return getISOString(calendar);
 	}
 
 	public static String getISOString(Calendar calendar) {
