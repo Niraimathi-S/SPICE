@@ -157,7 +157,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 						}
 					}
 
-					if (apiPermissionMap.isEmpty()) {
+//					if (apiPermissionMap.isEmpty()) {
 						commonRepository.getApiRolePermission().stream().forEach(api -> {
 							if (StringUtils.isNotBlank(api.getRoles())) {
 								Map<String, List<String>> apiRoleMap = new HashMap<>();
@@ -170,7 +170,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 								apiPermissionMap.put(api.getMethod(), apiRoleMap);
 							}
 						});
-					}
+//					}
 					Set<String> requestTypeSet = apiPermissionMap.get(request.getMethod()).keySet();
 					requestTypeSet.stream().forEach(requestType -> {
 						if (request.getRequestURI().contains(requestType)) {
