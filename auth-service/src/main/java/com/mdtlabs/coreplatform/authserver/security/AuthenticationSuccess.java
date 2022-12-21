@@ -101,7 +101,7 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 					ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 					String json = objectWriter.writeValueAsString(user);
 					response.getWriter().write(json);
-					responseHeaderUser(response, user);
+					responseHeaderUser(response, user,request.getHeader("client")); 
 				} else {
 					response.getWriter().write(ErrorConstants.INVALID_USER_ERROR);
 				}
@@ -120,7 +120,7 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 * @param user     - user information is passed through DTO
 	 * @param maxRole  - role of the corresponding user being passed
 	 */
-	private void responseHeaderUser(HttpServletResponse response, AuthUserDTO user) {
+	private void responseHeaderUser(HttpServletResponse response, AuthUserDTO user,String client) {
 		init();
 		Map<String, Object> userInfo = new ObjectMapper().convertValue(user, Map.class);
 		String authToken = null;
@@ -131,10 +131,11 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 		} catch (JOSEException execption) {
 			Logger.logError(ErrorConstants.ERROR_JWE_TOKEN, execption);
 		}
-		createUserToken(user.getId(), authToken, refreshToken);
+		createUserToken(user.getId(), authToken, refreshToken, client);
 		response.setHeader(Constants.AUTHORIZATION, authToken);
 		response.setHeader(Constants.REFRESH_TOKEN, refreshToken);
 		response.setHeader(Constants.HEADER_TENANT_ID, String.valueOf(user.getTenantId()));
+		response.setHeader(Constants.CLIENT, client);
 	}
 
 	/**
@@ -196,12 +197,13 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 * @param jwtToken        - jwt token of the logged in user
 	 * @param jwtRefreshToken - refresh token of the logged in user
 	 */
-	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken) {
+	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken,String client) {
 		UserToken userToken = new UserToken();
 		userToken.setUserId(userId);
 		userToken.setAuthToken(jwtToken.substring(Constants.BEARER.length(), jwtToken.length()));
 		userToken.setRefreshToken(jwtRefreshToken.substring(Constants.BEARER.length(), jwtRefreshToken.length()));
 		userToken.setActive(true);
+		userToken.setClient(client); 
 		genericRepository.save(userToken);
 		Optional<List<UserToken>> userTokens = userTokenService.getUserTokenByUserID(userId);
 		List<String> tokensToDelete = getTokensToDelete(userTokens);
