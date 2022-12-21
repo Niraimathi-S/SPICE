@@ -582,7 +582,7 @@ public class MedicalReviewServiceImpl implements MedicalReviewService {
 	}
 
 	public Map<String, Integer> getPrescriptionAndLabtestCount(RequestDTO request) {
-		if (!Objects.isNull(request.getPatientTrackId())) {
+		if (Objects.isNull(request.getPatientTrackId())) {
 			throw new DataNotAcceptableException(10010);
 		}
 		int prescriptionDaysCompletedCount = prescriptionRepository.getPrecriptionCount(new Date(),
