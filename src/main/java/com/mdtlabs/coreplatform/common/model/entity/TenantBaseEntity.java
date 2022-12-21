@@ -35,6 +35,6 @@ public class TenantBaseEntity extends BaseEntity{
     private static final long serialVersionUID = 1L;
     
 	//@JsonIgnore
-    @Column(name = FieldConstants.TENANT_ID, nullable = false)
-	protected long tenantId;
+    @Column(name = FieldConstants.TENANT_ID)
+	protected Long tenantId;
 }

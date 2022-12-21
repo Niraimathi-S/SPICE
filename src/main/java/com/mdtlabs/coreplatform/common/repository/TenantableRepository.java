@@ -24,5 +24,5 @@ public interface TenantableRepository<T> extends JpaRepository<T, Long> {
 	 * @param id - tenant id
 	 * @return Optional<T> - tenant entity
 	 */
-	Optional<T> findOneById(long id);
+	Optional<T> findOneById(Long id);
 }

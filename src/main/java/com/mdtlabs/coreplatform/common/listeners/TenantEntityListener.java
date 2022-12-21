@@ -20,7 +20,7 @@ public class TenantEntityListener {
     @PreUpdate
     public void prePersistAndUpdate(Object object) {
         if (object instanceof TenantBaseEntity) {
-        	if (((TenantBaseEntity) object).getTenantId() != 0) {
+        	if (((TenantBaseEntity) object).getTenantId() != null) {
         		
         	} else {
         		((TenantBaseEntity) object).setTenantId(UserSelectedTenantContextHolder.get());

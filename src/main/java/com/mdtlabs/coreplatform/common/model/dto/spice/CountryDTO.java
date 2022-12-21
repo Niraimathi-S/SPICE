@@ -11,10 +11,15 @@ import com.mdtlabs.coreplatform.common.model.entity.User;
 
 import lombok.Data;
 
+/**
+ * This is an DTO class for Country entity.
+ * 
+ * @author Niraimathi S
+ *
+ */
 @Data
 public class CountryDTO {
-
-    private long id;
+	private long id;
 
     private boolean isDeleted;
 
@@ -28,10 +33,4 @@ public class CountryDTO {
 
 	@NotEmpty(message = ErrorConstants.UNIT_MEASUREMENT_NOT_NULL)
 	private String unitMeasurement;
-
-	// @NotNull(message = ErrorConstants.TENANT_ID_NOT_NULL)
-	// private Long tenantId;
-
-	// @Transient
-	// private List<User> users;
 }

@@ -128,13 +128,18 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		if (request.getRequestURI().contains("/forgot-password") || request.getRequestURI().contains("/update-password")
-				|| request.getRequestURI().contains("/login-limit-exceed")
-				|| request.getRequestURI().contains("/is-forget-password-limit-exceed")
-				|| request.getRequestURI().contains("/is-reset-password-limit-exceed")
+		if (request.getRequestURI().contains("/user/forgot-password") 
+				|| request.getRequestURI().contains("/user/update-password")
+				|| request.getRequestURI().contains("/user/login-limit-exceed")
+				|| request.getRequestURI().contains("/user/is-forget-password-limit-exceed")
+				|| request.getRequestURI().contains("/user/is-reset-password-limit-exceed")
 				|| request.getRequestURI().contains("/webjars/swagger-ui")
 				|| request.getRequestURI().contains("/v3/api-docs")
-				|| request.getRequestURI().contains("/generate-token")) {
+				|| request.getRequestURI().contains("/auth/generate-token")
+				|| request.getRequestURI().contains("/email/create")
+				|| request.getRequestURI().contains("/email/email-type")
+				|| request.getRequestURI().contains("/sms/save-outboundsms")
+				|| request.getRequestURI().contains("/sms/get-sms-template-values")) {
 			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(null, null, null);
 			SecurityContextHolder.getContext().setAuthentication(auth);
 			filterChain.doFilter(request, response);

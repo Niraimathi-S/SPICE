@@ -18,6 +18,9 @@ public class SearchRequestDTO extends PaginateDTO {
 	private Long patientTrackId;
 
 	private Long lastRefillVisitId;
+	
+	private Long tenantId;
+
 	// private int offset;
 
 	// private String sortField;

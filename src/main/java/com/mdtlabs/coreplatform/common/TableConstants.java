@@ -28,7 +28,7 @@ public final class TableConstants {
 	public static final String TABLE_EMAIL_TEMPLATE_VALUE = "email_template_value";
 	public static final String TABLE_AUDIT = "audit";
 	public static final String TABLE_MEDICATION = "medication"; // Medication table
-	public static final String TABLE_MEDICATION_COUNTRY_DETAIL = "medicationcountrydetail";
+	public static final String TABLE_MEDICATION_COUNTRY_DETAIL = "medication_country_detail";
 	public static final String TABLE_BRAND = "brand"; // brand table
 	public static final String TABLE_CLASSIFICATION = "classification";// classification table
 	public static final String TABLE_DOSAGE_FORM = "dosage_form";
@@ -116,5 +116,6 @@ public final class TableConstants {
 	public static final String TABLE_SMS_TEMPLATE_VALUES = "sms_template_values";
 	public static final String TABLE_DEVICE_DETAILS = "device_details";
 	public static final String TABLE_PATIENT_ASSESSMENT = "patient_assessment";
-
+	public static final String TABLE_COUNTRY_CLASSIFICATION = "country_classification";
+	public static final String TABLE_CLASSIFICATION_BRAND = "classification_brand";
 }

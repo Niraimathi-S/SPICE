@@ -17,5 +17,9 @@ public class MedicationDTO extends CommonRequestDTO {
 	private String dosageFormName;
 
 	private Long brandId;
+	
+	private String classificationName;
+	
+	private String brandName;
 
 }

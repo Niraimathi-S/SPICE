@@ -9,6 +9,12 @@ import com.mdtlabs.coreplatform.common.model.entity.User;
 
 import lombok.Data;
 
+/**
+ * This is an DTO class for Country entity.
+ * 
+ * @author Niraimathi S
+ *
+ */
 @Data
 public class CountryOrganizationDTO {
 	private long id;

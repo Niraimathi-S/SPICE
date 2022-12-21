@@ -334,6 +334,7 @@ public final class Constants {
 	public static final String DATA = "data";
 	public static final String REFRESH_TOKEN = "RefreshToken";
 	public static final String EMAIL_FORM_USER = "User";
+	public static final String CREATED_AT = "createdAt";
 
 	public static final String DIABETES_MELLITUS_TYPE_1 = "Diabetes Mellitus Type 1";
 	public static final String DIABETES_MELLITUS_TYPE_2 = "Diabetes Mellitus Type 2";
