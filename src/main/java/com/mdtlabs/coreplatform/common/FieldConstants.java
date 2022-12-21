@@ -88,7 +88,7 @@ public final class FieldConstants {
 	public static final String IS_LICENSE_ACCEPTANCE = "is_license_acceptance";
 	public static final String LAST_LOGGED_IN = "last_logged_in";
 	public static final String LAST_LOGGED_OUT = "last_logged_out";
-	public static final String TELECOUNSELOR = "Telec0unseL0r";
+	public static final String SPICE = "Telec0unseL0r";
 	public static final String RESET_CLICK_TIME = "reset_click_time";
 	public static final String ENTITY = "entity";
 	public static final String ACTION = "action";

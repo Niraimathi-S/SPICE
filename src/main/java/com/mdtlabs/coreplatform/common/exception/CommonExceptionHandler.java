@@ -34,7 +34,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 	/**
 	 * This method is used to handle runtime exception
 	 * 
-	 * @param runtimeException- run time exception
+	 * @param runtimeException run time exception
 	 * @return ErrorMessage - error trace message
 	 */
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
@@ -74,7 +74,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 	@ResponseBody
 	public ErrorMessage exceptionHandler(Exception exception) {
 		Logger.logError(StringUtil.constructString(exception.getClass().getName(), ExceptionConstants.MESSAGE_GENERIC,
-				getErrorStackString(exception)));
+		    getErrorStackString(exception)));
 
 		return resolver.resolveError(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
 	}

@@ -142,7 +142,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 			if (!token.isBlank() && token.startsWith(Constants.BEARER)) {
 				String tenantId = request.getHeader(Constants.HEADER_TENANT_ID);
-				if (!tenantId.isBlank() && tenantId.matches("[0-9]+")) {
+				if (null != tenantId && !tenantId.isBlank() && tenantId.matches("[0-9]+")) {
 					UserSelectedTenantContextHolder.set(Long.parseLong(tenantId));
 				}
 				UserDTO userDto = null;

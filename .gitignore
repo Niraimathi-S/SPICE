@@ -9,6 +9,9 @@ dist/
 
 # Compiled Java class files
 *.class
+.project
+.settings/
+.classpath
 
 # Compiled Python bytecode
 *.py[cod]

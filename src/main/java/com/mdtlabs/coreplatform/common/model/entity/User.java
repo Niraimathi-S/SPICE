@@ -78,8 +78,8 @@ public class User extends TenantBaseEntity implements Serializable, UserDetails 
 	private String username;
 
 	@ColumnTransformer(forColumn = FieldConstants.PASSWORD, read = "public.pgp_sym_decrypt(password::bytea, " + "'"
-			+ FieldConstants.TELECOUNSELOR + "'"
-			+ ")", write = "public.pgp_sym_encrypt(?, " + "'" + FieldConstants.TELECOUNSELOR + "'" + ")")
+			+ FieldConstants.SPICE + "'"
+			+ ")", write = "public.pgp_sym_encrypt(?, " + "'" + FieldConstants.SPICE + "'" + ")")
 	@Column(name = FieldConstants.PASSWORD, columnDefinition = "bytea", nullable = false)
 	private String password;
 
