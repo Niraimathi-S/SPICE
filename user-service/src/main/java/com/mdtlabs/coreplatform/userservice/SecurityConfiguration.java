@@ -18,7 +18,7 @@ import com.mdtlabs.coreplatform.AuthenticationFilter;
  * <p>
  * Authentication has been done here for this service.
  * </p>
- * 
+ *
  * @author Vigneshkumar Created on 30 Jun 2022
  */
 @Configuration
@@ -32,6 +32,13 @@ public class SecurityConfiguration {
 		this.authenticationFilter = authenticationFilter;
 	}
 
+	/**
+	 * This method is used  to filter request.
+	 *
+	 * @param http - http request
+	 * @return SecurityFilterChain - security filter chain
+	 * @throws Exception - exception
+	 */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
@@ -40,8 +47,10 @@ public class SecurityConfiguration {
 				.antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/webjars/swagger-ui/**").permitAll().anyRequest()
 				.authenticated().and()
-				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling()
-				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and().sessionManagement()
+				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.exceptionHandling()
+				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
+				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.csrf().disable();
 		return http.build();

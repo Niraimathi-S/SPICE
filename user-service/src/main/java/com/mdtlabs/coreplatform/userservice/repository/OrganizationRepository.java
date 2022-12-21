@@ -23,32 +23,40 @@ import com.mdtlabs.coreplatform.common.model.entity.Organization;
  * database. In query annotation (nativeQuery = true) the below query perform
  * like SQL. Otherwise its perform like HQL default value for nativeQuery FALSE
  * </p>
- * 
+ *
  * @author VigneshKumar created on Jan 30, 2022
  */
 @Repository
 public interface OrganizationRepository
-		extends JpaRepository<Organization, Long>, PagingAndSortingRepository<Organization, Long> {
+	extends JpaRepository<Organization, Long>, PagingAndSortingRepository<Organization, Long> {
 
-	public static final String GET_ALL_ORGANIZATIONS = "select organization from Organization as organization where organization.isActive =:status ";
-	public static final String UPDATE_ORGANIZATION_STATUS_BY_ID = "update Organization as organization set organization.isActive =:status where organization.id =:id";
-	public static final String GET_ORGANIZATIONS_BY_IDS = "select organization from Organization as organization where organization.id in (:organizationIds)";
-	public static final String GET_ORGANIZATION_BY_ID = "select organization from Organization as organization where organization.id =:id ";
-	public static final String GET_ORGANIZATION_BY_NAME = "select organization from Organization as organization where organization.name =:name ";
+	public static final String GET_ALL_ORGANIZATIONS = "select organization from Organization "
+		+ "as organization where organization.isActive =:status ";
+	public static final String UPDATE_ORGANIZATION_STATUS_BY_ID = "update Organization as organization"
+		+ " set organization.isActive =:status where organization.id =:id";
+	public static final String GET_ORGANIZATIONS_BY_IDS = "select organization from Organization"
+		+ " as organization where organization.id in (:organizationIds)";
+	public static final String GET_ORGANIZATION_BY_ID = "select organization from Organization "
+		+ "as organization where organization.id =:id ";
+	public static final String GET_ORGANIZATION_BY_NAME = "select organization from Organization "
+		+ "as organization where organization.name =:name ";
 	public static final String ACTIVE_INACTIVE_ORG = "UPDATE Organization SET isActive = :isActive WHERE id = :id";
-	public static final String ACTIVE_INACTIVE_CHILD_ORG = "UPDATE Organization SET isActive = :isActive WHERE id IN (:childOrgIds) ";
-	public static final String GET_CHILD_ORG_COUNT = "select count(o2) as siteCount,(select count(id) from organization"
-			+ " o where o.parent_organization_id = :tenantId) as OUCount from organization o2 where "
-			+ "o2.parent_organization_id in (select id from organization o where o.parent_organization_id = :tenantId)";
-//	public static final String GET_ORGANISATION_IDS_BY_USER = "select uo.organization_id from user_organization as uo where uo.userId=:userId";
+	public static final String ACTIVE_INACTIVE_CHILD_ORG = "UPDATE Organization SET isActive = :isActive"
+		+ " WHERE id IN (:childOrgIds) ";
+	public static final String GET_CHILD_ORG_COUNT = "select count(o2) as siteCount,(select count(id) "
+		+ "from organization o where o.parent_organization_id = :tenantId) as OUCount from "
+		+ "organization o2 where o2.parent_organization_id in (select id from organization"
+		+ " o where o.parent_organization_id = :tenantId)";
+	//public static final String GET_ORGANISATION_IDS_BY_USER = "select uo.organization_id
+	//from user_organization as uo where uo.userId=:userId";
 
 	/**
 	 * <p>
 	 * This method get all the active organization details from the database.
 	 * </p>
-	 * 
+	 *
 	 * @param status - state of the organization as true or false
-	 * @return List<Organization> - List of Organization Entity
+	 * @return List(Organization) - List of Organization Entity
 	 */
 	@Query(value = GET_ALL_ORGANIZATIONS)
 	public List<Organization> getAllOrganizations(@Param(FieldConstants.STATUS) boolean status);
@@ -58,21 +66,21 @@ public interface OrganizationRepository
 	 * This method used to active or inactive the organization using id (0 as
 	 * inactive and 1 as active).
 	 * </p>
-	 * 
+	 *
 	 * @param status         - state of the organization as true or false
-	 * @param organizationId - organization id
+	 * @param id - organization id
 	 * @return int response of organization update
 	 */
 	@Query(value = UPDATE_ORGANIZATION_STATUS_BY_ID)
 	public int updateOrganizationStatusById(@Param(FieldConstants.STATUS) Boolean status,
-			@Param(FieldConstants.ID) long id);
+		@Param(FieldConstants.ID) long id);
 
 	/**
 	 * <p>
 	 * This method used to get the organization detail using id.
 	 * </p>
-	 * 
-	 * @param organizationId - organization id
+	 *
+	 * @param id - organization id
 	 * @return Organization Entity
 	 */
 	@Query(value = GET_ORGANIZATION_BY_ID)
@@ -82,7 +90,7 @@ public interface OrganizationRepository
 	 * <p>
 	 * This method used to get the organization detail using name.
 	 * </p>
-	 * 
+	 *
 	 * @param name - name of the organization
 	 * @return Organization Entity
 	 */
@@ -91,26 +99,26 @@ public interface OrganizationRepository
 
 	/**
 	 * Gets organization using name and isDeleted fields.
-	 * 
+	 *
 	 * @param name - organization name
 	 * @return Organization - organization entity
 	 */
 	public Organization findByNameIgnoreCaseAndIsDeletedFalse(String name);
 
-//	@Query(value = GET_ORGANISATION_IDS_BY_USER)
-//	public List<Long> getUserTenants(@Param("userId") Long userId);
+	//@Query(value = GET_ORGANISATION_IDS_BY_USER)
+	//public List<Long> getUserTenants(@Param("userId") Long userId);
 
 	/**
 	 * Finds organization by its parent organization Id.
-	 * 
-	 * @param tenantId - parentOrganization Id
-	 * @return List<Organization> - List of organization entities.
+	 *
+	 * @param parentOrganizationId - parentOrganization Id
+	 * @return List(Organization) - List of organization entities.
 	 */
 	List<Organization> findByParentOrganizationId(long parentOrganizationId);
 
 	/**
 	 * To activate or inactivate organization.
-	 * 
+	 *
 	 * @param id       organization Id
 	 * @param isActive activate status
 	 * @return int - number of affected rows.
@@ -122,7 +130,7 @@ public interface OrganizationRepository
 
 	/**
 	 * Activate or inactivate child organizations using IDs of child organizations.
-	 * 
+	 *
 	 * @param childOrgIds child organization IDs
 	 * @param isActive    Activation status
 	 * @return Number of affected rows
@@ -131,28 +139,28 @@ public interface OrganizationRepository
 	@Modifying
 	@Transactional
 	int activateInactivateChildOrganizations(@Param("childOrgIds") List<Long> childOrgIds,
-			@Param("isActive") boolean isActive);
+		@Param("isActive") boolean isActive);
 
 	/**
 	 * Finds organizations by parent organization id list.
-	 * 
+	 *
 	 * @param childOrgIds child organization Id list
-	 * @return List<Organization> list of Organization entity.
+	 * @return List(Organization) list of Organization entity.
 	 */
 	List<Organization> findByParentOrganizationIdIn(List<Long> childOrgIds);
 
 	/**
 	 * Gets child organizations count for an organization.
-	 * 
+	 *
 	 * @param tenantId organization Id
-	 * @return Map<String, Integer> - Collection of child organization counts.
+	 * @return Map(String, Integer) - Collection of child organization counts.
 	 */
 	@Query(value = GET_CHILD_ORG_COUNT, nativeQuery = true)
 	Map<String, Integer> getChildOrganizationCount(@Param("tenantId") Long tenantId);
 
 	/**
 	 * To get Organization based on id and isDeleted fields.
-	 * 
+	 *
 	 * @param id organization id
 	 * @return Organization entity
 	 */
@@ -162,8 +170,9 @@ public interface OrganizationRepository
 	 * <p>
 	 * To get list of organizations using list of ids.
 	 * </p>
-	 * @param roleNames - list of organizations ids
-	 * @return Set<Organization> - Set of Organization Entities
+	 *
+	 * @param organizationIds - list of organizations ids
+	 * @return Set(Organization) - Set of Organization Entities
 	 */
 	public Set<Organization> findByIsDeletedFalseAndIsActiveTrueAndIdIn(List<Long> organizationIds);
 

@@ -13,7 +13,7 @@ import com.mdtlabs.coreplatform.common.model.entity.Organization;
  * This an interface class for organization module you can implemented this class in any
  * class.
  * </p>
- * 
+ *
  * @author VigneshKumar created on Jun 30, 2022
  */
 public interface OrganizationService {
@@ -22,7 +22,7 @@ public interface OrganizationService {
 	 * <p>
 	 * This method used to add a organization detail.
 	 * </p>
-	 * 
+	 *
 	 * @param organization - organization to be added
 	 * @return Organization - added organization information
 	 */
@@ -32,8 +32,8 @@ public interface OrganizationService {
 	 * <p>
 	 * This method used to retrieve all the active organization.
 	 * </p>
-	 * 
-	 * @return List<Organization> - list of Organization Entity
+	 *
+	 * @return List(Organization) - list of Organization Entity
 	 */
 	List<Organization> getAllOrganizations();
 
@@ -41,7 +41,7 @@ public interface OrganizationService {
 	 * <p>
 	 * This method used to update a organization details.
 	 * </p>
-	 * 
+	 *
 	 * @param organization - updating organization
 	 * @return Organization - update organization entity
 	 */
@@ -51,7 +51,7 @@ public interface OrganizationService {
 	 * <p>
 	 * This method used to inactive a organization using id.
 	 * </p>
-	 * 
+	 *
 	 * @param organizationId - organization id to be deleted
 	 * @return int - value indicating the organization delete
 	 */
@@ -61,7 +61,7 @@ public interface OrganizationService {
 	 * <p>
 	 * This method used to get a organization detail by id.
 	 * </p>
-	 * 
+	 *
 	 * @param organizationId - organization id
 	 * @return Organization - organization entity
 	 */
@@ -71,7 +71,7 @@ public interface OrganizationService {
 	 * <p>
 	 * This method used to get a organization detail by name.
 	 * </p>
-	 * 
+	 *
 	 * @param name - organization name
 	 * @return Organization - organization entity
 	 */
@@ -79,15 +79,15 @@ public interface OrganizationService {
 	
 	/**
 	 * Gets user tenant Ids using user Id.
-	 * 
+	 *
 	 * @param userId - user ID
-	 * @return List<Long> - List of user tenantIds.
+	 * @return List(Long) - List of user tenantIds.
 	 */
 	List<Long> getUserTenants(long userId);
 
 	/**
 	 * Creates an organization with users.
-	 * 
+	 *
 	 * @param organization - organization details with users
 	 * @return Organization - organization entity.
 	 */
@@ -95,18 +95,18 @@ public interface OrganizationService {
 
 	/**
 	 * Gets child organization IDs of an organization.
-	 * 
+	 *
 	 * @param tenantId organization tenantId
 	 * @param formName organization form name
-	 * @return Map<String, List<Long>> - collection of child organization IDs.
+	 * @return Map(String, List(Long)) - collection of child organization IDs.
 	 */
 	Map<String, List<Long>> getChildOrganizations(long tenantId, String formName);
 	
 	/**
 	 * To get list of organizations based on list of ids.
-	 * 
-	 * @param roles - list of organization ids
-	 * @return Set<Role> - List of organization entity
+	 *
+	 * @param organizationIds - list of organization ids
+	 * @return Set(Role) - List of organization entity
 	 */
 	Set<Organization> getOrganizationsByIds(List<Long> organizationIds);
 

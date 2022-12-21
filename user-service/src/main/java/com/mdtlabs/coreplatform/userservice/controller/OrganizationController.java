@@ -29,7 +29,7 @@ import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
  * Organization Controller used to perform any action in the organization module like read and
  * write.
  * </p>
- * 
+ *
  * @author VigneshKumar created on Jan 30, 2022
  */
 @RestController
@@ -43,84 +43,97 @@ public class OrganizationController {
 	 * <p>
 	 * Add new organization for some action privileges.
 	 * </p>
-	 * 
+	 *
 	 * @param organization - organization information to be added
 	 * @return Organization - response of adding the organization
 	 */
 	@PostMapping
 	public SuccessResponse<Organization> addOrganization(@RequestBody Organization organization) {
 		Organization newOrganization = organizationService.addOrganization(organization);
-		return new SuccessResponse<>((null == newOrganization) ? SuccessCode.ORGANIZATION_SAVE_ERROR : SuccessCode.ORGANIZATION_SAVE, newOrganization, HttpStatus.OK);
+		return new SuccessResponse<>((null == newOrganization) 
+			? SuccessCode.ORGANIZATION_SAVE_ERROR : SuccessCode.ORGANIZATION_SAVE,
+			newOrganization, HttpStatus.OK);
 	}
 
 	/**
 	 * <p>
 	 * Retrieve all the active organizations detail list.
 	 * </p>
-	 * 
-	 * @return List<Organization> - List of Organization Entity
+	 *
+	 * @return List(Organization) - List of Organization Entity
 	 */
 	@GetMapping
 	public SuccessResponse<List<Organization>> getAllOrganizations() {
 		List<Organization> organizationList = organizationService.getAllOrganizations();
-		return new SuccessResponse((organizationList.isEmpty()) ? SuccessCode.GET_ORGANIZATIONS_ERROR : SuccessCode.GET_ORGANIZATIONS, organizationList, HttpStatus.OK);
+		return new SuccessResponse((organizationList.isEmpty()) 
+			? SuccessCode.GET_ORGANIZATIONS_ERROR : SuccessCode.GET_ORGANIZATIONS, 
+			organizationList, HttpStatus.OK);
 	}
 
 	/**
 	 * <p>
 	 * Update Organization details like change the name.
 	 * </p>
-	 * 
+	 *
 	 * @param organization - organization information to be updated
 	 * @return Organization - response of the updated organization
 	 */
 	@PutMapping
 	public SuccessResponse<Organization> updateOrganization(@RequestBody Organization organization) {
 		Organization updatedOrganization = organizationService.updateOrganization(organization);
-		return new SuccessResponse<>((null == updatedOrganization) ? SuccessCode.ORGANIZATION_UPDATE_ERROR : SuccessCode.ORGANIZATION_UPDATE, updatedOrganization, HttpStatus.OK);
+		return new SuccessResponse<>((null == updatedOrganization) 
+			? SuccessCode.ORGANIZATION_UPDATE_ERROR : SuccessCode.ORGANIZATION_UPDATE, 
+			updatedOrganization, HttpStatus.OK);
 	}
 
 	/**
 	 * <p>
 	 * Inactive the organization by id.
 	 * </p>
-	 * 
+	 *
 	 * @param organizationId - the id of the organization which has be deleted
 	 * @return Organization - response count of delete
 	 */
 	@DeleteMapping
-	public SuccessResponse<Organization> deleteOrganizationById(@PathVariable(value = FieldConstants.ID) long organizationId) {
+	public SuccessResponse<Organization> deleteOrganizationById(
+		@PathVariable(value = FieldConstants.ID) long organizationId) {
 		int organization = organizationService.deleteOrganizationById(organizationId);
-		return new SuccessResponse<>((organization == Constants.ONE) ? SuccessCode.ORGANIZATION_DELETE : SuccessCode.ORGANIZATION_DELETE_ERROR, organizationService.deleteOrganizationById(organizationId), HttpStatus.OK);
+		return new SuccessResponse<>((organization == Constants.ONE) 
+			? SuccessCode.ORGANIZATION_DELETE : SuccessCode.ORGANIZATION_DELETE_ERROR, 
+			organizationService.deleteOrganizationById(organizationId), HttpStatus.OK);
 	}
 
 	/**
-	 * This method is used to get organization information by organization id
-	 * 
+	 * This method is used to get organization information by organization id.
+	 *
 	 * @param organizationId - the id of the organization
 	 * @return Organization - organization information
 	 */
 	@GetMapping(value = "/{id}")
-	public SuccessResponse<Organization> getOrganizationById(@PathVariable(value = FieldConstants.ID) long organizationId) {
-		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATION, organizationService.getOrganizationById(organizationId), HttpStatus.OK);
+	public SuccessResponse<Organization> getOrganizationById(@PathVariable(value = FieldConstants.ID) 
+		long organizationId) {
+		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATION, organizationService.getOrganizationById(
+			organizationId), HttpStatus.OK);
 	}
 
 	/**
-	 * This method is used to get organization information by organization name
-	 * 
+	 * This method is used to get organization information by organization name.
+	 *
 	 * @param name - the name of the organization
 	 * @return Organization - organization information
 	 */
 	@GetMapping(value = "/{name}")
-	public SuccessResponse<Organization> getOrganizationByName(@PathVariable(value = FieldConstants.NAME) String name) {
-		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATION, organizationService.getOrganizationByName(name), HttpStatus.OK);
+	public SuccessResponse<Organization> getOrganizationByName(@PathVariable(value = FieldConstants.NAME)
+		String name) {
+		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATION, organizationService.getOrganizationByName(
+			name), HttpStatus.OK);
 	}
 	
 	/**
-	 * 
 	 * Gets List of tenantIds of a user.
+	 *
 	 * @param id - user Id
-	 * @return List<Long> - list of tenant IDs.
+	 * @return List(Long) - list of tenant IDs.
 	 */
 	@GetMapping("/get-user-tenants/{id}")
 	public List<Long> getUserTenants(@PathVariable long id) {
@@ -129,38 +142,39 @@ public class OrganizationController {
 
 	/**
 	 * Creates an organization with users.
-	 * 
-	 * @param organizationDTO - Object with Organization details and List of users.
+	 *
+	 * @param organizationDto - Object with Organization details and List of users.
 	 * @return Organization - Organization Entity.
 	 * @author Niraimathi S
 	 */
 	@PostMapping("/create")
-	public ResponseEntity<Organization> createOrganization(@RequestBody OrganizationDTO organizationDTO) {
-		Organization newOrganization = organizationService.createOrganization(organizationDTO);
-//		return new SuccessResponse<>((null == newOrganization) ? SuccessCode.ORGANIZATION_SAVE_ERROR : SuccessCode.ORGANIZATION_SAVE, newOrganization, HttpStatus.OK);
+	public ResponseEntity<Organization> createOrganization(@RequestBody OrganizationDTO organizationDto) {
+		Organization newOrganization = organizationService.createOrganization(organizationDto);
 		return ResponseEntity.ok().body(newOrganization);
 	}
 	
 	/**
 	 * Gets child organization IDs of an organization.
-	 * 
+	 *
 	 * @param tenantId organization tenantId
 	 * @param formName organization form name
-	 * @return Map<String, List<Long>> - collection of child organization IDs.
+	 * @return Map(String, List(Long)) - collection of child organization IDs.
 	 */
 	@PostMapping("/get-child-organizations/{tenantId}")
-	public Map<String, List<Long>> getChildOrganizations(@PathVariable("tenantId") Long tenantId,@RequestBody String formName) {
+	public Map<String, List<Long>> getChildOrganizations(@PathVariable("tenantId") Long tenantId,
+		@RequestBody String formName) {
 		return organizationService.getChildOrganizations(tenantId, formName);
 	}
 	
 	/**
 	 * This method is used to get organization information by list of ids.
-	 * 
-	 * @param ids - organization ids
+	 *
+	 * @param organizationIds - organization ids
 	 * @return Role - list of organization
 	 */
 	@PostMapping(value = "/organization-ids")
 	public SuccessResponse<Set<Organization>> getOrganizationsByIds(@RequestBody List<Long> organizationIds) {
-		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATIONS, organizationService.getOrganizationsByIds(organizationIds), HttpStatus.OK);
+		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATIONS, 
+			organizationService.getOrganizationsByIds(organizationIds), HttpStatus.OK);
 	}
 }

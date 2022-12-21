@@ -28,7 +28,7 @@ import com.mdtlabs.coreplatform.userservice.service.UserService;
  * This service class contain all the business logic for organization module and
  * perform all the organization operation here.
  * </p>
- * 
+ *
  * @author VigneshKumar created on Jun 30, 2022
  */
 @Service
@@ -58,7 +58,8 @@ public class OrganzationServiceImpl implements OrganizationService {
 	 * {@inheritDoc}
 	 */
 	public Organization updateOrganization(Organization organization) {
-		Organization existingOrganization = organizationRepository.findByIdAndIsDeletedFalse(organization.getId());
+		Organization existingOrganization = organizationRepository.findByIdAndIsDeletedFalse(
+			organization.getId());
 		if (Objects.isNull(existingOrganization)) {
 			throw new DataNotFoundException(23008);
 		}
@@ -93,7 +94,7 @@ public class OrganzationServiceImpl implements OrganizationService {
 	 * {@inheritDoc}
 	 */
 	public List<Long> getUserTenants(long userId) {
-//		return organizationRepository.getUserTenants(userId);
+		//return organizationRepository.getUserTenants(userId);
 		return null;
 	}
 
@@ -101,20 +102,20 @@ public class OrganzationServiceImpl implements OrganizationService {
 	 * {@inheritDoc}
 	 */
 	@org.springframework.transaction.annotation.Transactional
-	public Organization createOrganization(OrganizationDTO organizationDTO) {
-		if (Objects.isNull(organizationDTO)) {
+	public Organization createOrganization(OrganizationDTO organizationDto) {
+		if (Objects.isNull(organizationDto)) {
 			throw new BadRequestException(10000);
 		}
 		Organization existingOrganization = organizationRepository
-				.findByNameIgnoreCaseAndIsDeletedFalse(organizationDTO.getOrganization().getName());
+			.findByNameIgnoreCaseAndIsDeletedFalse(organizationDto.getOrganization().getName());
 
 		if (!Objects.isNull(existingOrganization)) {
 			throw new DataConflictException(23007);
 		}
-		Organization organization = organizationDTO.getOrganization();
+		Organization organization = organizationDto.getOrganization();
 		organization = organizationRepository.save(organization);
-		userService.addOrganizationUsers(organizationDTO.getUsers(), organizationDTO.getRoles(),
-				organizationDTO.isSiteOrganization());
+		userService.addOrganizationUsers(organizationDto.getUsers(), organizationDto.getRoles(),
+			organizationDto.isSiteOrganization());
 		return organization;
 	}
 
@@ -139,12 +140,13 @@ public class OrganzationServiceImpl implements OrganizationService {
 			} else {
 				childOrgs = organizationRepository.findByParentOrganizationIdIn(childOrgIds);
 			}
-			childOrgIds = childOrgs.stream().map(operatingUnit -> operatingUnit.getId()).collect(Collectors.toList());
+			childOrgIds = childOrgs.stream().map(operatingUnit -> operatingUnit.getId())
+				.collect(Collectors.toList());
 			childIds.put("operatingUnitIds", childOrgIds);
 			childOrgIdsToDelete.addAll(childOrgIds);
 		}
 		if (formName.equalsIgnoreCase("country") || formName.equalsIgnoreCase("account")
-				|| formName.equalsIgnoreCase("operating unit")) {
+			|| formName.equalsIgnoreCase("operating unit")) {
 
 			if (formName.equalsIgnoreCase("operating unit")) {
 				childOrgs = organizationRepository.findByParentOrganizationId(tenantId);

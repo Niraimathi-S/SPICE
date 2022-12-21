@@ -18,7 +18,7 @@ import com.mdtlabs.coreplatform.userservice.service.RoleService;
  * This service class contain all the business logic for role module and perform
  * all the role operation here.
  * </p>
- * 
+ *
  * @author VigneshKumar created on Jun 30, 2022
  */
 @Service

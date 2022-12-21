@@ -35,7 +35,7 @@ import com.mdtlabs.coreplatform.userservice.service.UserService;
  * User Controller used to perform any action in the user module like read and
  * write.
  * </p>
- * 
+ *
  * @author VigneshKumar created on Jun 30, 2022
  */
 @RestController
@@ -57,8 +57,8 @@ public class UserController {
 	private SpiceApiInterface spiceApiInterface;
 
 	/**
-	 * This method is used to add user information
-	 * 
+	 * This method is used to add user information.
+	 *
 	 * @param user - user to be added
 	 * @return UserDTO - response of adding new user
 	 */
@@ -66,17 +66,17 @@ public class UserController {
 	public SuccessResponse<UserDTO> addUser(@RequestBody User user) {
 		User addUser = userService.addUser(user);
 		if (null != addUser) {
-			UserDTO userDTO = modelMapper.map(addUser, UserDTO.class);
-			return new SuccessResponse<>(SuccessCode.USER_SAVE, userDTO, HttpStatus.OK);
+			UserDTO userDto = modelMapper.map(addUser, UserDTO.class);
+			return new SuccessResponse<>(SuccessCode.USER_SAVE, userDto, HttpStatus.OK);
 		}
 		return new SuccessResponse<>(SuccessCode.USER_NOT_SAVED, user, HttpStatus.BAD_REQUEST);
 	}
 
 	/**
-	 * This method is used to get all users information
-	 * 
+	 * This method is used to get all users information.
+	 *
 	 * @param pageNumber - page number of the grid
-	 * @return List<User> - list response of the users
+	 * @return List(User) - list response of the users
 	 */
 	@GetMapping(value = "/all/{pageNumber}")
 	public SuccessResponse<List<UserDTO>> getUsers(@PathVariable(value = Constants.PAGE_NUMBER) int pageNumber) {
@@ -93,7 +93,7 @@ public class UserController {
 	 * <p>
 	 * Update User details like password, name etc.
 	 * </p>
-	 * 
+	 *
 	 * @param user - user to be updated
 	 * @return User - response of the updated user
 	 */
@@ -107,7 +107,7 @@ public class UserController {
 	 * <p>
 	 * Deactivate the user account using their id.
 	 * </p>
-	 * 
+	 *
 	 * @param userId - id of the user
 	 * @return boolean - count response of the deleted user
 	 */
@@ -117,62 +117,64 @@ public class UserController {
 	}
 
 	/**
-	 * This method is used to get user by id
-	 * 
+	 * This method is used to get user by id.
+	 *
 	 * @param userId - id of the user
 	 * @return User - response of the user
 	 */
 	@GetMapping(value = "/{id}")
 	public SuccessResponse<UserDTO> getUserById(@PathVariable(value = FieldConstants.ID) long userId) {
-		UserDTO userDTO = modelMapper.map(userService.getUserById(userId), UserDTO.class);
-		return new SuccessResponse(SuccessCode.GET_USER, userDTO, HttpStatus.OK);
+		UserDTO userDto = modelMapper.map(userService.getUserById(userId), UserDTO.class);
+		return new SuccessResponse(SuccessCode.GET_USER, userDto, HttpStatus.OK);
 	}
 
 	/**
-	 * This method is used to get user profile by id
-	 * 
+	 * This method is used to get user profile by id.
+	 *
 	 * @return UserProfileDTO - response of user profile
 	 */
 	@GetMapping(value = "/profile")
 	public SuccessResponse<UserProfileDTO> getUserProfileById() {
-		UserDTO userDTO = UserContextHolder.getUserDto();
-		User user = userService.getUserById(userDTO.getId());
+		UserDTO userDto = UserContextHolder.getUserDto();
+		User user = userService.getUserById(userDto.getId());
 		if (null != user) {
-			UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
-			return new SuccessResponse<>(SuccessCode.GET_USER, userProfileDTO, HttpStatus.OK);
+			UserProfileDTO userProfileDto = modelMapper.map(user, UserProfileDTO.class);
+			return new SuccessResponse<>(SuccessCode.GET_USER, userProfileDto, HttpStatus.OK);
 		}
 		return new SuccessResponse<>(SuccessCode.USER_NOT_FOUND, user, HttpStatus.OK);
 	}
 
 	/**
-	 * This method is used to get user by user name
-	 * 
+	 * This method is used to get user by user name.
+	 *
 	 * @param username - username of the user
 	 * @return User - response of the user
 	 */
 	@GetMapping(value = "username/{username}")
 	public SuccessResponse<User> getUserByUsername(@PathVariable(value = FieldConstants.USERNAME) String username) {
-		return new SuccessResponse<>(SuccessCode.GET_USER, userService.getUserByUsername(username), HttpStatus.OK);
+		return new SuccessResponse<>(SuccessCode.GET_USER, 
+			userService.getUserByUsername(username), HttpStatus.OK);
 	}
 
 	/**
-	 * This method is used to save or update user name of user
-	 * 
+	 * This method is used to save or update user name of user.
+	 *
 	 * @param token    - auth token of logged in user
 	 * @param userInfo - password information of the user
 	 * @return boolean - response of updating user as true/false
 	 */
 	@PutMapping(value = "/update-password/{token}")
 	public SuccessResponse<Boolean> updatePassword(@PathVariable(Constants.TOKEN) String token,
-			@RequestBody Map<String, String> userInfo) {
+		@RequestBody Map<String, String> userInfo) {
 		return new SuccessResponse<>(SuccessCode.PASSWORD_UPDATED,
-				userService.updatePassword(token, userInfo.get(FieldConstants.PASSWORD)), HttpStatus.OK);
+				userService.updatePassword(token, userInfo.get(FieldConstants.PASSWORD)),
+				HttpStatus.OK);
 	}
 
 	/**
 	 * This method is used to send reset password link to the given username.
-	 * 
-	 * @param request
+	 *
+	 * @param request - request map
 	 * @return SuccessResponse
 	 */
 	@PostMapping(value = "/forgot-password", produces = "application/json")
@@ -184,27 +186,28 @@ public class UserController {
 	}
 
 	/**
-	 * This method is used to update user token
-	 * 
+	 * This method is used to update user token.
+	 *
 	 * @param id       - id of the user
 	 * @param userInfo - user information as map
 	 * @return User - response of the user token update
 	 */
 	@PostMapping(value = "/user-token/{id}")
 	public SuccessResponse<UserToken> createUserToken(@PathVariable(FieldConstants.ID) long id,
-			@RequestBody Map<String, String> userInfo) {
+		@RequestBody Map<String, String> userInfo) {
 		UserToken userToken = modelMapper.map(userService.createUserToken(id, userInfo), UserToken.class);
 		return new SuccessResponse(SuccessCode.GET_USER, userToken, HttpStatus.OK);
 	}
 
 	/**
-	 * This method is used to check login limit exceeded or not
-	 * 
+	 * This method is used to check login limit exceeded or not.
+	 *
 	 * @param username - user name of the user
 	 * @return boolean - response of the limit exceed as true or false
 	 */
 	@GetMapping(value = "/login-limit-exceed/{username}")
-	public SuccessResponse<Boolean> loginLimitExceed(@PathVariable(value = FieldConstants.USERNAME) String username) {
+	public SuccessResponse<Boolean> loginLimitExceed(
+		@PathVariable(value = FieldConstants.USERNAME) String username) {
 		Boolean response = userService.loginLimitExceed(username);
 		return Boolean.TRUE.equals(response)
 				? new SuccessResponse<>(SuccessCode.DISABLED_ACCOUNT, response, HttpStatus.OK)
@@ -215,13 +218,13 @@ public class UserController {
 	 * <p>
 	 * Return false if user exceed the forget passowrd limit.
 	 * </p>
-	 * 
+	 *
 	 * @return User Entity
-	 * @throws Exception
+	 * @throws Exception - exception
 	 */
 	@PostMapping(value = "/is-forget-password-limit-exceed/{username}")
 	public SuccessResponse<Boolean> isForgetPasswordLimitExceed(
-			@PathVariable(value = FieldConstants.USERNAME) String username) {
+		@PathVariable(value = FieldConstants.USERNAME) String username) {
 		Boolean response = userService.isForgetPasswordLimitExceed(username, false);
 		return Boolean.TRUE.equals(response)
 				? new SuccessResponse<>(SuccessCode.DISABLED_ACCOUNT, response, HttpStatus.OK)
@@ -229,14 +232,14 @@ public class UserController {
 	}
 
 	/**
-	 * This method is used to check reset password limit exceeded or not
-	 * 
+	 * This method is used to check reset password limit exceeded or not.
+	 *
 	 * @param username - user name fo the user
 	 * @return boolean - response of limit exceeded as true or false
 	 */
 	@PostMapping(value = "/is-reset-password-limit-exceed/{username}")
 	public SuccessResponse<Boolean> resetPasswordLimitExceed(
-			@PathVariable(value = FieldConstants.USERNAME) String username) {
+		@PathVariable(value = FieldConstants.USERNAME) String username) {
 		Boolean response = userService.isResetPasswordLimitExceed(username);
 		return Boolean.TRUE.equals(response)
 				? new SuccessResponse<>(SuccessCode.DISABLED_ACCOUNT, response, HttpStatus.OK)
@@ -244,8 +247,8 @@ public class UserController {
 	}
 
 	/**
-	 * This method is used to clear the api permission role map
-	 * 
+	 * This method is used to clear the api permission role map.
+	 *
 	 * @return SuccessResponse
 	 */
 	@GetMapping(value = "/clear")
@@ -261,9 +264,9 @@ public class UserController {
 
 	/**
 	 * To get Users based on organization Id.
-	 * 
-	 * @param tenantIds
-	 * @return
+	 *
+	 * @param tenantIds - list of tenant ids
+	 * @return List(User) - list of user
 	 */
 	@PostMapping("/get-by-tenants")
 	public List<User> getUsersByTenantIds(@RequestBody List<Long> tenantIds) {
@@ -271,8 +274,8 @@ public class UserController {
 	}
 
 	/**
-	 * To check if the session is expired
-	 * 
+	 * To check if the session is expired.
+	 *
 	 * @return session status
 	 */
 	@PostMapping("/validate")

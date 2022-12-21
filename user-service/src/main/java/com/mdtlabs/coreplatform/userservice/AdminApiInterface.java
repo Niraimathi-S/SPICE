@@ -7,10 +7,16 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.mdtlabs.coreplatform.userservice.message.SuccessResponse;
 
+/**
+ * This interface is used for admin service feign.
+ *
+ * @author Prabu
+ *
+ */
 @FeignClient(name = "admin-service")
 public interface AdminApiInterface {
 	
 	@GetMapping("/account/clear")
 	public ResponseEntity<Boolean> clearApiPermissions(@RequestHeader("Authorization") String token,
-			@RequestHeader("TenantId") long tenantId);
+		@RequestHeader("TenantId") long tenantId);
 }

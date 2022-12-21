@@ -11,7 +11,7 @@ import com.mdtlabs.coreplatform.common.model.entity.Role;
  * This an interface class for role module you can implemented this class in any
  * class.
  * </p>
- * 
+ *
  * @author VigneshKumar created on Jun 30, 2022
  */
 public interface RoleService {
@@ -20,7 +20,7 @@ public interface RoleService {
 	 * <p>
 	 * This method used to add a role detail.
 	 * </p>
-	 * 
+	 *
 	 * @param role - role to be added
 	 * @return Role - added role information
 	 */
@@ -30,8 +30,8 @@ public interface RoleService {
 	 * <p>
 	 * This method used to retrieve all the active role.
 	 * </p>
-	 * 
-	 * @return List<Role> - list of Role Entity
+	 *
+	 * @return List(Role) - list of Role Entity
 	 */
 	List<Role> getAllRoles();
 
@@ -39,7 +39,7 @@ public interface RoleService {
 	 * <p>
 	 * This method used to update a role details.
 	 * </p>
-	 * 
+	 *
 	 * @param role - updating role
 	 * @return Role - update role entity
 	 */
@@ -49,7 +49,7 @@ public interface RoleService {
 	 * <p>
 	 * This method used to inactive a role using id.
 	 * </p>
-	 * 
+	 *
 	 * @param roleId - role id to be deleted
 	 * @return int - value indicating the role delete
 	 */
@@ -59,7 +59,7 @@ public interface RoleService {
 	 * <p>
 	 * This method used to get a role detail by id.
 	 * </p>
-	 * 
+	 *
 	 * @param roleId - role id
 	 * @return Role - role entity
 	 */
@@ -69,25 +69,25 @@ public interface RoleService {
 	 * <p>
 	 * This method used to get a role detail by name.
 	 * </p>
-	 * 
+	 *
 	 * @param name - role name
 	 * @return Role - role entity
 	 */
 	Role getRoleByName(String name);
 
 	/**
-	 * To get list of roles based on list of role names
-	 * 
+	 * To get list of roles based on list of role names.
+	 *
 	 * @param roles - list of role names
-	 * @return Set<Role> - List of Role entity
+	 * @return Set(Role) - List of Role entity
 	 */
 	Set<Role> getRolesByName(List<String> roles);
 	
 	/**
 	 * To get list of roles based on list of role ids.
-	 * 
-	 * @param roles - list of role ids
-	 * @return Set<Role> - List of Role entity
+	 *
+	 * @param roleIds - list of role ids
+	 * @return Set(Role) - List of Role entity
 	 */
 	Set<Role> getRolesByIds(List<Long> roleIds);
 

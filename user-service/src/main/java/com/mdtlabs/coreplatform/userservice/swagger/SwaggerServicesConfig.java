@@ -14,7 +14,7 @@ import com.mdtlabs.coreplatform.common.Constants;
  * Swagger to describe what are endpoints are present in this service with their
  * reference request and response.
  * </p>
- * 
+ *
  * @author Vigneshkumar Created on 30 Jun 2022
  */
 @Component
@@ -33,6 +33,12 @@ public class SwaggerServicesConfig {
 		this.swagger = swaggerResources;
 	}
 
+	/**
+	 * Swagger services class. 
+	 *
+	 * @author Vignesh
+	 *
+	 */
 	@EnableConfigurationProperties
 	@ConfigurationProperties(prefix = Constants.DOCUMENTATION_SWAGGER_SERVICES)
 	public static class SwaggerServices {

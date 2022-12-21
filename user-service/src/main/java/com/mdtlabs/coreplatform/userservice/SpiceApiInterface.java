@@ -5,10 +5,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+/**
+ * This interface is used for spice service feign.
+ *
+ * @author Prabu
+ *
+ */
 @FeignClient(name = "spice-service")
 public interface SpiceApiInterface {
-	
+
 	@GetMapping("/assessment/clear")
 	public ResponseEntity<Boolean> clearApiPermissions(@RequestHeader("Authorization") String token,
-			@RequestHeader("TenantId") long tenantId);
+		@RequestHeader("TenantId") long tenantId);
 }
