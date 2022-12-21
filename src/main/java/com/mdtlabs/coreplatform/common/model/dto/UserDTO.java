@@ -56,7 +56,7 @@ public class UserDTO {
 
 	private Timezone timezone;
 
-	private Set<Organization> tenants;
+	private Set<Organization> organizations;
 	
 	private Boolean isBlocked;
 
@@ -65,6 +65,8 @@ public class UserDTO {
     private Long deviceInfoId;
     
     private long tenantId;
+    
+    private Boolean isSuperUser = false;
 
 	public TimezoneDTO getTimezone() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -75,9 +77,9 @@ public class UserDTO {
 		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());
 	}
 
-//	public CountryDTO getCountry() {
-//		ModelMapper modelMapper = new ModelMapper();
-//		return modelMapper.map(country, CountryDTO.class);
-//	}
+	public CountryDTO getCountry() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(country, CountryDTO.class);
+	}
 
 }

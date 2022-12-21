@@ -54,7 +54,7 @@ public class AuthUserDTO {
 
 	private Timezone timezone;
 
-	private Set<Organization> tenants;
+	private Set<Organization> organizations;
 	
 	private long tenantId;
 	
@@ -65,6 +65,8 @@ public class AuthUserDTO {
 	private Country country;
 	
 	private Long deviceInfoId;
+	
+	private Boolean isSuperUser = false;
 
 	public Set<RoleDTO> getRoles() {
 		return roles.stream().map(role -> new ModelMapper().map(role, RoleDTO.class)).collect(Collectors.toSet());

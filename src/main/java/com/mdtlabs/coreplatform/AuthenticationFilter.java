@@ -145,11 +145,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 		} else {
 			String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-			if (!token.isBlank() && token.startsWith(Constants.BEARER)) {
+			if (StringUtils.isNotBlank(token) && token.startsWith(Constants.BEARER)) {
 				String tenantId = request.getHeader(Constants.HEADER_TENANT_ID);
-				if (null != tenantId && !tenantId.isBlank() && tenantId.matches("[0-9]+")) {
-					UserSelectedTenantContextHolder.set(Long.parseLong(tenantId));
-				}
 				UserDTO userDto = null;
 				try {
 					userDto = validateAspect(token.substring(Constants.BEARER.length(), token.length()), response);
@@ -162,7 +159,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 						}
 					}
 
-//					if (apiPermissionMap.isEmpty()) {
+					if (StringUtils.isNotBlank(tenantId) && tenantId.matches("[0-9]+")) {
+						List<Long> userTenants = UserTenantsContextHolder.get();
+						/*if (!userTenants.contains(Long.parseLong(tenantId))
+								&& !userDto.getIsSuperUser()) {
+							throw new Validation(20003);
+						}*/ 
+						UserSelectedTenantContextHolder.set(Long.parseLong(tenantId));
+					}
+					if (apiPermissionMap.isEmpty()) {
 						commonRepository.getApiRolePermission().stream().forEach(api -> {
 							if (StringUtils.isNotBlank(api.getRoles())) {
 								Map<String, List<String>> apiRoleMap = new HashMap<>();
@@ -175,19 +180,25 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 								apiPermissionMap.put(api.getMethod(), apiRoleMap);
 							}
 						});
-//					}
-					Set<String> requestTypeSet = apiPermissionMap.get(request.getMethod()).keySet();
-					requestTypeSet.stream().forEach(requestType -> {
-						if (request.getRequestURI().contains(requestType)) {
-							apiRequest = requestType;
-						}
-					});
+					}
+					
 					boolean isExist = false;
-					for (RoleDTO role : userDto.getRoles()) {
-						if (apiPermissionMap.get(request.getMethod()).get(apiRequest).contains(
-								role.getName())) {
-							isExist = true;
-							break;
+					if (userDto.getIsSuperUser()) {
+						isExist = true;
+					} else {
+						Set<String> requestTypeSet = apiPermissionMap.get(request.getMethod()).keySet();
+						requestTypeSet.stream().forEach(requestType -> {
+							if (request.getRequestURI().contains(requestType)) {
+								apiRequest = requestType;
+							}
+						});
+						
+						for (RoleDTO role : userDto.getRoles()) {
+							if (apiPermissionMap.get(request.getMethod()).get(apiRequest).contains(
+									role.getName())) {
+								isExist = true;
+								break;
+							}
 						}
 					}
 					if (isExist) {
@@ -249,9 +260,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		userDetail = objectMapper.readValue(rawJson, UserDTO.class);
 		userDetail.setAuthorization(jwtToken);
 		if (null != tenants) {
-			String data = tenants.toString();
-			List<Integer> tenantIds = Arrays.asList(data.split(",")).stream().map(s -> Integer.parseInt(s.trim()))
-					.collect(Collectors.toList());
+			List<Long> tenantIds = (List<Long>) tenants;
 			UserTenantsContextHolder.set(tenantIds);
 		}
 		if (null != userDetail.getTimezone()) {

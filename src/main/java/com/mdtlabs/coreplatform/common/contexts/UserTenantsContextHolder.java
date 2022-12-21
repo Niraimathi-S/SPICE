@@ -28,13 +28,13 @@ import java.util.List;
 
 public class UserTenantsContextHolder {
 
-	private static final ThreadLocal<List<Integer>> USER_TENANTS_CONTEXT = new ThreadLocal<>();
+	private static final ThreadLocal<List<Long>> USER_TENANTS_CONTEXT = new ThreadLocal<>();
 
-	public static void set(List<Integer> tenantIds) {
+	public static void set(List<Long> tenantIds) {
 		USER_TENANTS_CONTEXT.set(tenantIds);
 	}
 
-	public static List<Integer> get() {
+	public static List<Long> get() {
 		return USER_TENANTS_CONTEXT.get();
 	}
 

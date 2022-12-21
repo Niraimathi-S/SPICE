@@ -183,6 +183,7 @@ public final class Constants {
 	public static final String ADMIN_ROLE_NAME = "ROLE_ADMIN";
 	public static final String USER_ROLE_NAME = "ROLE_USER";
 	public static final String RED_RISK_USER = "ROLE_RED_RISK";
+	public static final String ROLE_SUPER_USER = "SUPER_USER";
 
 	public static final int SUPER_TENANT_ADMINISTRATOR_ID = 0;
 	public static final String USER_SELECTED_TENANT = "userTenant";
