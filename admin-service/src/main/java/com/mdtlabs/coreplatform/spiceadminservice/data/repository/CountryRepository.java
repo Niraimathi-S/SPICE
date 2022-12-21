@@ -22,7 +22,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
 	public static final String GET_ALL_COUNTRIES = "select country from Country as country where country.isDeleted=false";
 	public static final String GET_COUNTRIES_BY_NAME = "select country from Country as country where lower(country.name)"
-			+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND country.isDeleted=false";
+			+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND country.isDeleted=false order by country.updatedBy";
 
 	/**
 	 * Finds a country based on countryCode and name

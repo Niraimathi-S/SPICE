@@ -3,11 +3,15 @@ package com.mdtlabs.coreplatform.spiceadminservice.data.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
 import com.mdtlabs.coreplatform.common.model.entity.County;
 import com.mdtlabs.coreplatform.common.model.entity.Subcounty;
+import com.mdtlabs.coreplatform.common.model.entity.User;
 
 /**
  * This interface contains business logic for manipulating Country, County and
@@ -149,4 +153,29 @@ public interface DataService {
 	 * @return Country entity
 	 */
 	Country findCountryById(Long countryId);
+
+	/**
+	 * To create a region admin.
+	 * 
+	 * @param user user details 
+	 * @return User entity.
+	 * @author Niraimathi S
+	 */
+	User addRegionAdmin(User user);
+
+	/**
+	 * To update an region admin user.
+	 * 
+	 * @param user - User details 
+	 * @return user - user entity
+	 */
+	User updateRegionAdmin(@Valid User user);
+
+	/**
+	 * To remove an user from country.
+	 * 
+	 * @param requestDTO 
+	 * @return
+	 */
+	Boolean deleteRegionAdmin(CommonRequestDTO requestDTO);
 }

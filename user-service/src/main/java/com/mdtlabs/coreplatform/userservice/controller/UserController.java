@@ -3,6 +3,8 @@ package com.mdtlabs.coreplatform.userservice.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +65,7 @@ public class UserController {
 	 * @return UserDTO - response of adding new user
 	 */
 	@PostMapping
-	public SuccessResponse<UserDTO> addUser(@RequestBody User user) {
+	public SuccessResponse<UserDTO> addUser(@Valid @RequestBody User user) {
 		User addUser = userService.addUser(user);
 		if (null != addUser) {
 			UserDTO userDto = modelMapper.map(addUser, UserDTO.class);
@@ -278,7 +280,7 @@ public class UserController {
 	 *
 	 * @return session status
 	 */
-	@PostMapping("/validate")
+	@GetMapping("/validate")
 	public ResponseEntity<String> validateSession() {
 		return ResponseEntity.ok().body(Constants.SESSSION_ALIVE);
 	}

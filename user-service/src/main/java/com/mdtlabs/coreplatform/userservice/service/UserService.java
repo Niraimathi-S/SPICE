@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.userservice.service;
 import java.util.List;
 import java.util.Map;
 
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
 
@@ -171,5 +172,34 @@ public interface UserService {
 	 * @return True or False
 	 */
 	Boolean isForgetPasswordLimitExceed(String username, boolean isFromCreation);
+
+	/**
+	 * Updates organization user.
+	 * 
+	 * @param user - user details
+	 * @return User - User entity
+	 * @author Niraimathi S
+	 */
+	User updateOrganizationUser(User user);
+
+	/**
+	 * Deletes an organization User.
+	 * 
+	 * @param requestDTO - request data with user id and tenantId.
+	 * @return Boolean
+	 * @author Niraimathi S
+	 */
+	Boolean deleteOrganizationUser(CommonRequestDTO requestDTO);
+	
+	/**
+	 * Validates a list of users.
+	 * 
+	 * @param parentOrganizationId - parent organizationId
+	 * @param requestUsers - List of Users to be validated
+	 * @return List<User> - List of User entities
+	 * @author Niraimathi S
+	 */
+	List<User> validateUser(Long parentOrganizationId, List<User> requestUsers);
+
 
 }

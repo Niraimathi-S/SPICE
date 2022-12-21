@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -105,5 +104,22 @@ public interface UserRepository extends JpaRepository<User, Long>, PagingAndSort
 	 */
 	@Query(value = GET_USERS_BY_TENANT_IDS)
 	public List<User> findUsersByTenantIds(@Param("tenantIds") List<Long> tenantIds);
+
+	/**
+	 * Finds user by its Id and tenantId
+	 * 
+	 * @param id - user id
+	 * @param tenantId - tenant Id
+	 * @return user - User entity
+	 */
+	public User findByIdAndTenantIdAndIsActiveTrue(Long id, Long tenantId);
+
+	/**
+	 * Finds user by its Id and isActive fields.
+	 * 
+	 * @param userId - user Id
+	 * @return User - user Entity.
+	 */
+	public User findByIdAndIsActiveTrue(Long userId);
 
 }

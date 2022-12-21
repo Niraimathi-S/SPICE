@@ -2,6 +2,8 @@ package com.mdtlabs.coreplatform.userservice.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -10,17 +12,24 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataConflictException;
+import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
+import com.mdtlabs.coreplatform.common.model.entity.Role;
+import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.userservice.repository.OrganizationRepository;
 import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
+import com.mdtlabs.coreplatform.userservice.service.RoleService;
 import com.mdtlabs.coreplatform.userservice.service.UserService;
 
 /**
@@ -39,6 +48,11 @@ public class OrganzationServiceImpl implements OrganizationService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private RoleService roleService;
+
+	ModelMapper modelMapper = new ModelMapper();
 
 	/**
 	 * {@inheritDoc}
@@ -63,8 +77,9 @@ public class OrganzationServiceImpl implements OrganizationService {
 		if (Objects.isNull(existingOrganization)) {
 			throw new DataNotFoundException(23008);
 		}
-
-		return organizationRepository.save(organization);
+		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+		modelMapper.map(organization, existingOrganization);
+		return organizationRepository.save(existingOrganization);
 	}
 
 	/**
@@ -114,9 +129,49 @@ public class OrganzationServiceImpl implements OrganizationService {
 		}
 		Organization organization = organizationDto.getOrganization();
 		organization = organizationRepository.save(organization);
-		userService.addOrganizationUsers(organizationDto.getUsers(), organizationDto.getRoles(),
-			organizationDto.isSiteOrganization());
+		List<User> validatedUsers = new ArrayList<>();
+		List<User> users = new ArrayList<>();
+		validatedUsers = userService.validateUser(organization.getParentOrganizationId(), organizationDto.getUsers());
+
+		if (!Objects.isNull(validatedUsers) && !validatedUsers.isEmpty()) {
+			List<Long> userTenantsList = validatedUsers.stream().map(user -> user.getTenantId())
+					.collect(Collectors.toList());
+			validateParentOrganization(organization.getParentOrganizationId(), userTenantsList);
+			users.addAll(validatedUsers);
+		}
+
+		for (User user : organizationDto.getUsers()) {
+			if (Objects.isNull(user.getId()) || 0 == user.getId()) {
+				users.add(user);
+			}
+		}
+		for (User user : users) {
+			Set<Organization> userOrganizations = new HashSet<>();
+			if (Objects.isNull(user.getOrganizations()) || user.getOrganizations().isEmpty()) {
+				userOrganizations = Set.of(organization);
+			} else {
+				userOrganizations = user.getOrganizations();
+				userOrganizations.add(organization);
+			}
+			user.setOrganizations(userOrganizations);
+			userService.addUser(user);
+		}
 		return organization;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void validateParentOrganization(Long parentOrganizationId, List<Long> tenantIds) {
+		List<Organization> organizations = new ArrayList<>();
+		if (!Objects.isNull(parentOrganizationId) && !tenantIds.isEmpty()) {
+			organizations = organizationRepository
+					.findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(parentOrganizationId, tenantIds);
+		}
+		if (organizations.size() != tenantIds.size()) {
+			throw new DataNotAcceptableException(5002);
+		}
+
 	}
 
 	/**
@@ -160,12 +215,51 @@ public class OrganzationServiceImpl implements OrganizationService {
 		}
 		return childIds;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Set<Organization> getOrganizationsByIds(List<Long> organizationIds) {
 		return organizationRepository.findByIsDeletedFalseAndIsActiveTrueAndIdIn(organizationIds);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public User addAdminUsers(User user) {
+		Organization organization = organizationRepository.findByIdAndIsDeletedFalse(user.getTenantId());
+		if (Objects.isNull(organization)) {
+			throw new DataNotFoundException(5001);
+		}
+		user.setOrganizations(Set.of(organization));
+		String roleName = user.getRoles().stream().map(Role::getName).collect(Collectors.toList()).get(0);
+		Role role = null;
+		if (!roleName.isEmpty()) {
+			role = roleService.getRoleByName(roleName);
+		}
+		user.setRoles(Set.of(role));
+		user = userService.addUser(user);
+		return user;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public User updateAdminUsers(User user) {
+		Organization organization = organizationRepository.findByIdAndIsDeletedFalse(user.getTenantId());
+		if (Objects.isNull(organization)) {
+			throw new DataNotFoundException(5001);
+		}
+		user.setOrganizations(Set.of(organization));
+		user = userService.updateOrganizationUser(user);
+		return user;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Boolean deleteAdminUsers(CommonRequestDTO requestDTO) {
+		return userService.deleteOrganizationUser(requestDTO);
 	}
 
 }

@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
+import com.mdtlabs.coreplatform.common.model.entity.Role;
+import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.userservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.userservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
@@ -177,4 +181,40 @@ public class OrganizationController {
 		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATIONS, 
 			organizationService.getOrganizationsByIds(organizationIds), HttpStatus.OK);
 	}
+	
+	/**
+	 * Creates an admin user for an organization.
+	 * 
+	 * @param user - user details.
+	 * @return ResponseEntity<User> - User entity
+	 */
+	@PostMapping("/add-admin-user")
+	public ResponseEntity<User> addAdminUsers(@RequestBody User user) {
+		return ResponseEntity.ok().body(organizationService.addAdminUsers(user));
+	}
+
+	/**
+	 * Updates an admin user for an organization.
+	 * 
+	 * @param user - user details.
+	 * @return ResponseEntity<User> - User entity
+	 */
+	@PutMapping("/update-admin-user")
+	public ResponseEntity<User> updateAdminUsers(@RequestBody User user) {
+		System.out.println("user in organization controller "+ user );
+		return ResponseEntity.ok().body(organizationService.updateAdminUsers(user));
+	}
+	
+	/**
+	 * 
+	 * @param token
+	 * @param userTenantId
+	 * @param requestDTO
+	 * @return
+	 */
+	@DeleteMapping("/delete-admin-user")
+	public ResponseEntity<Boolean> deleteAdminUser(@RequestBody CommonRequestDTO requestDTO) {
+		return ResponseEntity.ok().body(organizationService.deleteAdminUsers(requestDTO));
+	}
+
 }

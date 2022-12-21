@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
+import com.mdtlabs.coreplatform.common.model.entity.User;
 
 
 /**
@@ -110,5 +112,28 @@ public interface OrganizationService {
 	 */
 	Set<Organization> getOrganizationsByIds(List<Long> organizationIds);
 
+	/**
+	 * Creates an admin user for an organization.
+	 * 
+	 * @param user - user details
+	 * @return user - User entity.
+	 */
+	User addAdminUsers(User user);
+
+	/**
+	 * To update an admin user for an organization
+	 * 
+	 * @param user - user details
+	 * @return user - user entity
+	 */
+	User updateAdminUsers(User user);
+
+	/**
+	 * to remove an user from an organizations.
+	 * 
+	 * @param requestDTO - request data containing user id and tenantId
+	 * @return Boolean 
+	 */
+	Boolean deleteAdminUsers(CommonRequestDTO requestDTO);
 
 }

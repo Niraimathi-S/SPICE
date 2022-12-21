@@ -123,7 +123,17 @@ public class AssessmentServiceImpl implements AssessmentService {
 		if (Objects.isNull(assessmentDTO)) {
 			throw new BadRequestException(1000);
 		} else {
+			if (UnitConstants.IMPERIAL == assessmentDTO.getUnitMeasurement()) {
+				bpLogService.convertBpLogUnits(assessmentDTO.getBpLog(), UnitConstants.METRIC);
+//				assessmentDTO.getBpLog().setHeight(
+//                        UnitConversion.convertHeight(screeningLogDTO.getBioMetrics().getHeight(),
+//                                UnitConstants.METRIC));
+//				assessmentDTO.get().setWeight(
+//                        UnitConversion.convertHeight(screeningLogDTO.getBioMetrics().getWeight(),
+//                                UnitConstants.METRIC));
+//                // screeningLogDTO.getBioMetrics().setTempe(UnitConversion.convertHeight(screeningLogDTO.getBioMetrics(), UnitConstants.METRIC));
 
+            }
 			PatientTracker patientTracker = new PatientTracker();
 			if (Objects.isNull(assessmentDTO.getPatientTrackId())) {
 				patientTracker = constructPatientTracker(patientTracker, assessmentDTO);
@@ -238,6 +248,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 		}
 
 		return response;
+		
 	}
 
 	private PatientTracker updateTreatmentPlan(PatientTracker patientTracker, AssessmentDTO assessmentDTO,

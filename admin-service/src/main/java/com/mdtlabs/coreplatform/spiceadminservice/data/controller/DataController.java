@@ -12,9 +12,11 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.logger.SpiceLogger;
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryListDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
@@ -30,7 +33,7 @@ import com.mdtlabs.coreplatform.common.model.dto.spice.SubCountyDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
 import com.mdtlabs.coreplatform.common.model.entity.County;
 import com.mdtlabs.coreplatform.common.model.entity.Subcounty;
-
+import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.spiceadminservice.data.service.DataService;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
@@ -275,6 +278,45 @@ public class DataController {
 	@GetMapping(value = "/get-country/{id}")
 	public Country getCountry(@PathVariable(value = "id") long countryId) {
 		return dataService.findCountryById(countryId);
+	}
+	
+	/**
+	 * Adds an region admin user.
+	 * 
+	 * @param user - user details
+	 * @return User - user entity.
+	 * @author Niraimathi S
+	 */
+	@PostMapping(value = "/country/add-user")
+	public SuccessResponse<User> addRegionAdmin(@RequestBody @Valid User user) {
+		dataService.addRegionAdmin(user);
+        return new SuccessResponse<>(SuccessCode.REGION_ADMIN_SAVE, HttpStatus.CREATED);
+	}
+	
+	/**
+	 * Updates an region admin user.
+	 * 
+	 * @param user - updated user details
+	 * @return User - User entity
+	 * @author Niraimathi S
+	 */
+	@PutMapping(value = "/country/update-user")
+	public SuccessResponse<User> updateRegionAdmin(@RequestBody @Valid User user) {
+		dataService.updateRegionAdmin(user);
+        return new SuccessResponse<>(SuccessCode.REGION_ADMIN_UPDATE, HttpStatus.OK);
+	}
+	
+	/**
+	 * To remove an region admin user.
+	 * 
+	 * @param requestDTO - request data containing user Id and tenantId.
+	 * @return User - user entity
+	 * @author Niraimathi S
+	 */
+	@DeleteMapping(value = "/country/remove-user")
+	public SuccessResponse<User> removeRegionAdmin(@RequestBody CommonRequestDTO requestDTO) {
+		dataService.deleteRegionAdmin(requestDTO);
+        return new SuccessResponse<>(SuccessCode.REGION_ADMIN_DELETE, HttpStatus.OK);
 	}
 
 }

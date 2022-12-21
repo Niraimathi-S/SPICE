@@ -72,7 +72,7 @@ CREATE TABLE "user" (
   last_logged_out TIMESTAMP,
   country_id BIGINT, FOREIGN KEY (country_id) REFERENCES country(id),
   timezone_id BIGINT, FOREIGN KEY (timezone_id) REFERENCES timezone(id),
-  tenant_id BIGINT NOT NULL,
+  tenant_id BIGINT,
   created_by BIGINT NOT NULL,
   updated_by BIGINT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -418,6 +418,7 @@ CREATE TABLE patient (
   emr_number BIGINT,
   is_er_visit_history BOOLEAN,
   zip_code BIGINT,
+  virtual_id BIGINT,
   site_id BIGINT, FOREIGN KEY (site_id) REFERENCES site(id),
   program_id BIGINT, FOREIGN KEY (program_id) REFERENCES program(id),
   country_id BIGINT, FOREIGN KEY (country_id) REFERENCES country(id),
@@ -576,6 +577,7 @@ CREATE TABLE glucose_log (
   type VARCHAR,
   is_red_risk_patient BOOLEAN,
   is_updated_from_enrollment BOOLEAN,
+  risk_level VARCHAR,
   hba1c_unit VARCHAR,
   patient_track_id BIGINT, FOREIGN KEY (patient_track_id) REFERENCES patient_tracker(id),
   screening_id BIGINT, FOREIGN KEY (screening_id) REFERENCES screening_log(id),
@@ -1521,7 +1523,7 @@ CREATE TABLE email_template (
   app_url VARCHAR
 );
 
-INSERT INTO public.email_template (id,type,vm_content,body,title,app_url) VALUES
+INSERT INTO email_template (id,type,vm_content,body,title,app_url) VALUES
      (1,'Forgot_Password','vmContent','<p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/spiceEngage.png" style=\"height:70%;width:10%;"></p><p style=\"font-size: 11pt\>Dear Telecounseling Application User,<br><br>    <p>We have received a request to reset your Telecounseling account password. It was initiated after you selected “Forgot Password” in the Telecounseling software application.    <br><br>    <strong>Please click on this 
 <a href="{{app_url_email}}">LINK</a> to reset your password. The link will expire in 60 minutes.If it is expires before the reset is completed, 
 click on Forgot Password in the application to reset it again.</strong>    <br><br>  
@@ -1551,4 +1553,30 @@ INSERT INTO sms_template_values ("key",template_id,created_at,updated_at) VALUES
 	 ('orgname',2,'2022-12-16 12:57:17.815','2022-12-16 12:57:17.815'),
 	 ('patient_id',2,'2022-12-16 12:57:17.816','2022-12-16 12:57:17.816');
 
+CREATE TABLE classification_brand (
+    id SERIAL PRIMARY KEY,
+    country_id bigint, FOREIGN KEY(country_id) REFERENCES country(id),
+    brand_id bigint, FOREIGN KEY(brand_id) REFERENCES brand(id),
+    classification_id bigint, FOREIGN KEY(classification_id) REFERENCES classification(id),
+    tenant_id bigint,
+    is_active  BOOLEAN DEFAULT true,
+    is_deleted BOOLEAN DEFAULT false,
+    created_by bigint NOT NULL,
+    updated_by bigint NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+);
+
+CREATE TABLE country_classification (
+    id SERIAL PRIMARY KEY,
+    country_id bigint, FOREIGN KEY(country_id) REFERENCES country(id),
+    classification_id bigint, FOREIGN KEY(classification_id) REFERENCES classification(id),
+    tenant_id bigint,
+    is_active  BOOLEAN DEFAULT true,
+    is_deleted BOOLEAN DEFAULT false,
+    created_by bigint NOT NULL,
+    updated_by bigint NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+);
 

@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,16 +39,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import com.mdtlabs.coreplatform.userservice.repository.UserRepository;
-import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
-import com.mdtlabs.coreplatform.userservice.service.RoleService;
-import com.mdtlabs.coreplatform.userservice.service.UserService;
 import com.mdtlabs.coreplatform.AuthenticationFilter;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
-import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataConflictException;
@@ -63,11 +58,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import com.mdtlabs.coreplatform.common.logger.Logger;
 import com.mdtlabs.coreplatform.common.model.dto.EmailDTO;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.EmailTemplate;
 import com.mdtlabs.coreplatform.common.model.entity.EmailTemplateValue;
-import com.mdtlabs.coreplatform.common.model.entity.Notification;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.Role;
+import com.mdtlabs.coreplatform.common.model.entity.Timezone;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
 import com.mdtlabs.coreplatform.common.model.entity.spice.OutBoundEmail;
@@ -76,8 +72,11 @@ import com.mdtlabs.coreplatform.common.repository.UserTokenRepository;
 import com.mdtlabs.coreplatform.common.util.CommonUtil;
 import com.mdtlabs.coreplatform.common.util.DateUtil;
 import com.mdtlabs.coreplatform.common.util.StringUtil;
+import com.mdtlabs.coreplatform.userservice.repository.UserRepository;
+import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
+import com.mdtlabs.coreplatform.userservice.service.RoleService;
+import com.mdtlabs.coreplatform.userservice.service.UserService;
 
-import org.springframework.web.client.RestTemplate;
 
 /**
  * <p>
@@ -743,5 +742,52 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		return ipInfo;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+    public User updateOrganizationUser(User user) {
+        if (Objects.isNull(user.getId())) {
+            throw new DataNotAcceptableException(1016);
+        }
+        User existingUser = userRepository.findByIdAndTenantIdAndIsActiveTrue(user.getId(), user.getTenantId());
+        if (Objects.isNull(existingUser)) {
+            throw new DataNotFoundException(1010);
+        }
+//        existingUser.setCountryId(user.getCountry().getId());
+        existingUser.setCountryCode(user.getCountryCode());
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setPhoneNumber(user.getPhoneNumber());
+        Timezone timezone = new Timezone();
+        timezone.setId(user.getTimezone().getId());
+        existingUser.setTimezone(timezone);
+        existingUser.setGender(user.getGender());
+        
+        System.out.println("existing user -------" + existingUser);
+        return userRepository.save(existingUser);
+    }
+
+	/**
+	 * {@inheritDoc}
+	 */
+    public Boolean deleteOrganizationUser(CommonRequestDTO requestData) {
+        Long userId = requestData.getId();
+        Long tenantId = requestData.getTenantId();
+        if (Objects.isNull(userId)) {
+            throw new DataNotAcceptableException(1016);
+        }
+        User existingUser = userRepository.findByIdAndIsActiveTrue(userId);
+        if (Objects.isNull(existingUser)) {
+            throw new DataNotFoundException(1010);
+        }
+
+        existingUser.getOrganizations().removeIf(organization -> organization.getId() == tenantId);
+        System.out.println("delete user after removing oorg in user" + existingUser);
+        existingUser.setDeleted(Constants.BOOLEAN_TRUE);
+        userRepository.save(existingUser);
+        return true;
+    }
+
 
 }
