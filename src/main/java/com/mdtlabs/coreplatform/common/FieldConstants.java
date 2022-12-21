@@ -17,6 +17,7 @@ public final class FieldConstants {
 	public static final String METHOD = "method";
 	public static final String API = "api";
 
+	public static final String CLIENT = "client";
 	public static final String ID = "id";
 	public static final String CREATED_BY = "created_by";
 	public static final String MODIFIED_BY = "modified_by";

@@ -33,6 +33,9 @@ public class UserToken extends BaseEntity implements Serializable {
 
 	@Column(name = FieldConstants.REFRESH_TOKEN)
 	private String refreshToken;
+	
+	@Column(name = FieldConstants.CLIENT)
+	private String client;
 
 	// @Column(name = FieldConstants.LAST_SESSION_TIME, columnDefinition = "TIMESTAMP")
 	// @UpdateTimestamp

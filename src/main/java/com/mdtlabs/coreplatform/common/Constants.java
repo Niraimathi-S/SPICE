@@ -117,6 +117,7 @@ public final class Constants {
 	public static final String ROLE_IDS = "roleIds";
 	public static final String JWE_TOKEN = "jweToken";
 	public static final String JWE_REFRESH_TOKEN = "jweRefreshToken";
+	public static final String CLIENT = "client";
 	public static final String NOTIFICATION_INSTANCE = "NOTIFICATION-SERVICE";
 	public static final String LOGGER = "Logger";
 	public static final int ZERO = 0;
