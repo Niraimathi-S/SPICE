@@ -29,6 +29,17 @@ import org.springframework.util.FileCopyUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.mdtlabs.coreplatform.authservice.repository.UserRepository;
+import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.ErrorConstants;
+import com.mdtlabs.coreplatform.common.logger.Logger;
+import com.mdtlabs.coreplatform.common.model.dto.AuthUserDTO;
+import com.mdtlabs.coreplatform.common.model.dto.RoleDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Organization;
+import com.mdtlabs.coreplatform.common.model.entity.UserToken;
+import com.mdtlabs.coreplatform.common.repository.GenericRepository;
+import com.mdtlabs.coreplatform.common.service.UserTokenService;
+import com.mdtlabs.coreplatform.common.util.DateUtil;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -36,18 +47,6 @@ import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.mdtlabs.coreplatform.common.Constants;
-import com.mdtlabs.coreplatform.common.ErrorConstants;
-import com.mdtlabs.coreplatform.common.FieldConstants;
-import com.mdtlabs.coreplatform.common.logger.Logger;
-import com.mdtlabs.coreplatform.common.model.dto.AuthUserDTO;
-import com.mdtlabs.coreplatform.common.model.entity.Organization;
-import com.mdtlabs.coreplatform.common.model.entity.UserToken;
-import com.mdtlabs.coreplatform.common.repository.CommonRepository;
-import com.mdtlabs.coreplatform.common.repository.GenericRepository;
-import com.mdtlabs.coreplatform.common.service.UserTokenService;
-import com.mdtlabs.coreplatform.common.util.DateUtil;
-import com.mdtlabs.coreplatform.authservice.repository.UserRepository;
 
 /**
  * <p>
@@ -122,6 +121,12 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 */
 	private void responseHeaderUser(HttpServletResponse response, AuthUserDTO user,String client) {
 		init();
+		List<String> roles = user.getRoles().stream().map(RoleDTO::getName).collect(Collectors.toList());
+        boolean isSuperUser = false;
+        if (roles.contains(Constants.ROLE_SUPER_USER)) {
+        	isSuperUser = true;
+        }
+		user.setIsSuperUser(isSuperUser);
 		Map<String, Object> userInfo = new ObjectMapper().convertValue(user, Map.class);
 		String authToken = null;
 		String refreshToken = null;
@@ -148,12 +153,15 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 */
 	private String authTokenCreation(AuthUserDTO user, Map<String, Object> userInfo) throws JOSEException {
 		List<Long> tenantIds = new ArrayList<>();
-		String tenantData = tenantIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+		if (!user.getOrganizations().isEmpty()) {
+			tenantIds = user.getOrganizations().stream().map(Organization::getId).collect(Collectors.toList());
+		}
 		JWTClaimsSet.Builder claimsSet = new JWTClaimsSet.Builder();
 		claimsSet.issuer(Constants.TOKEN_ISSUER);
 		claimsSet.subject(Constants.AUTH_TOKEN_SUBJECT);
 		claimsSet.claim(Constants.USER_ID_PARAM, user.getId());
 		claimsSet.claim(Constants.USER_DATA, userInfo);
+		claimsSet.claim(Constants.TENANT_IDS_CLAIM, tenantIds);
 		claimsSet.claim(Constants.APPLICATION_TYPE, Constants.WEB);
 		claimsSet.expirationTime(
 				Date.from(ZonedDateTime.now().plusMinutes(Constants.AUTH_TOKEN_EXPIRY_MINUTES).toInstant()));

@@ -153,13 +153,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				.map(Role::getId).collect(Collectors.toList()));
 			user.setRoles(roles);
 			user.setForgetPasswordCount(Constants.ZERO);
-			if (null != user.getOrganizations()) {
+			Set<Organization> organizations = new HashSet<>();
+			if (null != user.getOrganizations() && !user.getOrganizations().isEmpty()) {
 				Set<Organization> organizations = organizationService.getOrganizationsByIds(
 					user.getOrganizations().stream().map(Organization::getId)
 					.collect(Collectors.toList()));
 				user.setOrganizations(organizations);
 				user.setTenantId(organizations.stream().findFirst().get().getId());
 			}
+			user.setOrganizations(organizations);
 			User newUser = userRepository.save(user);
 			if (Objects.nonNull(newUser)) {
 				forgotPassword(user.getUsername(), Boolean.TRUE);
