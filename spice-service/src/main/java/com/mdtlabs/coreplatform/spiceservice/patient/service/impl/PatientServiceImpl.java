@@ -471,6 +471,7 @@ public class PatientServiceImpl implements PatientService {
 		if (Objects.isNull(patientTracker)) {
 			throw new DataNotFoundException(3004);
 		}
+
 //        TODO: find organizationUnit using data from params and unit conversion of that data.
 		PatientTrackerDTO patientTrackerDTO = modelMapper.map(patientTracker, new TypeToken<PatientTrackerDTO>() {
 		}.getType());
@@ -484,7 +485,7 @@ public class PatientServiceImpl implements PatientService {
 		if (patientTrackerDTO.getPhq4SecondScore() >= 2) {
 			patientTrackerDTO.setPhq9(Constants.BOOLEAN_TRUE);
 		}
-
+		patientTrackerDTO.setId(patientTracker.getId());
 		if (requestData.isAssessmentDataRequired()) {
 			BpLog bpLog = bpLogService.getBpLogByPatientTrackIdAndIsLatest(requestData.getId(), Constants.BOOLEAN_TRUE);
 			if (!Objects.isNull(bpLog)) {

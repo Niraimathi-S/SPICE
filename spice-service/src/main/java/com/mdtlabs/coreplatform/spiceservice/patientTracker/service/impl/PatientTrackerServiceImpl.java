@@ -329,7 +329,7 @@ public class PatientTrackerServiceImpl implements PatientTrackerService {
 			HashMap<String, String> datesMap = getTodayAndTomorrowDate();
 
 			if (!Objects.isNull(patientFilterDTO.getScreeningReferral()) && patientFilterDTO.getScreeningReferral()) {
-				map.put("patientStatusNotEnrolled", "SCREENED");
+				map.put("patientStatusNotScreened", "SCREENED");
 			}
 
 			if (!Objects.isNull(patientFilterDTO.getPatientStatus())
