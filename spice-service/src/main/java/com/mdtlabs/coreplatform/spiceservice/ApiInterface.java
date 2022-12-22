@@ -1,29 +1,19 @@
 package com.mdtlabs.coreplatform.spiceservice;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-
 import com.mdtlabs.coreplatform.common.model.dto.spice.OtherMedicationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
-import com.mdtlabs.coreplatform.common.model.entity.Account;
-import com.mdtlabs.coreplatform.common.model.entity.Country;
-import com.mdtlabs.coreplatform.common.model.entity.County;
-import com.mdtlabs.coreplatform.common.model.entity.Program;
-import com.mdtlabs.coreplatform.common.model.entity.Site;
-import com.mdtlabs.coreplatform.common.model.entity.Subcounty;
+import com.mdtlabs.coreplatform.common.model.entity.*;
 import com.mdtlabs.coreplatform.common.model.entity.spice.AccountCustomization;
 import com.mdtlabs.coreplatform.common.model.entity.spice.AccountWorkflow;
 import com.mdtlabs.coreplatform.common.model.entity.spice.LabTest;
 import com.mdtlabs.coreplatform.common.model.entity.spice.RegionCustomization;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This interface is used to access admin service APIs.

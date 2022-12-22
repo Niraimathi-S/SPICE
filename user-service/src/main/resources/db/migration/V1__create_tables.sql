@@ -1491,7 +1491,7 @@ CREATE TABLE sms_template(
 CREATE TABLE sms_template_values(
 	id SERIAL PRIMARY KEY,
 	key VARCHAR,
-	template_id int, FOREIGN KEY (template_id) REFERENCES sms_template(id),
+	sms_template_id int, FOREIGN KEY (template_id) REFERENCES sms_template(id),
 	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -1541,7 +1541,7 @@ INSERT INTO api_role_permission ("method",api,roles) VALUES
 INSERT INTO sms_template (body,"type",created_at,updated_at) VALUES
 	 ('A Red Alert Notification was received for one of your patients. Log into the SPICE application to review patient details.
 ','RED_RISK','2022-12-16 12:56:09.161','2022-12-16 12:56:09.161'),
-	 ('Hi {{name}}, thank you for getting screened by Spice health worker from {{orgname}} site. Your registration code is {{patient_id}}.
+	 ('Hi ${name}, thank you for getting screened by Spice health worker from ${country} site. Your registration code is ${patient_id}.
 
 ','ENROLL_PATIENT','2022-12-16 12:56:09.161','2022-12-16 12:56:09.161');
 
