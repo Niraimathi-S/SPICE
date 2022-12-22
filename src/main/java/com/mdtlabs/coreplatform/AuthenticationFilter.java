@@ -33,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
@@ -47,7 +46,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -118,17 +116,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserTokenService userTokenService;
 
-	private RestTemplate restService = new RestTemplate();
-
-	private ModelMapper modelMapper = new ModelMapper();
-
 	@Value("${app.public-key}")
 	private String publicKey;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		if (request.getRequestURI().contains("/user/forgot-password") 
+		if (request.getRequestURI().contains("/user/forgot-password")
 				|| request.getRequestURI().contains("/user/update-password")
 				|| request.getRequestURI().contains("/user/login-limit-exceed")
 				|| request.getRequestURI().contains("/user/is-forget-password-limit-exceed")
@@ -161,10 +155,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 					if (StringUtils.isNotBlank(tenantId) && tenantId.matches("[0-9]+")) {
 						List<Long> userTenants = UserTenantsContextHolder.get();
-						/*if (!userTenants.contains(Long.parseLong(tenantId))
-								&& !userDto.getIsSuperUser()) {
-							throw new Validation(20003);
-						}*/ 
+						/*
+						 * if (!userTenants.contains(Long.parseLong(tenantId)) &&
+						 * !userDto.getIsSuperUser()) { throw new Validation(20003); }
+						 */
 						UserSelectedTenantContextHolder.set(Long.parseLong(tenantId));
 					}
 					if (apiPermissionMap.isEmpty()) {
@@ -181,7 +175,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 							}
 						});
 					}
-					
+
 					boolean isExist = false;
 					if (userDto.getIsSuperUser()) {
 						isExist = true;
@@ -192,13 +186,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 								apiRequest = requestType;
 							}
 						});
-						
+
 						for (RoleDTO role : userDto.getRoles()) {
-							if (apiPermissionMap.get(request.getMethod()).get(apiRequest).contains(
-									role.getName())) {
+							if (apiPermissionMap.get(request.getMethod()).get(apiRequest).contains(role.getName())) {
 								isExist = true;
 								break;
 							}
+
 						}
 					}
 					if (isExist) {
@@ -260,8 +254,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		userDetail = objectMapper.readValue(rawJson, UserDTO.class);
 		userDetail.setAuthorization(jwtToken);
 		if (null != tenants) {
-			List<Long> tenantIds = (List<Long>) tenants;
-			UserTenantsContextHolder.set(tenantIds);
+			System.out.println("tenants: " + tenants);
+			if (tenants instanceof List) {
+				List<Long> tenantIds = (List<Long>) tenants;
+				UserTenantsContextHolder.set(tenantIds);
+				System.out.println("tenantIdss---------------------" + tenantIds);
+			}
+
 		}
 		if (null != userDetail.getTimezone()) {
 			CustomDateSerializer.USER_ZONE_ID = userDetail.getTimezone().getOffset();

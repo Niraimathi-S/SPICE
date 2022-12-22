@@ -11,4 +11,6 @@ public class MedicalReviewDTO extends CommonRequestDTO {
 
 	private Boolean isPregent;
 
+
+
 }

@@ -20,33 +20,34 @@ import lombok.Data;
 @Table(name = TableConstants.TABLE_PATIENT_LIFESTYLE)
 public class PatientLifestyle extends TenantBaseEntity {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-	public PatientLifestyle() {}
-    
-    public PatientLifestyle(Long tenantId, Long patientTrackId, Long patinetVisitId, Long lifestyleId,
-            String answer, String comments) {
-        this.tenantId = tenantId;
-        this.patientTrackId = patientTrackId;
-        this.patinetVisitId = patinetVisitId;
-        this.lifestyleId = lifestyleId;
-        this.answer = answer;
-        this.comments = comments;
-    }
+	public PatientLifestyle() {
+	}
 
-    @Column(name = FieldConstants.PATIENT_TRACK_ID)
-    private Long patientTrackId;
+	public PatientLifestyle(Long tenantId, Long patientTrackId, Long patinetVisitId, Long lifestyleId, String answer,
+			String comments) {
+		this.tenantId = tenantId;
+		this.patientTrackId = patientTrackId;
+		this.patinetVisitId = patinetVisitId;
+		this.lifestyleId = lifestyleId;
+		this.answer = answer;
+		this.comments = comments;
+	}
 
-    @Column(name = FieldConstants.PATIENT_VISIT_ID)
-    private Long patinetVisitId;
+	@Column(name = FieldConstants.PATIENT_TRACK_ID)
+	private Long patientTrackId;
 
-    @Column(name = FieldConstants.LIFESTYLE_ID)
-    private Long lifestyleId;
+	@Column(name = FieldConstants.PATIENT_VISIT_ID)
+	private Long patinetVisitId;
 
-    @Column(name = FieldConstants.ANSWER)
-    private String answer;
+	@Column(name = FieldConstants.LIFESTYLE_ID)
+	private Long lifestyleId;
 
-    @Column(name = FieldConstants.COMMENTS)
-    private String comments;
+	@Column(name = FieldConstants.ANSWER)
+	private String answer;
+
+	@Column(name = FieldConstants.COMMENTS)
+	private String comments;
 
 }

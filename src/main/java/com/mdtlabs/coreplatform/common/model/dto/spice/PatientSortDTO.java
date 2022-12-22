@@ -12,10 +12,10 @@ import lombok.Data;
 public class PatientSortDTO extends PaginateDTO {
 
 	private Boolean isRedRiskPatientAsc;
-
 	private Boolean nextMedicalReviewDateAsc;
-	
 	private Boolean cvdRiskScoreAsc;
 	private Boolean nextBpAssessmentDateAsc;
+	private Boolean nextBgAssessmentDateAsc;
+	private Boolean assessmentDueDateAsc;
 
 }

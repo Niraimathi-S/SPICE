@@ -15,4 +15,5 @@ public class ContinuousMedicalReviewDTO extends CommonRequestDTO {
 
 	private String physicalExamComments;
 
+	private String clinicalNote;
 }

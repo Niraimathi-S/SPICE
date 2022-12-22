@@ -324,7 +324,8 @@ public class CommonUtil {
 	 */
 	public static HttpEntity<String> getCurrentEntity() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.AUTHORIZATION, StringUtil.concatString(Constants.BEARER, UserContextHolder.getUserDto().getAuthorization()));
+		headers.add(HttpHeaders.AUTHORIZATION,
+				StringUtil.concatString(Constants.BEARER, UserContextHolder.getUserDto().getAuthorization()));
 		return new HttpEntity<>(headers);
 	}
 
@@ -364,7 +365,7 @@ public class CommonUtil {
 		String regex = "^[0-9a-zA-Z@._-]+$";
 
 		boolean isInvalidData = values.stream()
-				.anyMatch(value -> (!Objects.isNull(value) && !value.isEmpty() && !Pattern.matches(regex, value)));
+				.allMatch(value -> (!Objects.isNull(value) && !value.isEmpty() && !Pattern.matches(regex, value)));
 
 		return isInvalidData;
 	}

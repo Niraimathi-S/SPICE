@@ -16,32 +16,34 @@ import lombok.Data;
 
 @Data
 public class AssessmentResponseDTO {
-    
-    private PatientDetailDTO patientDetails;
 
-    private GlucoseLogDTO glucoseLog;
+	private PatientDetailDTO patientDetails;
 
-    private BpLogDTO bpLog;
+	private GlucoseLogDTO glucoseLog;
 
-    private MentalHealthDTO phq4;
+	private BpLogDTO bpLog;
 
-    private List<PatientSymptomDTO> symptoms;
+	private MentalHealthDTO phq4;
 
-    private List<PatientComplianceDTO> medicalCompliance;
+	private List<PatientSymptomDTO> symptoms;
 
-    private String riskLevel;
+	private List<PatientComplianceDTO> medicalCompliance;
 
-    private String riskMessage;
+	private String riskLevel;
 
-    public void setSymptoms(List<PatientSymptom> symptoms) {
-        ModelMapper mapper = new ModelMapper();
-        this.symptoms = mapper.map(symptoms, new TypeToken<List<PatientSymptomDTO>>() {
-        }.getType());
-    }
+	private String riskMessage;
 
-    public void setMedicalCompliance(List<PatientMedicalCompliance> medicalCompliance) {
-        ModelMapper mapper = new ModelMapper();
-        this.symptoms = mapper.map(medicalCompliance, new TypeToken<List<PatientComplianceDTO>>() {
-        }.getType());
-    }
+	private List<String> confirmDiagnosis;
+
+	public void setSymptoms(List<PatientSymptom> symptoms) {
+		ModelMapper mapper = new ModelMapper();
+		this.symptoms = mapper.map(symptoms, new TypeToken<List<PatientSymptomDTO>>() {
+		}.getType());
+	}
+
+	public void setMedicalCompliance(List<PatientMedicalCompliance> medicalCompliance) {
+		ModelMapper mapper = new ModelMapper();
+		this.symptoms = mapper.map(medicalCompliance, new TypeToken<List<PatientComplianceDTO>>() {
+		}.getType());
+	}
 }
