@@ -135,8 +135,7 @@ CREATE TABLE user_token (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   is_active BOOLEAN DEFAULT true,
-  is_deleted BOOLEAN DEFAULT false,
-  client VARCHAR
+  is_deleted BOOLEAN DEFAULT
 );
 
 CREATE TABLE role (
@@ -1500,7 +1499,7 @@ INSERT INTO country ("name",country_code,unit_measurement,tenant_id,created_by,u
 	 ('India','91','metric',1,1,1,'2022-12-08 19:10:06.739','2022-12-08 19:10:06.739',true,false,NULL);
 
 INSERT INTO timezone (description,abbreviation,"offset",created_by,updated_by,created_at,updated_at,is_active,is_deleted) VALUES
-	 ('(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi','IST','UTC+05:30',1,1,'2022-12-08 19:11:09.138','2022-12-08 19:11:09.138',true,false); 
+	 ('(+05:30) Chennai, Kolkata, Mumbai, New Delhi','IST','UTC+05:30',1,1,'2022-12-08 19:11:09.138','2022-12-08 19:11:09.138',true,false); 
 	 
 INSERT INTO "user" (first_name,last_name,middle_name,gender,phone_number,address,username,"password",country_code,is_blocked,blocked_date,forget_password_token,forget_password_time,forget_password_count,invalid_login_attempts,invalid_login_time,invalid_reset_time,is_password_reset_enabled,password_reset_attempts,is_license_acceptance,last_logged_in,last_logged_out,country_id,timezone_id,created_by,updated_by,created_at,updated_at,is_active,is_deleted,ref_id,tenant_id) VALUES
 	 ('test','user','m','Male','98764321',NULL,'superuser@test.com','\xc30d040703021e2a37bef1a7243f61d2b101cd17bf7f7db36e4e9270c0a587d01272e49b2c54eafd4e86fc00e048d3c93e763808ab2599ffd3d5a914130bbe28132852951b58e1c3c389523b46821eb4cd8d5cc4809844a3c008c020858e9994407d70933745ea9c083030e2f6ac1386ea05549c64c75ebceee058fa68f49fd189e9b99e4aaca19dd50f8290a1b4048300119745c58f99be07138a527f4dad7ea9b74a3bad9c65d611799e4e371f04173cf4f87ed9a3bbc46722708e7815b78305d5',NULL,false,NULL,'1','2022-12-08 14:38:17.115',0,0,'2022-12-08 14:38:17.115','2022-12-08 14:38:17.115',true,0,false,NULL,NULL,1,1,1,1,'2022-12-08 14:38:17.115','2022-12-08 14:38:17.115',true,false,NULL,0);
@@ -1541,7 +1540,7 @@ INSERT INTO api_role_permission ("method",api,roles) VALUES
 INSERT INTO sms_template (body,"type",created_at,updated_at) VALUES
 	 ('A Red Alert Notification was received for one of your patients. Log into the SPICE application to review patient details.
 ','RED_RISK','2022-12-16 12:56:09.161','2022-12-16 12:56:09.161'),
-	 ('Hi ${name}, thank you for getting screened by Spice health worker from ${country} site. Your registration code is ${patient_id}.
+	 ('Hi {{name}}, thank you for getting screened by Spice health worker from {{country}} site. Your registration code is {{patient_id}}.
 
 ','ENROLL_PATIENT','2022-12-16 12:56:09.161','2022-12-16 12:56:09.161');
 

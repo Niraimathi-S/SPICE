@@ -1,21 +1,25 @@
 package com.mdtlabs.coreplatform.spiceservice.patient.service.impl;
 
-import com.mdtlabs.coreplatform.common.Constants;
-import com.mdtlabs.coreplatform.common.FieldConstants;
-import com.mdtlabs.coreplatform.common.UnitConstants;
-import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
-import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
-import com.mdtlabs.coreplatform.common.exception.BadRequestException;
-import com.mdtlabs.coreplatform.common.exception.DataConflictException;
-import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
-import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
-import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
-import com.mdtlabs.coreplatform.common.model.dto.spice.*;
-import com.mdtlabs.coreplatform.common.model.entity.Country;
-import com.mdtlabs.coreplatform.common.model.entity.Site;
-import com.mdtlabs.coreplatform.common.model.entity.spice.*;
-import com.mdtlabs.coreplatform.common.util.CommonUtil;
-import com.mdtlabs.coreplatform.common.util.UnitConversion;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
+
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.stereotype.Service;
+
 import com.mdtlabs.coreplatform.spiceservice.ApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.NotificationApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.UserApiInterface;
@@ -34,18 +38,51 @@ import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.Patien
 import com.mdtlabs.coreplatform.spiceservice.prescription.repository.PrescriptionHistoryRepository;
 import com.mdtlabs.coreplatform.spiceservice.prescription.repository.PrescriptionRepository;
 import com.mdtlabs.coreplatform.spiceservice.screeningLog.service.ScreeningLogService;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.UnitConstants;
+import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
+import com.mdtlabs.coreplatform.common.exception.BadRequestException;
+import com.mdtlabs.coreplatform.common.exception.DataConflictException;
+import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
+import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
+import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.BioDataDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.BpLogDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.DiagnosisDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.EnrollmentRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.EnrollmentResponseDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.GetRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.GlucoseLogDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.MentalHealthDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.PatientDetailDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.PatientGetRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.PatientTrackerDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.PregnancyRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.PrescriberDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.RedRiskDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SmsDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Country;
+import com.mdtlabs.coreplatform.common.model.entity.Site;
+import com.mdtlabs.coreplatform.common.model.entity.spice.BpLog;
+import com.mdtlabs.coreplatform.common.model.entity.spice.GlucoseLog;
+import com.mdtlabs.coreplatform.common.model.entity.spice.Lifestyle;
+import com.mdtlabs.coreplatform.common.model.entity.spice.MentalHealth;
+import com.mdtlabs.coreplatform.common.model.entity.spice.Patient;
+import com.mdtlabs.coreplatform.common.model.entity.spice.PatientDiagnosis;
+import com.mdtlabs.coreplatform.common.model.entity.spice.PatientLifestyle;
+import com.mdtlabs.coreplatform.common.model.entity.spice.PatientPregnancyDetails;
+import com.mdtlabs.coreplatform.common.model.entity.spice.PatientTracker;
+import com.mdtlabs.coreplatform.common.model.entity.spice.Prescription;
+import com.mdtlabs.coreplatform.common.model.entity.spice.PrescriptionHistory;
+import com.mdtlabs.coreplatform.common.model.entity.spice.SMSTemplate;
+import com.mdtlabs.coreplatform.common.model.entity.spice.SMSTemplateValues;
+import com.mdtlabs.coreplatform.common.model.entity.spice.ScreeningLog;
+import com.mdtlabs.coreplatform.common.util.CommonUtil;
+import com.mdtlabs.coreplatform.common.util.StringUtil;
+import com.mdtlabs.coreplatform.common.util.UnitConversion;
 
 /**
  * This is the class that implements PatientService class and contains the
@@ -252,7 +289,7 @@ public class PatientServiceImpl implements PatientService {
 
 //		data.put("orgname", country.getName());
 //		data.put("patientid", enrolledPatient.getId().toString());
-		body = CommonUtil.parseEmailTemplate(body, data);
+		body = StringUtil.parseEmailTemplate(body, data);
 		smsDTO.setToPhoneNo(country.getCountryCode() + enrolledPatient.getPhoneNumber());
 		smsDTO.setTenantId(enrolledPatient.getTenantId());
 		smsDTO.setBody(body);

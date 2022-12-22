@@ -7,21 +7,25 @@ import java.security.spec.X509EncodedKeySpec;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -36,6 +40,7 @@ import com.mdtlabs.coreplatform.common.logger.Logger;
 import com.mdtlabs.coreplatform.common.model.dto.AuthUserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.RoleDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
+import com.mdtlabs.coreplatform.common.model.entity.Role;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
 import com.mdtlabs.coreplatform.common.repository.GenericRepository;
 import com.mdtlabs.coreplatform.common.service.UserTokenService;
@@ -97,12 +102,46 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 			try {
 				AuthUserDTO user = getLoggedInUser();
 				if (user != null) {
+					String client = request.getHeader(Constants.HEADER_CLIENT);
+					if (StringUtils.isNotBlank(client)) {
+						if (Constants.CLIENT_SPICE_MOBILE.equalsIgnoreCase(client)) {
+							boolean isExist = false;
+							for (RoleDTO roleDto : user.getRoles()) {
+								if (null != Constants.SPICE_MOBILE_ROLES.get(roleDto.getName())) {
+									isExist = true;
+									Role role = new Role(roleDto.getId(), roleDto.getName());
+									Set<Role> roles = new HashSet<>();
+									roles.add(role);
+									user.setRoles(roles);
+									break;
+								}
+							}
+							if (!isExist) {
+								throw new BadCredentialsException(ErrorConstants.ERROR_USER_DOESNT_ROLE);
+							}
+						} else if (Constants.CLIENT_SPICE_WEB.equalsIgnoreCase(client)) {
+							boolean isExist = false;
+							for (RoleDTO roleDto : user.getRoles()) {
+								if (null != Constants.SPICE_WEB_ROLES.get(roleDto.getName())) {
+									isExist = true;
+									Role role = new Role(roleDto.getId(), roleDto.getName());
+									Set<Role> roles = new HashSet<>();
+									roles.add(role);
+									user.setRoles(roles);
+									break;
+								}
+							}
+							if (!isExist) {
+								throw new BadCredentialsException(ErrorConstants.ERROR_USER_DOESNT_ROLE);
+							}
+						}
+					}
 					user.setCurrentDate(new Date().getTime());
 					ObjectWriter objectWriter = new ObjectMapper().writer()
 						.withDefaultPrettyPrinter();
 					String json = objectWriter.writeValueAsString(user);
 					response.getWriter().write(json);
-					responseHeaderUser(response, user, request.getHeader("client"));
+					responseHeaderUser(response, user); 
 				} else {
 					response.getWriter().write(ErrorConstants.INVALID_USER_ERROR);
 				}
@@ -121,7 +160,7 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 * @param user     - user information is passed through DTO
 	 * @param maxRole  - role of the corresponding user being passed
 	 */
-	private void responseHeaderUser(HttpServletResponse response, AuthUserDTO user, String client) {
+	private void responseHeaderUser(HttpServletResponse response, AuthUserDTO user) {
 		init();
 		List<String> roles = user.getRoles().stream().map(RoleDTO::getName).collect(Collectors.toList());
 		boolean isSuperUser = false;
@@ -138,11 +177,10 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 		} catch (JOSEException execption) {
 			Logger.logError(ErrorConstants.ERROR_JWE_TOKEN, execption);
 		}
-		createUserToken(user.getId(), authToken, refreshToken, client);
+		createUserToken(user.getId(), authToken, refreshToken);
 		response.setHeader(Constants.AUTHORIZATION, authToken);
 		response.setHeader(Constants.REFRESH_TOKEN, refreshToken);
 		response.setHeader(Constants.HEADER_TENANT_ID, String.valueOf(user.getTenantId()));
-		response.setHeader(Constants.CLIENT, client);
 	}
 
 	/**
@@ -210,14 +248,13 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 * @param jwtToken        - jwt token of the logged in user
 	 * @param jwtRefreshToken - refresh token of the logged in user
 	 */
-	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken, String client) {
+	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken) {
 		UserToken userToken = new UserToken();
 		userToken.setUserId(userId);
 		userToken.setAuthToken(jwtToken.substring(Constants.BEARER.length(), jwtToken.length()));
 		userToken.setRefreshToken(jwtRefreshToken.substring(Constants.BEARER.length(),
 			jwtRefreshToken.length()));
 		userToken.setActive(true);
-		userToken.setClient(client);
 		genericRepository.save(userToken);
 		Optional<List<UserToken>> userTokens = userTokenService.getUserTokenByUserID(userId);
 		List<String> tokensToDelete = getTokensToDelete(userTokens);
