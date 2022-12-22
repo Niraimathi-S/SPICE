@@ -1,6 +1,7 @@
 package com.mdtlabs.coreplatform.spiceadminservice.medication.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.Medication;
@@ -44,7 +45,7 @@ public interface MedicationService {
 	 * @param requestObject
 	 * @return List of Medication Entity
 	 */
-	public List<Medication> getAllMedications(RequestDTO requestObject);
+	public  Map<String, Object> getAllMedications(RequestDTO requestObject);
 
 	/**  
 	 * This method is used to update the status of a medication which is soft

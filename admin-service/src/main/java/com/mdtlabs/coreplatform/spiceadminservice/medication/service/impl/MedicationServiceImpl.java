@@ -1,6 +1,8 @@
 package com.mdtlabs.coreplatform.spiceadminservice.medication.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -82,6 +84,15 @@ public class MedicationServiceImpl implements MedicationService {
      * {@inheritDoc}
      */
     public Boolean validateMedication(Medication medication) {
+
+        if (Objects.isNull(medication.getClassificationId()) 
+            && Objects.isNull(medication.getBrandId())
+            && Objects.isNull(medication.getDosageFormId())
+            && Objects.isNull(medication.getMedicationName()) 
+            && Objects.isNull(medication.getCountryId())) {
+			throw new DataNotAcceptableException(12007);
+        } 
+        
         Medication medicationCountryDetail = medicationRepository.getMedicationByFields(
                 medication.getClassificationId(), medication.getBrandId(), medication.getDosageFormId(),
                 medication.getCountryId(), medication.getMedicationName());
@@ -106,7 +117,14 @@ public class MedicationServiceImpl implements MedicationService {
     /**
      * {@inheritDoc}
      */
-    public List<Medication> getAllMedications(RequestDTO requestObject) {
+    public Map<String, Object> getAllMedications(RequestDTO requestObject) {
+
+        if (Objects.isNull(requestObject.getCountryId())) {
+            throw new DataNotAcceptableException(10001);
+        }
+
+        Map<String, Object> responseMap = new HashMap<>();
+
         String sortField = Objects.isNull(requestObject.getSortField()) ||
                 requestObject.getSortField().isBlank() ? FieldConstants.MODIFIED_AT : requestObject.getSortField();
         Direction sortDirection = 0 != requestObject.getSortOrder() &&
@@ -121,8 +139,11 @@ public class MedicationServiceImpl implements MedicationService {
         }
         medications = medicationRepository.getAllMedications(formattedSearchTerm, requestObject.getCountryId(),
                 requestObject.getTenantId(), pageable);
-        return medications.stream().collect(Collectors.toList());
-
+        int medicationsCount = medicationRepository.getAllMedicationsCount(formattedSearchTerm, requestObject.getCountryId(),
+                requestObject.getTenantId());
+        responseMap.put("medicationList", medications.stream().collect(Collectors.toList()));
+        responseMap.put("totalCount", medicationsCount);
+        return responseMap;
     }
 
     /**

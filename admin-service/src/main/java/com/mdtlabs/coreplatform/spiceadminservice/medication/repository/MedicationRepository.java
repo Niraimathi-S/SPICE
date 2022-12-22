@@ -26,10 +26,13 @@ import com.mdtlabs.coreplatform.common.model.entity.spice.Medication;
 public interface MedicationRepository extends JpaRepository<Medication, Long> {
 
 
-	public static final String GET_ALL_MEDICATIONS = "select * from medicationcountrydetail as medication where "
-			+ "(:countryId is null or medication.country_id=:countryId) and medication.tenant_id=:tenantId and medication.is_deleted=false "
-			+ "and (:searchTerm is null or lower(medication.medication_name) LIKE CONCAT('%',lower(:searchTerm),'%'))"
-			;
+	public static final String GET_ALL_MEDICATIONS = "select * from medication_country_detail as medication where "
+            + "medication.country_id=:countryId and medication.tenant_id=:tenantId and medication.is_deleted=false "
+            + "and (:searchTerm is null or lower(medication.medication_name) LIKE CONCAT('%',lower(:searchTerm),'%'))";
+
+	public static final String GET_ALL_MEDICATIONS_COUNT = "select count(id) from medication_country_detail as medication where "
+            + "medication.country_id=:countryId and medication.tenant_id=:tenantId and medication.is_deleted=false "
+            + "and (:searchTerm is null or lower(medication.medication_name) LIKE CONCAT('%',lower(:searchTerm),'%'))";
 
 	public static final String UPDATE_MEDICATION_STATUS_BY_ID = "update from Medication as medication set "
 			+ "medication.isDeleted=:status where medication.id = :medicationId AND medication.isDeleted=false AND "
@@ -56,6 +59,16 @@ public interface MedicationRepository extends JpaRepository<Medication, Long> {
 	@Query(value = GET_ALL_MEDICATIONS, nativeQuery = true)
 	public Page<Medication> getAllMedications(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId, @Param("tenantId") Long tenantId,
 			Pageable pageable);
+
+    /**
+	 * This method is used to get all medications count.
+	 *
+	 * @param countryId
+	 * @param pageable
+	 * @return Total count
+	 */
+	@Query(value = GET_ALL_MEDICATIONS_COUNT, nativeQuery = true)
+	public int getAllMedicationsCount(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId, @Param("tenantId") Long tenantId);
 
 	/**
 	 * This method is used to update the isdeleted status of a medication.

@@ -1,12 +1,15 @@
 package com.mdtlabs.coreplatform.spiceadminservice.medication.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,17 +91,24 @@ public class MedicationController {
 	 * @param requestObject
 	 * @return List of Medication Entity
 	 */
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	public SuccessResponse<List<MedicationDTO>> getAllMedications(@RequestBody RequestDTO requestObject) {
-		List<Medication> medications = medicationService.getAllMedications(requestObject);
-		if (!medications.isEmpty()) {
-			List<MedicationDTO> medicationDTOs = modelMapper.map(medications, new TypeToken<List<MedicationDTO>>() {
-			}.getType());
-			return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, medicationDTOs,
-					medicationDTOs.size(), HttpStatus.OK);
-		}
-		return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, noDataList, 0, HttpStatus.OK);
-	}
+        Map<String, Object> medications = medicationService.getAllMedications(requestObject);
+        List<Medication> medicationList = medications.containsKey("medicationList")
+            ? (List<Medication>) medications.get("medicationList")
+            : new ArrayList<>();
+        Integer totalMedicationCount = medications.containsKey("totalCount") 
+            ? Integer.parseInt(medications.get("totalCount").toString())
+            : 0;
+        int totalCount = 0;
+        List<MedicationDTO>  medicationDTOs = new ArrayList<>();
+        if (!medicationList.isEmpty()) {
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            medicationDTOs = modelMapper.map(medicationList, new TypeToken<List<MedicationDTO>>() {}.getType());
+            totalCount = totalMedicationCount;
+        }
+        return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, medicationDTOs, totalCount, HttpStatus.OK);
+     }
 
 	/**
 	 * Used to soft delete a medication.

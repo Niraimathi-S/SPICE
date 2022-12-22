@@ -299,17 +299,16 @@ public class DataServiceImpl implements DataService {
 	public Map<String, Object> getCountryList(RequestDTO requestDTO) {
 		String searchTerm = requestDTO.getSearchTerm();
 		int totalCount = 0;
-		if (0 == requestDTO.getSkip()) {
-			totalCount = countryRepository.countByIsDeletedFalse();
-		}
-		Pageable pageable = Pagination.setPagination(requestDTO.getSkip(), requestDTO.getLimit(), Constants.CREATED_AT,
-				Constants.BOOLEAN_FALSE);
+		Pageable pageable = Pagination.setPagination(requestDTO.getSkip(), requestDTO.getLimit(), Constants.CREATED_AT, Constants.BOOLEAN_FALSE);
 		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
 			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
 		}
 		List<Country> countries = countryRepository.searchCountries(searchTerm, pageable).stream()
 				.collect(Collectors.toList());
 		List<CountryListDTO> countryListDTOs = new ArrayList<>();
+		if (0 == requestDTO.getSkip()) {
+            totalCount = countryRepository.getCountryCountByName(searchTerm);
+		}
 		UserDTO userDto = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDto.getAuthorization();
 

@@ -23,6 +23,9 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	public static final String GET_ALL_COUNTRIES = "select country from Country as country where country.isDeleted=false";
 	public static final String GET_COUNTRIES_BY_NAME = "select country from Country as country where lower(country.name)"
 			+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND country.isDeleted=false order by country.updatedBy";
+	public static final String GET_COUNTRIES_COUNT_BY_NAME = "select count(id) from Country as country where lower(country.name)"
+			+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND country.isDeleted=false";
+
 
 	/**
 	 * Finds a country based on countryCode and name
@@ -100,6 +103,16 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	Page<Country> searchCountries(@Param("searchTerm") String searchTerm, Pageable pageable);
 
 	/**
+	 * Retrives the all countries count based on the search term
+	 *
+	 * @param searchTerm
+	 * @return int count
+	 * @author Nandhakumar karthikeyan
+	 */
+	@Query(value = GET_COUNTRIES_COUNT_BY_NAME)
+	int getCountryCountByName(@Param("searchTerm") String searchTerm);
+
+	/**
 	 * Finds the country based on countryId and isActive
 	 *
 	 * @param countryId
@@ -126,12 +139,5 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	 * @return List of country entity
 	 */
 	List<Country> findByIdAndIsDeletedFalseAndIsActiveTrue(long id);
-
-	/**
-	 * To find the number of countries present. 
-	 * 
-	 * @return Number of countries.
-	 */
-	int countByIsDeletedFalse();
 
 }
