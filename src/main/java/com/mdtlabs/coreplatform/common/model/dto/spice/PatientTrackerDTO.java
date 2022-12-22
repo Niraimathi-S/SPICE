@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 public class PatientTrackerDTO {
 	private String nationalId;
+	private long id;
 	private String firstName;
 	private String lastName;
 	private Date dateOfBirth;

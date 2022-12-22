@@ -38,7 +38,7 @@ public class PatientDiagnosis extends TenantBaseEntity {
 	private String diabetesPatientType;
 
 	@Column(name = FieldConstants.DIABETES_DIAGNOSIS)
-	private String diabetesDiagnosis;
+	private String diabDiagnosis;
 
 	@Column(name = FieldConstants.DIABETES_DIAG_CONTROLLED_TYPE)
 	private String diabetesDiagControlledType;
@@ -74,12 +74,13 @@ public class PatientDiagnosis extends TenantBaseEntity {
 		this.diabetesYearOfDiagnosis = diabetesYearOfDiagnosis;
 		this.htnPatientType = htnPatientType;
 		this.diabetesPatientType = diabetesPatientType;
-		this.diabetesDiagnosis = diabetesDiagnosis;
+		this.diabDiagnosis = diabetesDiagnosis;
 		this.diabetesDiagControlledType = diabetesDiagControlledType;
 		this.isHtnDiagnosis = isHtnDiagnosis;
 		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
 	}
 
+<<<<<<< Updated upstream
 	public void setDiabetesDiagnosis(boolean isDiabetesDiagnosis) {
 		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
 	}
@@ -87,4 +88,6 @@ public class PatientDiagnosis extends TenantBaseEntity {
 	public void getDiabetesDiagnosis(String diabetesDiagnosis) {
 		this.diabetesDiagnosis = diabetesDiagnosis;
 	}
+=======
+>>>>>>> Stashed changes
 }
