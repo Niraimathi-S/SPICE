@@ -52,7 +52,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
  * <p>
  * <tt>AuthenticationSuccess</tt> Sent to successful authentication.
  * </p>
- * 
+ *
  * @author Vigneshkumar Created on 16 Oct 2020
  *
  */
@@ -69,6 +69,10 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	@Autowired
 	private GenericRepository genericRepository;
 
+	/**
+	 * This method is configured as init.
+	 * 
+	 */
 	public void init() {
 		try {
 			Resource resource = new ClassPathResource(publicKey);
@@ -84,7 +88,7 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) {
+		Authentication authentication) {
 		if (!response.isCommitted()) {
 			response.setStatus(HttpStatus.OK.value());
 			response.setContentType(Constants.CONTENT_TEXT_TYPE);
@@ -94,7 +98,8 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 				AuthUserDTO user = getLoggedInUser();
 				if (user != null) {
 					user.setCurrentDate(new Date().getTime());
-					ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+					ObjectWriter objectWriter = new ObjectMapper().writer()
+						.withDefaultPrettyPrinter();
 					String json = objectWriter.writeValueAsString(user);
 					response.getWriter().write(json);
 					responseHeaderUser(response, user, request.getHeader("client"));
@@ -110,8 +115,8 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	}
 
 	/**
-	 * This method is used to construct response header of the user
-	 * 
+	 * This method is used to construct response header of the user.
+	 *
 	 * @param response - http servlet reponse is passed
 	 * @param user     - user information is passed through DTO
 	 * @param maxRole  - role of the corresponding user being passed
@@ -141,12 +146,12 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	}
 
 	/**
-	 * This method is used to create authorization token
-	 * 
+	 * This method is used to create authorization token.
+	 *
 	 * @param user     - user information is passed through DTO
 	 * @param userInfo - user data is passed in map format
 	 * @return - String - jwt encrypted authorization token
-	 * @throws JOSEException
+	 * @throws JOSEException - jose exception
 	 */
 	private String authTokenCreation(AuthUserDTO user, Map<String, Object> userInfo) throws JOSEException {
 		List<Long> tenantIds = new ArrayList<>();
@@ -162,7 +167,8 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 		claimsSet.claim(Constants.APPLICATION_TYPE, Constants.WEB);
 		claimsSet.claim(Constants.TENANT_IDS_CLAIM, tenantIds);
 		claimsSet.expirationTime(
-				Date.from(ZonedDateTime.now().plusMinutes(Constants.AUTH_TOKEN_EXPIRY_MINUTES).toInstant()));
+			Date.from(ZonedDateTime.now().plusMinutes(Constants.AUTH_TOKEN_EXPIRY_MINUTES)
+			.toInstant()));
 		claimsSet.notBeforeTime(new Date());
 		claimsSet.jwtID(UUID.randomUUID().toString());
 		JWEHeader header = new JWEHeader(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM);
@@ -173,11 +179,11 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	}
 
 	/**
-	 * This method is used to create refresh token
-	 * 
+	 * This method is used to create refresh token.
+	 *
 	 * @param user - user information is passed through DTO
 	 * @return - String - jwt encrypted refresh token
-	 * @throws JOSEException
+	 * @throws JOSEException - jose exception
 	 */
 	private String refreshTokenCreation(AuthUserDTO user) throws JOSEException {
 		JWTClaimsSet.Builder claimsSet = new JWTClaimsSet.Builder();
@@ -186,7 +192,8 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 		claimsSet.claim(Constants.USER_ID_PARAM, user.getId());
 		claimsSet.claim(Constants.APPLICATION_TYPE, Constants.WEB);
 		claimsSet.expirationTime(
-				Date.from(ZonedDateTime.now().plusMinutes(Constants.REFRESH_TOKEN_EXPIRY_HOURS).toInstant()));
+			Date.from(ZonedDateTime.now().plusMinutes(Constants.REFRESH_TOKEN_EXPIRY_HOURS)
+			.toInstant()));
 		claimsSet.notBeforeTime(new Date());
 		claimsSet.jwtID(UUID.randomUUID().toString());
 		JWEHeader header = new JWEHeader(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM);
@@ -197,8 +204,8 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	}
 
 	/**
-	 * To update user token
-	 * 
+	 * To update user token.
+	 *
 	 * @param userId          - id of the user
 	 * @param jwtToken        - jwt token of the logged in user
 	 * @param jwtRefreshToken - refresh token of the logged in user
@@ -207,13 +214,14 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 		UserToken userToken = new UserToken();
 		userToken.setUserId(userId);
 		userToken.setAuthToken(jwtToken.substring(Constants.BEARER.length(), jwtToken.length()));
-		userToken.setRefreshToken(jwtRefreshToken.substring(Constants.BEARER.length(), jwtRefreshToken.length()));
+		userToken.setRefreshToken(jwtRefreshToken.substring(Constants.BEARER.length(),
+			jwtRefreshToken.length()));
 		userToken.setActive(true);
 		userToken.setClient(client);
 		genericRepository.save(userToken);
 		Optional<List<UserToken>> userTokens = userTokenService.getUserTokenByUserID(userId);
 		List<String> tokensToDelete = getTokensToDelete(userTokens);
-//		System.out.println("list of tokens" + tokensToDelete);
+		//System.out.println("list of tokens" + tokensToDelete);
 		if (!tokensToDelete.isEmpty()) {
 			userTokenService.deleteUserTokenByToken(tokensToDelete, userId);
 		}
@@ -239,16 +247,18 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	}
 
 	/**
-	 * To get logged in user details
-	 * 
-	 * @return UserDTO - user information
+	 * To get logged in user details.
+	 *
+	 * @return AuthUserDTO - user information
 	 */
 	private AuthUserDTO getLoggedInUser() {
-		if (null == SecurityContextHolder.getContext() || null == SecurityContextHolder.getContext().getAuthentication()
-				|| null == SecurityContextHolder.getContext().getAuthentication().getPrincipal()) {
+		if (null == SecurityContextHolder.getContext() || null == SecurityContextHolder.getContext()
+			.getAuthentication() || null == SecurityContextHolder.getContext()
+			.getAuthentication().getPrincipal()) {
 			return null;
 		}
-		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals(Constants.ANONYMOUS_USER)) {
+		if (SecurityContextHolder.getContext().getAuthentication()
+			.getPrincipal().equals(Constants.ANONYMOUS_USER)) {
 			return null;
 		}
 		return new ModelMapper().map(SecurityContextHolder.getContext().getAuthentication().getPrincipal(),

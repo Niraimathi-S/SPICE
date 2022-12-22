@@ -54,9 +54,16 @@ import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
-
 import io.jsonwebtoken.ExpiredJwtException;
 
+/**
+ * <p>
+ * This service class contain all the business logic for user module and perform
+ * all the user operation here.
+ * </p>
+ *
+ * @author VigneshKumar created on Jun 30, 2022
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -89,10 +96,9 @@ public class UserServiceImpl implements UserService {
 
 		Map<String, String> tokensMap = new HashMap<>();
 
-		UserDTO userDetail = null;
 
 		UserToken userToken = userTokenService.validateRefreshToken(userId,
-				refreshToken.substring(Constants.BEARER.length(), refreshToken.length()));
+			refreshToken.substring(Constants.BEARER.length(), refreshToken.length()));
 
 		if (Objects.isNull(userToken)) {
 			throw new Validation(3013);
@@ -120,7 +126,8 @@ public class UserServiceImpl implements UserService {
 		}
 		EncryptedJWT jwtRefresh;
 		try {
-			jwtRefresh = EncryptedJWT.parse(refreshToken.substring(Constants.BEARER.length(), refreshToken.length()));
+			jwtRefresh = EncryptedJWT.parse(refreshToken.substring(Constants.BEARER.length(), 
+				refreshToken.length()));
 		} catch (ParseException e) {
 			Logger.logError(e);
 			throw new Validation(3013);
@@ -134,19 +141,13 @@ public class UserServiceImpl implements UserService {
 		System.out.println("line 139----------------------------------------------");
 		String rawJson = String.valueOf(jwt.getJWTClaimsSet().getClaim(Constants.USER_DATA));
 		ObjectMapper objectMapper = new ObjectMapper();
-
+		UserDTO userDetail = null;
 		userDetail = objectMapper.readValue(rawJson, UserDTO.class);
 		userDetail.setAuthorization(userToken.getAuthToken());
-//		if (null != userDetail.getTimezone()) {
-////			CustomDateSerializer.USER_ZONE_ID = userDetail.getTimezone().getOffset();
-//			ModelMapper modelMapper = new ModelMapper();
-//			CustomDateSerializer.USER_ZONE_ID = modelMapper.map(userDetail.getTimezone().getId(), TimezoneDTO.class)
-//					.getOffset();
-//		}
-
 		DateFormat pstFormat = new SimpleDateFormat(Constants.JSON_DATE_FORMAT);
 		Date currentDate = pstFormat.parse(pstFormat.format(DateUtil.formatDate(new Date())));
-		Date expDateRefresh = pstFormat.parse(pstFormat.format(jwtRefresh.getJWTClaimsSet().getClaim(Constants.EXP)));
+		Date expDateRefresh = pstFormat.parse(pstFormat.format(jwtRefresh.getJWTClaimsSet()
+			.getClaim(Constants.EXP)));
 
 		if ((expDateRefresh.getTime() - currentDate.getTime()) / Constants.THOUSAND < Constants.ZERO) {
 			System.out.println("line 158---------------------------------------");
@@ -197,12 +198,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * This method is used to create authorization token
-	 * 
+	 * This method is used to create authorization token.
+	 *
 	 * @param user     - user information is passed through DTO
 	 * @param userInfo - user data is passed in map format
 	 * @return - String - jwt encrypted authorization token
-	 * @throws JOSEException
+	 * @throws JOSEException - jose exception
 	 */
 	private String authTokenCreation(UserDTO user, Map<String, Object> userInfo) throws JOSEException {
 		JWTClaimsSet.Builder claimsSet = new JWTClaimsSet.Builder();
@@ -214,7 +215,8 @@ public class UserServiceImpl implements UserService {
 		claimsSet.claim(Constants.APPLICATION_TYPE, Constants.WEB);
 
 		claimsSet.expirationTime(
-				Date.from(ZonedDateTime.now().plusMinutes(Constants.AUTH_TOKEN_EXPIRY_MINUTES).toInstant()));
+			Date.from(ZonedDateTime.now().plusMinutes(Constants.AUTH_TOKEN_EXPIRY_MINUTES)
+			.toInstant()));
 		claimsSet.notBeforeTime(new Date());
 		claimsSet.jwtID(UUID.randomUUID().toString());
 
@@ -226,11 +228,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * This method is used to create refresh token
-	 * 
+	 * This method is used to create refresh token.
+	 *
 	 * @param user - user information is passed through DTO
 	 * @return - String - jwt encrypted refresh token
-	 * @throws JOSEException
+	 * @throws JOSEException - jose exception
 	 */
 	private String refreshTokenCreation(UserDTO user) throws JOSEException {
 		JWTClaimsSet.Builder claimsSet = new JWTClaimsSet.Builder();
@@ -239,7 +241,8 @@ public class UserServiceImpl implements UserService {
 		claimsSet.claim(Constants.USER_ID_PARAM, user.getId());
 		claimsSet.claim(Constants.APPLICATION_TYPE, Constants.WEB);
 		claimsSet.expirationTime(
-				Date.from(ZonedDateTime.now().plusMinutes(Constants.REFRESH_TOKEN_EXPIRY_HOURS).toInstant()));
+			Date.from(ZonedDateTime.now().plusMinutes(Constants.REFRESH_TOKEN_EXPIRY_HOURS)
+			.toInstant()));
 		claimsSet.notBeforeTime(new Date());
 		claimsSet.jwtID(UUID.randomUUID().toString());
 		JWEHeader header = new JWEHeader(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM);
@@ -250,8 +253,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * To update user token
-	 * 
+	 * To update user token.
+	 *
 	 * @param userId          - id of the user
 	 * @param jwtToken        - jwt token of the logged in user
 	 * @param jwtRefreshToken - refresh token of the logged in user
@@ -261,8 +264,9 @@ public class UserServiceImpl implements UserService {
 		userToken.setUserId(userId);
 		userToken.setAuthToken(jwtToken.substring(Constants.BEARER.length(), jwtToken.length()));
 		userToken.setActive(true);
-		userToken.setRefreshToken(jwtRefreshToken.substring(Constants.BEARER.length(), jwtRefreshToken.length()));
-//		commonRepository.updateUserToken(userId, jwtToken, jwtRefreshToken);
+		userToken.setRefreshToken(jwtRefreshToken.substring(Constants.BEARER.length(), 
+			jwtRefreshToken.length()));
+		//commonRepository.updateUserToken(userId, jwtToken, jwtRefreshToken);
 		userTokenService.saveUserToken(userToken);
 	}
 

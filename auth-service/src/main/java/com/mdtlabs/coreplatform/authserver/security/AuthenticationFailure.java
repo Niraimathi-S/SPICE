@@ -18,7 +18,7 @@ import java.util.Map;
  * <tt>AuthenticationFailure</tt> Extended SimpleUrlAuthenticationFailureHandler
  * to Send failure response.
  * </p>
- * 
+ *
  * @author Vigneshkumar created on 30 Jun 2022
  *
  */
@@ -26,7 +26,7 @@ public class AuthenticationFailure extends SimpleUrlAuthenticationFailureHandler
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException exception) throws IOException, ServletException {
+		AuthenticationException exception) throws IOException, ServletException {
 		Map<String, String> responseBody = new HashMap<>();
 		responseBody.put(Constants.MESSAGE, exception.getMessage());
 		response.setContentType(Constants.CONTENT_TYPE);

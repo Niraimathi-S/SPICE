@@ -23,7 +23,7 @@ import com.mdtlabs.coreplatform.common.FieldConstants;
  * <p>
  * In this class is the entry point for user authentication and authorization.
  * </p>
- * 
+ *
  * @author Vigneshkumar Created on 30 Jun 2022
  *
  */
@@ -56,6 +56,11 @@ public class SecurityConfig {
 		return new LogoutSuccess();
 	}
 
+	/**
+	 * This method is used to configure cors.
+	 *
+	 * @return CorsConfigurationSource - cors configuration
+	 */
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -70,9 +75,9 @@ public class SecurityConfig {
 		config.addAllowedMethod(HttpMethod.DELETE);
 		config.addAllowedMethod(HttpMethod.PATCH);
 		config.addAllowedMethod(HttpMethod.OPTIONS);
-//		config.addExposedHeader(Constants.REFRESH_TOKEN);
-		source.registerCorsConfiguration(
-				Constants.ASTERISK_SYMBOL + Constants.FORWARD_SLASH + Constants.ASTERISK_SYMBOL, config);
+		//config.addExposedHeader(Constants.REFRESH_TOKEN);
+		source.registerCorsConfiguration(Constants.ASTERISK_SYMBOL 
+			+ Constants.FORWARD_SLASH + Constants.ASTERISK_SYMBOL, config);
 		return source;
 	}
 
@@ -81,6 +86,13 @@ public class SecurityConfig {
 		return web -> web.ignoring().antMatchers("/images/**", "/js/**", "/webjars/**");
 	}
 
+	/**
+	 * This method is used to configure the authentication.
+	 *
+	 * @param http - request
+	 * @return SecurityFilterChain - config
+	 * @throws Exception - exception
+	 */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().and().authorizeRequests().antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll().anyRequest()

@@ -17,6 +17,13 @@ import com.mdtlabs.coreplatform.authserver.service.UserService;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 
+/**
+ * <p>
+ * Auth Controller used to perform any action in the authorization.
+ * </p>
+ *
+ * @author VigneshKumar created on Jun 30, 2022
+ */
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthServerController {
@@ -25,14 +32,13 @@ public class AuthServerController {
 	UserService userService;
 
 	/**
-	 * To generate new refresh token
-	 * 
-	 * @param requestBody
-	 * @param response
-	 * @return
-	 * @throws JsonMappingException
-	 * @throws JsonProcessingException
-	 * @throws ParseException
+	 * To generate new refresh token.
+	 *
+	 * @param requestBody - request body
+	 * @return Map - token map
+	 * @throws JsonMappingException - json mapping exception
+	 * @throws JsonProcessingException - json processing exception
+	 * @throws ParseException - parse exception
 	 */
 	@PostMapping("/generate-token")
 	public Map<String, String> generateRefreshToken(@RequestBody Map<String, Object> requestBody)
@@ -44,8 +50,8 @@ public class AuthServerController {
 		Map<String, String> tokensMap = userService.generateRefreshToken(userId, refreshToken);
 
 		if (!tokensMap.isEmpty()) {
-//			response.setHeader(Constants.AUTHORIZATION, tokensMap.get("authToken"));
-//			response.setHeader(Constants.REFRESH_TOKEN, tokensMap.get("refreshToken"));
+			//response.setHeader(Constants.AUTHORIZATION, tokensMap.get("authToken"));
+			//response.setHeader(Constants.REFRESH_TOKEN, tokensMap.get("refreshToken"));
 		}
 
 		return tokensMap;

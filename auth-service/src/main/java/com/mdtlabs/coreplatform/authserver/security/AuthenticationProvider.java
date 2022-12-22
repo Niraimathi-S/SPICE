@@ -35,7 +35,7 @@ import com.mdtlabs.coreplatform.common.model.entity.User;
  * Extend spring {@code AuthenticationProvider} and check authentication
  * precondition like isActiveRole, isEnabled..etc.
  * </p>
- * 
+ *
  * @author Vigneshkumar created on 30 Jun 2022
  *
  */
@@ -60,7 +60,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	 * Set current password in to spring {@code PasswordEncoder} to check is
 	 * matches.
 	 * </p>
-	 * 
+	 *
 	 * @param passwordEncoder - Set encrypted password.
 	 */
 	@Autowired
@@ -85,7 +85,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	 * <p>
 	 * 4. If password matches then check the active role assign to the employee.
 	 * </p>
-	 * 
+	 *
 	 * @return a fully authenticated object including credentials. May return
 	 *         <code>null</code> if the <code>AuthenticationProvider</code> is
 	 *         unable to support authentication of the passed
@@ -117,7 +117,8 @@ public class AuthenticationProvider implements org.springframework.security.auth
 		}
 		if (null != user.getTimezone()) {
 			ModelMapper modelMapper = new ModelMapper();
-			CustomDateSerializer.USER_ZONE_ID = modelMapper.map(user.getTimezone(), TimezoneDTO.class).getOffset();
+			CustomDateSerializer.USER_ZONE_ID = modelMapper.map(user.getTimezone(), 
+				TimezoneDTO.class).getOffset();
 		}
 		if (isAuthenticated) {
 			Set<GrantedAuthority> authorityList = user.getAuthorities();
@@ -129,8 +130,8 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	}
 
 	/**
-	 * This method is used to check whether the user account is valid
-	 * 
+	 * This method is used to check whether the user account is valid.
+	 *
 	 * @param username - user name of the user
 	 * @param password - password of the user
 	 * @return User - user entity
@@ -162,7 +163,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	 * Convert the role collection in to map. Map key as role name and value as
 	 * object.
 	 * </p>
-	 * 
+	 *
 	 * @param roles - Role collection to map.
 	 * @return - Map with role name as key and role object as value.
 	 */
@@ -177,7 +178,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	 * Returns <code>true</code> if this <Code>AuthenticationProvider</code>
 	 * supports the indicated <Code>Authentication</code> object.
 	 * </p>
-	 * 
+	 *
 	 * @param authentication - the class type of authentication is being passed
 	 *
 	 * @return <code>true</code> if the implementation can more closely evaluate the
@@ -189,9 +190,9 @@ public class AuthenticationProvider implements org.springframework.security.auth
 
 	/**
 	 * <p>
-	 * check whether the sequence is blank or not
+	 * check whether the sequence is blank or not.
 	 * </p>
-	 * 
+	 *
 	 * @param charSequence - Check the charactersequence is blank.
 	 * @return true / false based on string isBlank.
 	 */
@@ -209,9 +210,9 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	}
 
 	/**
-	 * This method is used to check whether the login limit is exceeded
-	 * 
-	 * @param username - username of the user is passed
+	 * This method is used to check whether the login limit is exceeded.
+	 *
+	 * @param user - username of the user is passed
 	 * @return - true or false will be returned based on login limit exceed
 	 */
 	public boolean isLoginLimitExceed(User user) {
@@ -240,8 +241,8 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	}
 
 	/**
-	 * This method is used to set user entity values
-	 * 
+	 * This method is used to set user entity values.
+	 *
 	 * @param user                 - user entity
 	 * @param invalidLoginAttempts - invalid login attempts
 	 * @param isBlocked            - user blocked or not

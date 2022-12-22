@@ -16,6 +16,14 @@ import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.model.dto.AuthUserDTO;
 import com.mdtlabs.coreplatform.common.service.UserTokenService;
 
+/**
+ * <p>
+ * <tt>LogoutSuccess</tt> to handle successful logout.
+ * </p>
+ *
+ * @author Vigneshkumar Created on 16 Oct 2020
+ *
+ */
 public class LogoutSuccess implements LogoutHandler {
 
 	@Autowired
@@ -24,35 +32,37 @@ public class LogoutSuccess implements LogoutHandler {
 	@Override
 	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-		AuthUserDTO authUserDTO = getLoggedInUser();
-		if (!Objects.isNull(authUserDTO)) {
+		AuthUserDTO authUserDto = getLoggedInUser();
+		if (!Objects.isNull(authUserDto)) {
 
 			String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
 			if (!Objects.isNull(token)) {
 				token = token.substring(Constants.BEARER.length(), token.length());
 			}
-			userTokenService.deleteUserTokenByToken(token, authUserDTO.getId());
+			userTokenService.deleteUserTokenByToken(token, authUserDto.getId());
 		} else {
 
 			System.out.println(" Session expired for the user to logout... ");
 
 		}
 
-//		super.onLogoutSuccess(request, response, authentication);
+		//super.onLogoutSuccess(request, response, authentication);
 	}
 
 	/**
-	 * To get logged in user details
-	 * 
+	 * To get logged in user details.
+	 *
 	 * @return UserDTO - user information
 	 */
 	private AuthUserDTO getLoggedInUser() {
-		if (null == SecurityContextHolder.getContext() || null == SecurityContextHolder.getContext().getAuthentication()
-				|| null == SecurityContextHolder.getContext().getAuthentication().getPrincipal()) {
+		if (null == SecurityContextHolder.getContext() 
+			|| null == SecurityContextHolder.getContext().getAuthentication() 
+			|| null == SecurityContextHolder.getContext().getAuthentication().getPrincipal()) {
 			return null;
 		}
-		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals(Constants.ANONYMOUS_USER)) {
+		if (SecurityContextHolder.getContext().getAuthentication()
+			.getPrincipal().equals(Constants.ANONYMOUS_USER)) {
 			return null;
 		}
 		return new ModelMapper().map(SecurityContextHolder.getContext().getAuthentication().getPrincipal(),

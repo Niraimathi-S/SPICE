@@ -419,7 +419,6 @@ CREATE TABLE patient (
   is_er_visit_history BOOLEAN,
   virtual_id BIGINT,
   zip_code BIGINT,
-  virtual_id BIGINT,
   site_id BIGINT, FOREIGN KEY (site_id) REFERENCES site(id),
   program_id BIGINT, FOREIGN KEY (program_id) REFERENCES program(id),
   country_id BIGINT, FOREIGN KEY (country_id) REFERENCES country(id),
@@ -1563,7 +1562,7 @@ CREATE TABLE classification_brand (
     created_by bigint NOT NULL,
     updated_by bigint NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE country_classification (
@@ -1576,6 +1575,6 @@ CREATE TABLE country_classification (
     created_by bigint NOT NULL,
     updated_by bigint NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

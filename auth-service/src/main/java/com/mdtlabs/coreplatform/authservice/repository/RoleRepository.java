@@ -20,7 +20,7 @@ import com.mdtlabs.coreplatform.common.model.entity.Role;
  * In query annotation (nativeQuery = true) the below query perform like SQL.
  * Otherwise its perform like HQL default value for nativeQuery FALSE
  * </p>
- * 
+ *
  * @author VigneshKumar created on Aug 26, 2022
  */
 @Repository
@@ -32,9 +32,9 @@ public interface RoleRepository extends JpaRepository<Role, Long>, PagingAndSort
 	 * <p>
 	 * This method get all the active role details from the database.
 	 * </p>
-	 * 
+	 *
 	 * @param status - the status of the role
-	 * @return List<Role> - List of Role Entity
+	 * @return List(Role) - List of Role Entity
 	 */
 	@Query(value = GET_ALL_ROLES)
 	public List<Role> getAllRoles(@Param(FieldConstants.STATUS) boolean status);
