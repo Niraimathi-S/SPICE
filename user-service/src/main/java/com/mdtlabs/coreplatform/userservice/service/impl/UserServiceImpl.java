@@ -149,13 +149,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				throw new Validation(1009);
 			}
 			Set<Role> roles = roleService
-					.getRolesByIds(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
+				.getRolesByIds(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
 			user.setRoles(roles);
 			user.setForgetPasswordCount(Constants.ZERO);
 			Set<Organization> organizations = new HashSet<>();
 			if (null != user.getOrganizations() && !user.getOrganizations().isEmpty()) {
 				organizations = organizationService.getOrganizationsByIds(
-						user.getOrganizations().stream().map(Organization::getId).collect(Collectors.toList()));
+						user.getOrganizations().stream().map(Organization::getId)
+						.collect(Collectors.toList()));
 				user.setOrganizations(organizations);
 				user.setTenantId(organizations.stream().findFirst().get().getId());
 			}
@@ -192,14 +193,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (exisitingUser.getUsername().equals(user.getUsername())) {
 			if (null != user.getRoles()) {
 				Set<Role> roles = roleService
-						.getRolesByIds(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
+					.getRolesByIds(user.getRoles().stream().map(Role::getId)
+					.collect(Collectors.toList()));
 				user.setRoles(roles);
 				if (null != user.getOrganizations()) {
 					Set<Organization> organizations = organizationService.getOrganizationsByIds(
-							user.getOrganizations().stream().map(Organization::getId).collect(Collectors.toList()));
+						user.getOrganizations().stream()
+						.map(Organization::getId).collect(Collectors.toList()));
 
-					boolean isExist = organizations.stream().anyMatch(org -> (org.getId() == user.getTenantId()));
-					user.setTenantId(isExist ? user.getTenantId() : organizations.stream().findFirst().get().getId());
+					boolean isExist = organizations.stream()
+						.anyMatch(org -> (org.getId() == user.getTenantId()));
+					user.setTenantId(isExist ? user.getTenantId() : 
+						organizations.stream().findFirst().get().getId());
 					user.setOrganizations(organizations);
 				}
 				return userRepository.save(user);
@@ -422,8 +427,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userInfo.put(FieldConstants.USERNAME, user.getUsername());
 		JwtBuilder jwtBuilder = Jwts.builder().setClaims(userInfo).signWith(signatureAlgorithm, secretKeySpec);
 		String jwtToken = jwtBuilder.setId(String.valueOf(user.getId()))
-				.setExpiration(Date.from(ZonedDateTime.now().plusHours(Constants.TWENTY_FOUR).toInstant()))
-				.setIssuedAt(Date.from(ZonedDateTime.now().toInstant())).setIssuer(Constants.ISSUER).compact();
+			.setExpiration(Date.from(ZonedDateTime.now()
+			.plusHours(Constants.TWENTY_FOUR).toInstant()))
+			.setIssuedAt(Date.from(ZonedDateTime.now()
+			.toInstant())).setIssuer(Constants.ISSUER).compact();
 		return jwtToken;
 	}
 
@@ -457,23 +464,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			if (isFromCreation) {
 				HttpEntity<String> entity = CommonUtil.getCurrentEntity();
 				ResponseEntity<Map> emailTemplateResponse = restService.exchange(
-						notificationIp + "/email-type/" + Constants.NEW_USER_CREATION, HttpMethod.GET, entity,
-						Map.class);
-				if (emailTemplateResponse.getBody() == null
-						|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
+					notificationIp + "/email-type/" + Constants.NEW_USER_CREATION,
+					HttpMethod.GET, entity, Map.class);
+				if (emailTemplateResponse.getBody() == null 
+					|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
 					throw new Validation(3010);
 				} else {
-					emailDto = constructUserCreationEmail(user, jweToken, data, emailDto, emailTemplateResponse);
+					emailDto = constructUserCreationEmail(user, 
+						jweToken, data, emailDto, emailTemplateResponse);
 					createOutBoundEmail(notificationIp, emailDto);
 				}
 			} else {
 				ResponseEntity<Map> emailTemplateResponse = restService
-						.getForEntity(notificationIp + "/email-type/" + Constants.FORGOT_PASSWORD_USER, Map.class);
-				if (emailTemplateResponse.getBody() == null
-						|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
+					.getForEntity(notificationIp + "/email-type/" + Constants.FORGOT_PASSWORD_USER,
+					Map.class);
+				if (emailTemplateResponse.getBody() == null 
+					|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
 					throw new Validation(3010);
 				} else {
-					emailDto = constructForgotEmail(user, jweToken, data, emailDto, emailTemplateResponse);
+					emailDto = constructForgotEmail(user, 
+						jweToken, data, emailDto, emailTemplateResponse);
 					createOutBoundEmail(notificationIp, emailDto);
 				}
 			}
@@ -491,10 +501,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * @param emailDto              - email entity
 	 * @param emailTemplateResponse - email template response
 	 */
-	private EmailDTO constructUserCreationEmail(User user, String jwtToken, Map<String, String> data, EmailDTO emailDto,
-			ResponseEntity<Map> emailTemplateResponse) {
-		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse.getBody().get(FieldConstants.ENTITY),
-				EmailTemplate.class);
+	private EmailDTO constructUserCreationEmail(User user, String jwtToken, 
+		Map<String, String> data, EmailDTO emailDto, ResponseEntity<Map> emailTemplateResponse) {
+		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse.getBody()
+			.get(FieldConstants.ENTITY), EmailTemplate.class);
 		for (EmailTemplateValue emailTemplateValue : emailTemplate.getEmailTemplateValues()) {
 			if (Constants.APP_URL_EMAIL.equalsIgnoreCase(emailTemplateValue.getName())) {
 				data.put(Constants.APP_URL_EMAIL, appUrl + jwtToken);
@@ -520,9 +530,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * @param emailTemplateResponse - email template response
 	 */
 	private EmailDTO constructForgotEmail(User user, String jwtToken, Map<String, String> data, EmailDTO emailDto,
-			ResponseEntity<Map> emailTemplateResponse) {
-		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse.getBody().get(FieldConstants.ENTITY),
-				EmailTemplate.class);
+		ResponseEntity<Map> emailTemplateResponse) {
+		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse
+			.getBody().get(FieldConstants.ENTITY), EmailTemplate.class);
 		for (EmailTemplateValue emailTemplateValue : emailTemplate.getEmailTemplateValues()) {
 			if (Constants.APP_URL_EMAIL.equals(emailTemplateValue.getName())) {
 				emailTemplateValue.setValue(appUrl + jwtToken);
@@ -554,7 +564,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		header.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<OutBoundEmail> emailEntity = new HttpEntity<>(outBoundEmail, header);
 		ResponseEntity<Map> emailResponse = restService.exchange(notificationIp + "/create", HttpMethod.POST,
-				emailEntity, Map.class);
+			emailEntity, Map.class);
 		boolean isSuccess = modelMapper.map(emailResponse.getBody().get(FieldConstants.ENTITY), Boolean.class);
 		if (!isSuccess) {
 			throw new Validation(3011);
@@ -678,7 +688,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setForgetPasswordCount(Constants.ONE);
 			user.setIsBlocked(Boolean.FALSE);
 		} else {
-			if (forgotPasswordCount < forgotPasswordCountLimit && forgotPasswordCount >= 0 && !isFromCreation) {
+			if (forgotPasswordCount < forgotPasswordCountLimit 
+				&& forgotPasswordCount >= 0 && !isFromCreation) {
 				user.setForgetPasswordCount(++forgotPasswordCount);
 			}
 			if (forgotPasswordCount >= forgotPasswordCountLimit) {
@@ -718,7 +729,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		String ipInfo = Constants.EMPTY;
 		ServiceInstance instance = null;
 		try {
-			List<ServiceInstance> instanceList = discoveryClient.getInstances(Constants.NOTIFICATION_INSTANCE);
+			List<ServiceInstance> instanceList = discoveryClient
+				.getInstances(Constants.NOTIFICATION_INSTANCE);
 			if (!instanceList.isEmpty()) {
 				instance = instanceList.get(Constants.ZERO);
 			}
@@ -743,7 +755,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (Objects.isNull(existingUser)) {
 			throw new DataNotFoundException(1010);
 		}
-//        existingUser.setCountryId(user.getCountry().getId());
+		//existingUser.setCountryId(user.getCountry().getId());
 		existingUser.setCountryCode(user.getCountryCode());
 		existingUser.setFirstName(user.getFirstName());
 		existingUser.setLastName(user.getLastName());

@@ -175,7 +175,7 @@ public interface UserService {
 
 	/**
 	 * Updates organization user.
-	 * 
+	 *
 	 * @param user - user details
 	 * @return User - User entity
 	 * @author Niraimathi S
@@ -184,19 +184,19 @@ public interface UserService {
 
 	/**
 	 * Deletes an organization User.
-	 * 
-	 * @param requestDTO - request data with user id and tenantId.
+	 *
+	 * @param requestDto - request data with user id and tenantId.
 	 * @return Boolean
 	 * @author Niraimathi S
 	 */
-	Boolean deleteOrganizationUser(CommonRequestDTO requestDTO);
+	Boolean deleteOrganizationUser(CommonRequestDTO requestDto);
 	
 	/**
 	 * Validates a list of users.
-	 * 
+	 *
 	 * @param parentOrganizationId - parent organizationId
 	 * @param requestUsers - List of Users to be validated
-	 * @return List<User> - List of User entities
+	 * @return List(User) - List of User entities
 	 * @author Niraimathi S
 	 */
 	List<User> validateUser(Long parentOrganizationId, List<User> requestUsers);

@@ -106,8 +106,8 @@ public interface UserRepository extends JpaRepository<User, Long>, PagingAndSort
 	public List<User> findUsersByTenantIds(@Param("tenantIds") List<Long> tenantIds);
 
 	/**
-	 * Finds user by its Id and tenantId
-	 * 
+	 * Finds user by its Id and tenantId.
+	 *
 	 * @param id - user id
 	 * @param tenantId - tenant Id
 	 * @return user - User entity
@@ -116,7 +116,7 @@ public interface UserRepository extends JpaRepository<User, Long>, PagingAndSort
 
 	/**
 	 * Finds user by its Id and isActive fields.
-	 * 
+	 *
 	 * @param userId - user Id
 	 * @return User - user Entity.
 	 */

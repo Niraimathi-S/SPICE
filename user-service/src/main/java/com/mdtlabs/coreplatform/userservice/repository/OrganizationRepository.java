@@ -185,6 +185,7 @@ public interface OrganizationRepository
 	 * @param tenantIds - list of organizations tenant Ids
 	 * @return List(Organization) - List of Organization Entities
 	 */
-	public List<Organization> findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(Long parentOrganizationId, List<Long> tenantIds);
+	public List<Organization> findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(
+		Long parentOrganizationId, List<Long> tenantIds);
 
 }

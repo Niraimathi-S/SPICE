@@ -184,9 +184,9 @@ public class OrganizationController {
 	
 	/**
 	 * Creates an admin user for an organization.
-	 * 
+	 *
 	 * @param user - user details.
-	 * @return ResponseEntity<User> - User entity
+	 * @return ResponseEntity(User) - User entity
 	 */
 	@PostMapping("/add-admin-user")
 	public ResponseEntity<User> addAdminUsers(@RequestBody User user) {
@@ -195,26 +195,25 @@ public class OrganizationController {
 
 	/**
 	 * Updates an admin user for an organization.
-	 * 
+	 *
 	 * @param user - user details.
-	 * @return ResponseEntity<User> - User entity
+	 * @return ResponseEntity(User) - User entity
 	 */
 	@PutMapping("/update-admin-user")
 	public ResponseEntity<User> updateAdminUsers(@RequestBody User user) {
-		System.out.println("user in organization controller "+ user );
+		System.out.println("user in organization controller " + user);
 		return ResponseEntity.ok().body(organizationService.updateAdminUsers(user));
 	}
 	
 	/**
-	 * 
-	 * @param token
-	 * @param userTenantId
-	 * @param requestDTO
-	 * @return
+	 * This method is used to delete the admin user.
+	 *
+	 * @param requestDto - request dto
+	 * @return ResponseEntity(Boolean) - true or false
 	 */
 	@DeleteMapping("/delete-admin-user")
-	public ResponseEntity<Boolean> deleteAdminUser(@RequestBody CommonRequestDTO requestDTO) {
-		return ResponseEntity.ok().body(organizationService.deleteAdminUsers(requestDTO));
+	public ResponseEntity<Boolean> deleteAdminUser(@RequestBody CommonRequestDTO requestDto) {
+		return ResponseEntity.ok().body(organizationService.deleteAdminUsers(requestDto));
 	}
 
 }

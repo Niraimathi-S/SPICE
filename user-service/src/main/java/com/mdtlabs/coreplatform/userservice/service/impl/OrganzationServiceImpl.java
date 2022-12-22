@@ -131,11 +131,12 @@ public class OrganzationServiceImpl implements OrganizationService {
 		organization = organizationRepository.save(organization);
 		List<User> validatedUsers = new ArrayList<>();
 		List<User> users = new ArrayList<>();
-		validatedUsers = userService.validateUser(organization.getParentOrganizationId(), organizationDto.getUsers());
+		validatedUsers = userService.validateUser(organization.getParentOrganizationId(), 
+			organizationDto.getUsers());
 
 		if (!Objects.isNull(validatedUsers) && !validatedUsers.isEmpty()) {
 			List<Long> userTenantsList = validatedUsers.stream().map(user -> user.getTenantId())
-					.collect(Collectors.toList());
+				.collect(Collectors.toList());
 			validateParentOrganization(organization.getParentOrganizationId(), userTenantsList);
 			users.addAll(validatedUsers);
 		}
@@ -166,7 +167,8 @@ public class OrganzationServiceImpl implements OrganizationService {
 		List<Organization> organizations = new ArrayList<>();
 		if (!Objects.isNull(parentOrganizationId) && !tenantIds.isEmpty()) {
 			organizations = organizationRepository
-					.findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(parentOrganizationId, tenantIds);
+					.findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(
+					parentOrganizationId, tenantIds);
 		}
 		if (organizations.size() != tenantIds.size()) {
 			throw new DataNotAcceptableException(5002);
@@ -258,8 +260,8 @@ public class OrganzationServiceImpl implements OrganizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Boolean deleteAdminUsers(CommonRequestDTO requestDTO) {
-		return userService.deleteOrganizationUser(requestDTO);
+	public Boolean deleteAdminUsers(CommonRequestDTO requestDto) {
+		return userService.deleteOrganizationUser(requestDto);
 	}
 
 }

@@ -114,15 +114,15 @@ public interface OrganizationService {
 
 	/**
 	 * Creates an admin user for an organization.
-	 * 
+	 *
 	 * @param user - user details
 	 * @return user - User entity.
 	 */
 	User addAdminUsers(User user);
 
 	/**
-	 * To update an admin user for an organization
-	 * 
+	 * To update an admin user for an organization.
+	 *
 	 * @param user - user details
 	 * @return user - user entity
 	 */
@@ -130,10 +130,10 @@ public interface OrganizationService {
 
 	/**
 	 * to remove an user from an organizations.
-	 * 
-	 * @param requestDTO - request data containing user id and tenantId
+	 *
+	 * @param requestDto - request data containing user id and tenantId
 	 * @return Boolean 
 	 */
-	Boolean deleteAdminUsers(CommonRequestDTO requestDTO);
+	Boolean deleteAdminUsers(CommonRequestDTO requestDto);
 
 }
