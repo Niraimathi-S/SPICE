@@ -32,7 +32,6 @@ public class LogoutSuccess implements LogoutHandler {
 			if (!Objects.isNull(token)) {
 				token = token.substring(Constants.BEARER.length(), token.length());
 			}
-
 			userTokenService.deleteUserTokenByToken(token, authUserDTO.getId());
 		} else {
 

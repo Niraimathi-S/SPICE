@@ -30,6 +30,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
@@ -176,8 +177,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 	public OtherMedicationDTO getOtherMedication() {
 
 		long countryId = UserContextHolder.getUserDto().getCountry().getId();
-		ResponseEntity<OtherMedicationDTO> obj = apiInterface
-				.getOtherMedication(Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),UserContextHolder.getUserDto().getTenantId(), countryId);
+		ResponseEntity<OtherMedicationDTO> obj = apiInterface.getOtherMedication(
+				Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
+				UserSelectedTenantContextHolder.get(), countryId);
 		OtherMedicationDTO medicationDTO = obj.getBody();
 		return medicationDTO;
 	}

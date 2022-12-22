@@ -64,9 +64,6 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	private String publicKey;
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
 	private UserTokenService userTokenService;
 
 	@Autowired
@@ -100,7 +97,7 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 					ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 					String json = objectWriter.writeValueAsString(user);
 					response.getWriter().write(json);
-					responseHeaderUser(response, user,request.getHeader("client")); 
+					responseHeaderUser(response, user, request.getHeader("client"));
 				} else {
 					response.getWriter().write(ErrorConstants.INVALID_USER_ERROR);
 				}
@@ -119,13 +116,13 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 * @param user     - user information is passed through DTO
 	 * @param maxRole  - role of the corresponding user being passed
 	 */
-	private void responseHeaderUser(HttpServletResponse response, AuthUserDTO user,String client) {
+	private void responseHeaderUser(HttpServletResponse response, AuthUserDTO user, String client) {
 		init();
 		List<String> roles = user.getRoles().stream().map(RoleDTO::getName).collect(Collectors.toList());
-        boolean isSuperUser = false;
-        if (roles.contains(Constants.ROLE_SUPER_USER)) {
-        	isSuperUser = true;
-        }
+		boolean isSuperUser = false;
+		if (roles.contains(Constants.ROLE_SUPER_USER)) {
+			isSuperUser = true;
+		}
 		user.setIsSuperUser(isSuperUser);
 		Map<String, Object> userInfo = new ObjectMapper().convertValue(user, Map.class);
 		String authToken = null;
@@ -163,6 +160,7 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 		claimsSet.claim(Constants.USER_DATA, userInfo);
 		claimsSet.claim(Constants.TENANT_IDS_CLAIM, tenantIds);
 		claimsSet.claim(Constants.APPLICATION_TYPE, Constants.WEB);
+		claimsSet.claim(Constants.TENANT_IDS_CLAIM, tenantIds);
 		claimsSet.expirationTime(
 				Date.from(ZonedDateTime.now().plusMinutes(Constants.AUTH_TOKEN_EXPIRY_MINUTES).toInstant()));
 		claimsSet.notBeforeTime(new Date());
@@ -205,13 +203,13 @@ public class AuthenticationSuccess extends SimpleUrlAuthenticationSuccessHandler
 	 * @param jwtToken        - jwt token of the logged in user
 	 * @param jwtRefreshToken - refresh token of the logged in user
 	 */
-	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken,String client) {
+	private void createUserToken(long userId, String jwtToken, String jwtRefreshToken, String client) {
 		UserToken userToken = new UserToken();
 		userToken.setUserId(userId);
 		userToken.setAuthToken(jwtToken.substring(Constants.BEARER.length(), jwtToken.length()));
 		userToken.setRefreshToken(jwtRefreshToken.substring(Constants.BEARER.length(), jwtRefreshToken.length()));
 		userToken.setActive(true);
-		userToken.setClient(client); 
+		userToken.setClient(client);
 		genericRepository.save(userToken);
 		Optional<List<UserToken>> userTokens = userTokenService.getUserTokenByUserID(userId);
 		List<String> tokensToDelete = getTokensToDelete(userTokens);

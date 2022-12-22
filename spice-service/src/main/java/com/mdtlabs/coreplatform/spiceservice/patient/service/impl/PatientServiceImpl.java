@@ -19,12 +19,12 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Validator;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.UnitConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataConflictException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
@@ -47,7 +47,6 @@ import com.mdtlabs.coreplatform.common.model.dto.spice.RedRiskDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SmsDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
 import com.mdtlabs.coreplatform.common.model.entity.Site;
-import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.model.entity.spice.BpLog;
 import com.mdtlabs.coreplatform.common.model.entity.spice.GlucoseLog;
 import com.mdtlabs.coreplatform.common.model.entity.spice.Lifestyle;
@@ -139,17 +138,6 @@ public class PatientServiceImpl implements PatientService {
 
 		EnrollmentResponseDTO response = new EnrollmentResponseDTO();
 
-		if (Objects.isNull(data.getBioData().getNationalId()) || Objects.isNull(data.getBioData().getFirstName())
-				|| Objects.isNull(data.getBioData().getLastName()) || Objects.isNull(data.getGender())
-				|| Objects.isNull(data.getSite()) || Objects.isNull(data.getAge())
-				|| Objects.isNull(data.getBioData().getPhoneNumber())
-				|| Objects.isNull(data.getBioData().getPhoneNumberCategory())
-				|| Objects.isNull(data.getBioData().getCountry()) || Objects.isNull(data.getBioData().getCounty())
-				|| Objects.isNull(data.getBioData().getSubCounty()) || Objects.isNull(data.getBioData().getInitial())
-				|| Objects.isNull(data.getIsRegularSmoker())) {
-			throw new DataNotFoundException(30001);
-		}
-
 		String searchNationalId = data.getBioData().getNationalId();
 		PatientTracker existingPatientTracker = (!Objects.isNull(data.getPatientTrackerId()))
 				? patientTrackerService.getPatientTrackerById(data.getPatientTrackerId())
@@ -161,7 +149,7 @@ public class PatientServiceImpl implements PatientService {
 
 		Patient patient = constructPatientData(data.getBioData(), data);
 		Site site = adminApiInterface.getSiteById(Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-				UserContextHolder.getUserDto().getTenantId(), patient.getSiteId());
+				UserSelectedTenantContextHolder.get(), patient.getSiteId());
 		// operating unit id and account id for patient tracker
 		Patient enrolledPatient = patientRepository.save(patient);
 
@@ -181,7 +169,7 @@ public class PatientServiceImpl implements PatientService {
 			patientTracker = constructPatientTracker(enrolledPatient, data, existingPatientTracker);
 		} else {
 			patientTracker = constructPatientTracker(enrolledPatient, data, new PatientTracker());
-//			patientTracker = patientTrackerService.addOrUpdatePatientTracker(patientTracker);
+			patientTracker = patientTrackerService.addOrUpdatePatientTracker(patientTracker);
 		}
 
 		if (!Objects.isNull(data.getPhq4())) {
@@ -282,10 +270,10 @@ public class PatientServiceImpl implements PatientService {
 		SmsDTO smsDTO = new SmsDTO();
 		smsDTO.setFormDataId(enrolledPatient.getId());
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		Country country = adminApiInterface.getCountryById(token, UserContextHolder.getUserDto().getTenantId(),
+		Country country = adminApiInterface.getCountryById(token, UserSelectedTenantContextHolder.get(),
 				enrolledPatient.getCountryId());
 		SMSTemplate smsTemplate = notificationApiInterface.getSMSTemplateValues(token,
-				UserContextHolder.getUserDto().getTenantId(), Constants.TEMPLATE_TYPE_ENROLL_PATIENT).getBody();
+				UserSelectedTenantContextHolder.get(), Constants.TEMPLATE_TYPE_ENROLL_PATIENT).getBody();
 		String body = smsTemplate.getBody();
 		List<SMSTemplateValues> smsTemplateValues = smsTemplate.getSmsTemplateValues();
 		Map<String, String> data = new HashMap<>();
@@ -307,8 +295,7 @@ public class PatientServiceImpl implements PatientService {
 		smsDTO.setToPhoneNo(country.getCountryCode() + enrolledPatient.getPhoneNumber());
 		smsDTO.setTenantId(enrolledPatient.getTenantId());
 		smsDTO.setBody(body);
-		notificationApiInterface.saveOutBoundSMS(token, UserContextHolder.getUserDto().getTenantId(),
-				Arrays.asList(smsDTO));
+		notificationApiInterface.saveOutBoundSMS(token, UserSelectedTenantContextHolder.get(), Arrays.asList(smsDTO));
 	}
 
 	/**
@@ -692,7 +679,7 @@ public class PatientServiceImpl implements PatientService {
 		if (!Objects.isNull(prescription)) {
 			UserDTO userDTO = userApiInterface.getPrescriberDetails(
 					Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-					UserContextHolder.getUserDto().getTenantId(), prescription.getUpdatedBy());
+					UserSelectedTenantContextHolder.get(), prescription.getUpdatedBy());
 			PrescriptionHistory presHistory = prescriptionHistoryRepository
 					.findFirstByPatientTrackIdAndPrescriptionFilledDaysGreaterThanOrderByUpdatedAtDesc(patientTrackId,
 							Constants.ZERO);

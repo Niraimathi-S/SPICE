@@ -90,7 +90,7 @@ public interface ApiInterface {
 	public List<Program> getPrograms(@RequestHeader("Authorization") String token,
 			@RequestHeader("TenantId") long tenantId, @RequestBody List<Long> siteIds);
 
-	@GetMapping(value = "/site/{id}")
+	@GetMapping(value = "/site/{siteId}")
 	public Site getSiteById(@RequestHeader("Authorization") String token, @RequestHeader("TenantId") long tenantId,
 			@PathVariable("siteId") Long siteId);
 }

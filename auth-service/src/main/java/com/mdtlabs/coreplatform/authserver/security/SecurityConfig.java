@@ -72,7 +72,7 @@ public class SecurityConfig {
 		config.addAllowedMethod(HttpMethod.OPTIONS);
 //		config.addExposedHeader(Constants.REFRESH_TOKEN);
 		source.registerCorsConfiguration(
-				 Constants.ASTERISK_SYMBOL + Constants.FORWARD_SLASH + Constants.ASTERISK_SYMBOL, config);
+				Constants.ASTERISK_SYMBOL + Constants.FORWARD_SLASH + Constants.ASTERISK_SYMBOL, config);
 		return source;
 	}
 
@@ -82,20 +82,15 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { 
-		http.cors().and().authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
-				.anyRequest().authenticated().and()
-				.formLogin().loginProcessingUrl("/session")
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.cors().and().authorizeRequests().antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll().anyRequest()
+				.authenticated().and().formLogin().loginProcessingUrl("/session")
 				.usernameParameter(FieldConstants.USERNAME).passwordParameter(FieldConstants.PASSWORD)
-				.successHandler(authenticationSuccess())
-				.failureHandler(authenticationFailure()).and()
-				.exceptionHandling()
-				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-				.and().logout().logoutUrl("/logout")
-				.deleteCookies("JSESSIONID").invalidateHttpSession(Boolean.TRUE)
-				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).and()
-				.csrf().disable();
+				.successHandler(authenticationSuccess()).failureHandler(authenticationFailure()).and()
+				.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
+				.logout().logoutUrl("/logout").deleteCookies("JSESSIONID").invalidateHttpSession(Boolean.TRUE)
+				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).addLogoutHandler(logoutSuccess())
+				.and().csrf().disable();
 		return http.build();
 	}
 

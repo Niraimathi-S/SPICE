@@ -55,7 +55,6 @@ import com.mdtlabs.coreplatform.spiceadminservice.data.service.DataService;
 @Service
 public class DataServiceImpl implements DataService {
 
-
 	@Autowired
 	CountyRepository countyRepository;
 
@@ -101,7 +100,8 @@ public class DataServiceImpl implements DataService {
 			List<User> users = modelMapper.map(countryDTO.getUsers(), new TypeToken<List<User>>() {
 			}.getType());
 			organizationDTO.setUsers(users);
-			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,UserSelectedTenantContextHolder.get() ,organizationDTO);
+			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,
+					UserSelectedTenantContextHolder.get(), organizationDTO);
 			countryResponse.setTenantId(response.getBody().getId());
 			countryResponse = countryRepository.save(countryResponse);
 			return countryResponse;
@@ -131,14 +131,15 @@ public class DataServiceImpl implements DataService {
 			if (nameMap.keySet().contains(country.getName()) && nameMap.get(country.getName()) != country.getId()) {
 				throw new DataConflictException(19001);
 			}
-			if (codeMap.keySet().contains(country.getCountryCode()) && codeMap.get(country.getCountryCode()) != country.getId()) {
+			if (codeMap.keySet().contains(country.getCountryCode())
+					&& codeMap.get(country.getCountryCode()) != country.getId()) {
 				throw new DataConflictException(19007);
 			}
 			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 			Organization organization = new Organization();
-			organization.setId(country.getTenantId());			
+			organization.setId(country.getTenantId());
 			organization.setName(country.getName());
-		    userApiInterface.updateOrganization(token,UserSelectedTenantContextHolder.get(), organization);
+			userApiInterface.updateOrganization(token, UserSelectedTenantContextHolder.get(), organization);
 			return countryRepository.save(country);
 		}
 	}
@@ -213,7 +214,8 @@ public class DataServiceImpl implements DataService {
 		countryOrganizationDTO = modelMapper.map(country, new TypeToken<CountryOrganizationDTO>() {
 		}.getType());
 		System.out.println("UserSelectedTenantContextHolder.get()" + UserSelectedTenantContextHolder.get());
-		List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get() ,List.of(country.getId()));
+		List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(),
+				List.of(country.getId()));
 		countryOrganizationDTO.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
 		}.getType()));
 		return countryOrganizationDTO;
@@ -300,7 +302,8 @@ public class DataServiceImpl implements DataService {
 		if (0 == requestDTO.getSkip()) {
 			totalCount = countryRepository.countByIsDeletedFalse();
 		}
-		Pageable pageable = Pagination.setPagination(requestDTO.getSkip(), requestDTO.getLimit(), Constants.CREATED_AT, Constants.BOOLEAN_FALSE);
+		Pageable pageable = Pagination.setPagination(requestDTO.getSkip(), requestDTO.getLimit(), Constants.CREATED_AT,
+				Constants.BOOLEAN_FALSE);
 		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
 			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
 		}
@@ -309,15 +312,17 @@ public class DataServiceImpl implements DataService {
 		List<CountryListDTO> countryListDTOs = new ArrayList<>();
 		UserDTO userDto = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDto.getAuthorization();
-		
-		System.out.println("UserSelectedTenantContextHolder.get()"+ UserSelectedTenantContextHolder.get());
+
+		System.out.println("UserSelectedTenantContextHolder.get()" + UserSelectedTenantContextHolder.get());
 		if (!countries.isEmpty()) {
 			for (Country country : countries) {
 				CountryListDTO countryListDTO = new CountryListDTO();
 				countryListDTO.setId(country.getId());
 				countryListDTO.setName(country.getName());
 				countryListDTO.setTenantId(country.getTenantId());
-				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,UserSelectedTenantContextHolder.get(),UserSelectedTenantContextHolder.get(), Constants.COUNTRY);
+				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
+						UserSelectedTenantContextHolder.get(), UserSelectedTenantContextHolder.get(),
+						Constants.COUNTRY);
 				countryListDTO.setAccountsCount(childOrgList.get("accountIds").size());
 				countryListDTO.setOUCount(childOrgList.get("operatingUnitIds").size());
 				countryListDTO.setSiteCount(childOrgList.get("siteIds").size());
@@ -338,7 +343,7 @@ public class DataServiceImpl implements DataService {
 		}
 		return country;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -348,7 +353,8 @@ public class DataServiceImpl implements DataService {
 		role.setName(Constants.ROLE_REGION_ADMIN);
 		user.setRoles(Set.of(role));
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		ResponseEntity<User> response = userApiInterface.addAdminUser(token, UserSelectedTenantContextHolder.get(),user);
+		ResponseEntity<User> response = userApiInterface.addAdminUser(token, UserSelectedTenantContextHolder.get(),
+				user);
 		return response.getBody();
 	}
 
@@ -360,16 +366,18 @@ public class DataServiceImpl implements DataService {
 		UserDTO userDTO = UserContextHolder.getUserDto();
 		System.out.println("userDTO____________" + userDTO);
 		String token = Constants.BEARER + userDTO.getAuthorization();
-		ResponseEntity<User> response = userApiInterface.updateAdminUser(token, UserSelectedTenantContextHolder.get(),user);
+		ResponseEntity<User> response = userApiInterface.updateAdminUser(token, UserSelectedTenantContextHolder.get(),
+				user);
 		return response.getBody();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Boolean deleteRegionAdmin(CommonRequestDTO requestDTO) {
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		ResponseEntity<Boolean> response = userApiInterface.deleteAdminUser(token, UserSelectedTenantContextHolder.get(),requestDTO);
+		ResponseEntity<Boolean> response = userApiInterface.deleteAdminUser(token,
+				UserSelectedTenantContextHolder.get(), requestDTO);
 		return true;
 	}
 }

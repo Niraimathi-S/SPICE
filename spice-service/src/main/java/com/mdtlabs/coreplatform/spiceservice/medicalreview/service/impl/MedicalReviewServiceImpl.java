@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.SpiceValidation;
@@ -162,6 +163,7 @@ public class MedicalReviewServiceImpl implements MedicalReviewService {
 		patientMedicalReview.setTenantId(medicalReviewDTO.getTenantId());
 		patientMedicalReview.setPatientTrackId(medicalReviewDTO.getPatientTrackId());
 		patientMedicalReview.setPatientVisitId(medicalReviewDTO.getPatientVisitId());
+		patientMedicalReview.setClinicalNote(medicalReviewDTO.getContinuousMedicalReview().getClinicalNote());
 		patientMedicalReview
 				.setPhysicalExamComments(medicalReviewDTO.getContinuousMedicalReview().getPhysicalExamComments());
 		patientMedicalReview.setCompliantComments(medicalReviewDTO.getContinuousMedicalReview().getComplaintComments());
@@ -431,7 +433,7 @@ public class MedicalReviewServiceImpl implements MedicalReviewService {
 		List<PatientVisit> patientVisitList = new ArrayList<>();
 		// List<Date> visitDates = null; //= new ArrayList<>();
 		List<Map<String, Object>> visits = new ArrayList<>();
-		if (medicalReviewListDTO.isLatestRequired() && Objects.isNull(medicalReviewListDTO.getPatientVisitId())) {
+		if (medicalReviewListDTO.isLatestRequired() && !Objects.isNull(medicalReviewListDTO.getPatientVisitId())) {
 			patientVisitList = patientVisitService.getPatientVisitDates(medicalReviewListDTO.getPatientTrackId(), null,
 					Constants.BOOLEAN_TRUE, null);
 
@@ -543,7 +545,7 @@ public class MedicalReviewServiceImpl implements MedicalReviewService {
 
 			UserDTO userDTO = userApiInterface.getPrescriberDetails(
 					Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-					UserContextHolder.getUserDto().getTenantId(), patientVisit.getCreatedBy());
+					UserSelectedTenantContextHolder.get(), patientVisit.getCreatedBy());
 			if (!Objects.isNull(userDTO)) {
 				reviewerMap.put(FieldConstants.FIRST_NAME, userDTO.getFirstName());
 				reviewerMap.put(FieldConstants.LAST_NAME, userDTO.getLastName());

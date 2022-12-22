@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.Validation;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CustomizationDTO;
@@ -107,7 +108,7 @@ public class StaticDataServiceImpl implements StaticDataService {
 		UserDTO userDTO = UserContextHolder.getUserDto();
 		Long countryId = userDTO.getCountry().getId();
 		String token = Constants.BEARER + userDTO.getAuthorization();
-		Long tenantId = userDTO.getTenantId();
+		Long tenantId = UserSelectedTenantContextHolder.get();
 
 		List<Long> tenants = List.of(1L, 2L, 3L, 4L);
 //		Long userTenantId = Long.parseLong(UserSelectedTenantContextHolder.get().toString());
@@ -152,7 +153,7 @@ public class StaticDataServiceImpl implements StaticDataService {
 		response.setSites(siteDTOList);
 
 		response.setDefaultSite(
-				sites.stream().filter(site -> site.getTenantId() == UserContextHolder.getUserDto().getTenantId())
+				sites.stream().filter(site -> site.getTenantId() == UserSelectedTenantContextHolder.get())
 						.findAny().orElse(null));
 		response.setOperatingSites(
 				apiInterface.getSitesByOperatingUnitId(token, tenantId, sites.get(0).getOperatingUnitId()));

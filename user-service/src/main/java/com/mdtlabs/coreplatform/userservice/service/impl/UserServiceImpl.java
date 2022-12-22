@@ -77,7 +77,6 @@ import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
 import com.mdtlabs.coreplatform.userservice.service.RoleService;
 import com.mdtlabs.coreplatform.userservice.service.UserService;
 
-
 /**
  * <p>
  * This service class contain all the business logic for user module and perform
@@ -94,7 +93,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private UserTokenRepository userTokenRepository;
 
@@ -106,7 +105,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private RoleService roleService;
-	
+
 	@Autowired
 	private OrganizationService organizationService;
 
@@ -130,15 +129,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Value("${app.email-app-url}")
 	private String appUrl;
-	
+
 	@Value("${app.forgot-password-time-limit-in-minutes}")
 	private int forgotPasswordtimeLimitInMinutes;
-	
+
 	@Value("${app.reset-password-time-limit-in-minutes}")
 	private int resetPasswordtimeLimitInMinutes;
-	
+
 	private ModelMapper modelMapper = new ModelMapper();
-	
+
 	private RestTemplate restService = new RestTemplate();
 
 	/**
@@ -149,15 +148,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			if (null != getUserByUsername(user.getUsername())) {
 				throw new Validation(1009);
 			}
-			Set<Role> roles = roleService.getRolesByIds(user.getRoles().stream()
-				.map(Role::getId).collect(Collectors.toList()));
+			Set<Role> roles = roleService
+					.getRolesByIds(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
 			user.setRoles(roles);
 			user.setForgetPasswordCount(Constants.ZERO);
 			Set<Organization> organizations = new HashSet<>();
 			if (null != user.getOrganizations() && !user.getOrganizations().isEmpty()) {
-				Set<Organization> organizations = organizationService.getOrganizationsByIds(
-					user.getOrganizations().stream().map(Organization::getId)
-					.collect(Collectors.toList()));
+				organizations = organizationService.getOrganizationsByIds(
+						user.getOrganizations().stream().map(Organization::getId).collect(Collectors.toList()));
 				user.setOrganizations(organizations);
 				user.setTenantId(organizations.stream().findFirst().get().getId());
 			}
@@ -193,18 +191,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		if (exisitingUser.getUsername().equals(user.getUsername())) {
 			if (null != user.getRoles()) {
-				Set<Role> roles = roleService.getRolesByIds(user.getRoles().stream()
-					.map(Role::getId).collect(Collectors.toList()));
+				Set<Role> roles = roleService
+						.getRolesByIds(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
 				user.setRoles(roles);
 				if (null != user.getOrganizations()) {
 					Set<Organization> organizations = organizationService.getOrganizationsByIds(
-						user.getOrganizations().stream().map(Organization::getId)
-						.collect(Collectors.toList()));
-					
-					boolean isExist = organizations.stream().anyMatch(org -> 
-						(org.getId() == user.getTenantId()));
-					user.setTenantId(isExist ? user.getTenantId() : organizations.stream()
-						.findFirst().get().getId());
+							user.getOrganizations().stream().map(Organization::getId).collect(Collectors.toList()));
+
+					boolean isExist = organizations.stream().anyMatch(org -> (org.getId() == user.getTenantId()));
+					user.setTenantId(isExist ? user.getTenantId() : organizations.stream().findFirst().get().getId());
 					user.setOrganizations(organizations);
 				}
 				return userRepository.save(user);
@@ -247,14 +242,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public User getUserByUsername(String username) {
 		return userRepository.getUserByUsername(username, Boolean.TRUE);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<User> getUsersByTenantIds(List<Long> tenantIds) {
 		return userRepository.findUsersByTenantIds(tenantIds);
 	}
-	
+
 	/**
 	 * This method is used for validating user list.
 	 *
@@ -305,22 +300,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (Objects.isNull(users) || users.isEmpty()) {
 			throw new BadRequestException(10000);
 		}
-		//if (isSiteUser) {
-		//	users.forEach(user -> user.setForgetPasswordCount(Constants.ZERO));
-		//} else {
-		//	Set<Role> userRoles = roleService.getRolesByName(roles);
-		//	if (userRoles.isEmpty()) {
-		//		throw new DataNotFoundException(2002);
-		//	}
-		//	users.forEach(user -> {
-		//		user.setRoles(userRoles);
-		//		user.setForgetPasswordCount(Constants.ZERO);
-		//	});
-		//		}
-		//users = userRepository.saveAll(users);
-		//if (!Objects.isNull(users) && !users.isEmpty()) {
-		//	users.forEach(user -> forgotPassword(user.getUsername(), Boolean.TRUE));
-		//}
+		// if (isSiteUser) {
+		// users.forEach(user -> user.setForgetPasswordCount(Constants.ZERO));
+		// } else {
+		// Set<Role> userRoles = roleService.getRolesByName(roles);
+		// if (userRoles.isEmpty()) {
+		// throw new DataNotFoundException(2002);
+		// }
+		// users.forEach(user -> {
+		// user.setRoles(userRoles);
+		// user.setForgetPasswordCount(Constants.ZERO);
+		// });
+		// }
+		// users = userRepository.saveAll(users);
+		// if (!Objects.isNull(users) && !users.isEmpty()) {
+		// users.forEach(user -> forgotPassword(user.getUsername(), Boolean.TRUE));
+		// }
 		for (User user : users) {
 			addUser(user);
 		}
@@ -354,7 +349,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setForgetPasswordCount(0);
 		return null != userRepository.save(user);
 	}
-	
+
 	/**
 	 * This method is used to compare username and password.
 	 *
@@ -376,7 +371,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			throw new Validation(1014);
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -425,11 +420,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		Key secretKeySpec = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 		Map<String, Object> userInfo = new HashMap<>();
 		userInfo.put(FieldConstants.USERNAME, user.getUsername());
-		JwtBuilder jwtBuilder = Jwts.builder().setClaims(userInfo)
-			.signWith(signatureAlgorithm, secretKeySpec);
+		JwtBuilder jwtBuilder = Jwts.builder().setClaims(userInfo).signWith(signatureAlgorithm, secretKeySpec);
 		String jwtToken = jwtBuilder.setId(String.valueOf(user.getId()))
-			.setExpiration(Date.from(ZonedDateTime.now().plusHours(Constants.TWENTY_FOUR).toInstant()))
-			.setIssuedAt(Date.from(ZonedDateTime.now().toInstant())).setIssuer(Constants.ISSUER).compact();
+				.setExpiration(Date.from(ZonedDateTime.now().plusHours(Constants.TWENTY_FOUR).toInstant()))
+				.setIssuedAt(Date.from(ZonedDateTime.now().toInstant())).setIssuer(Constants.ISSUER).compact();
 		return jwtToken;
 	}
 
@@ -463,26 +457,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			if (isFromCreation) {
 				HttpEntity<String> entity = CommonUtil.getCurrentEntity();
 				ResponseEntity<Map> emailTemplateResponse = restService.exchange(
-					notificationIp + "/email-type/" + Constants.NEW_USER_CREATION, 
-					HttpMethod.GET, entity, Map.class);
+						notificationIp + "/email-type/" + Constants.NEW_USER_CREATION, HttpMethod.GET, entity,
+						Map.class);
 				if (emailTemplateResponse.getBody() == null
-					|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
+						|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
 					throw new Validation(3010);
 				} else {
-					emailDto = constructUserCreationEmail(user, jweToken, data, 
-						emailDto, emailTemplateResponse);
+					emailDto = constructUserCreationEmail(user, jweToken, data, emailDto, emailTemplateResponse);
 					createOutBoundEmail(notificationIp, emailDto);
 				}
 			} else {
 				ResponseEntity<Map> emailTemplateResponse = restService
-					.getForEntity(notificationIp + "/email-type/" + Constants.FORGOT_PASSWORD_USER,
-					Map.class);
+						.getForEntity(notificationIp + "/email-type/" + Constants.FORGOT_PASSWORD_USER, Map.class);
 				if (emailTemplateResponse.getBody() == null
-					|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
+						|| emailTemplateResponse.getBody().get(FieldConstants.ENTITY) == null) {
 					throw new Validation(3010);
 				} else {
-					emailDto = constructForgotEmail(user, jweToken, data, emailDto, 
-						emailTemplateResponse);
+					emailDto = constructForgotEmail(user, jweToken, data, emailDto, emailTemplateResponse);
 					createOutBoundEmail(notificationIp, emailDto);
 				}
 			}
@@ -490,7 +481,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			e.getMessage();
 		}
 	}
-	
+
 	/**
 	 * This method is used to construct the email.
 	 *
@@ -500,10 +491,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * @param emailDto              - email entity
 	 * @param emailTemplateResponse - email template response
 	 */
-	private EmailDTO constructUserCreationEmail(User user, String jwtToken, Map<String, String> data,
-		EmailDTO emailDto, ResponseEntity<Map> emailTemplateResponse) {
-		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse.getBody()
-			.get(FieldConstants.ENTITY), EmailTemplate.class);
+	private EmailDTO constructUserCreationEmail(User user, String jwtToken, Map<String, String> data, EmailDTO emailDto,
+			ResponseEntity<Map> emailTemplateResponse) {
+		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse.getBody().get(FieldConstants.ENTITY),
+				EmailTemplate.class);
 		for (EmailTemplateValue emailTemplateValue : emailTemplate.getEmailTemplateValues()) {
 			if (Constants.APP_URL_EMAIL.equalsIgnoreCase(emailTemplateValue.getName())) {
 				data.put(Constants.APP_URL_EMAIL, appUrl + jwtToken);
@@ -528,10 +519,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * @param emailDto              - email dto
 	 * @param emailTemplateResponse - email template response
 	 */
-	private EmailDTO constructForgotEmail(User user, String jwtToken, Map<String, String> data, 
-		EmailDTO emailDto, ResponseEntity<Map> emailTemplateResponse) {
-		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse.getBody()
-			.get(FieldConstants.ENTITY), EmailTemplate.class);
+	private EmailDTO constructForgotEmail(User user, String jwtToken, Map<String, String> data, EmailDTO emailDto,
+			ResponseEntity<Map> emailTemplateResponse) {
+		EmailTemplate emailTemplate = modelMapper.map(emailTemplateResponse.getBody().get(FieldConstants.ENTITY),
+				EmailTemplate.class);
 		for (EmailTemplateValue emailTemplateValue : emailTemplate.getEmailTemplateValues()) {
 			if (Constants.APP_URL_EMAIL.equals(emailTemplateValue.getName())) {
 				emailTemplateValue.setValue(appUrl + jwtToken);
@@ -551,12 +542,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return emailDto;
 	}
 
-
 	/**
 	 * This method is used to send mail in runnable thread.
 	 *
 	 * @param notificationIp - notification info
-	 * @param emailDto -      email entity
+	 * @param emailDto       - email entity
 	 */
 	private void createOutBoundEmail(String notificationIp, EmailDTO emailDto) {
 		OutBoundEmail outBoundEmail = modelMapper.map(emailDto, OutBoundEmail.class);
@@ -564,11 +554,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		header.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<OutBoundEmail> emailEntity = new HttpEntity<>(outBoundEmail, header);
 		ResponseEntity<Map> emailResponse = restService.exchange(notificationIp + "/create", HttpMethod.POST,
-			emailEntity, Map.class);
+				emailEntity, Map.class);
 		boolean isSuccess = modelMapper.map(emailResponse.getBody().get(FieldConstants.ENTITY), Boolean.class);
 		if (!isSuccess) {
 			throw new Validation(3011);
-		} 
+		}
 	}
 
 	/**
@@ -644,7 +634,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return false;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -658,7 +647,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				grantedAuthorities);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -669,13 +658,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		return checkForgotPasswordLimitExceed(user, isFromCreation);
 	}
-	
+
 	/**
 	 * <p>
 	 * Common method both api like limit check and forgot password.
 	 * </p>
 	 *
-	 * @param user - User object
+	 * @param user           - User object
 	 * @param isFromCreation - From user cration
 	 * @return Boolean - True or False
 	 */
@@ -689,8 +678,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setForgetPasswordCount(Constants.ONE);
 			user.setIsBlocked(Boolean.FALSE);
 		} else {
-			if (forgotPasswordCount < forgotPasswordCountLimit 
-				&& forgotPasswordCount >= 0 && !isFromCreation) {
+			if (forgotPasswordCount < forgotPasswordCountLimit && forgotPasswordCount >= 0 && !isFromCreation) {
 				user.setForgetPasswordCount(++forgotPasswordCount);
 			}
 			if (forgotPasswordCount >= forgotPasswordCountLimit) {
@@ -704,12 +692,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userRepository.save(user);
 		return Boolean.FALSE;
 	}
-	
+
 	@Override
 	public void clearApiPermissions() {
 		authenticationFilter.apiPermissionMap.clear();
 	}
-	
+
 	/**
 	 * This method is used to generate secret key.
 	 *
@@ -720,7 +708,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(Constants.AES_KEY_TOKEN);
 		return new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 	}
-	
+
 	/**
 	 * This method is used to get notification information.
 	 *
@@ -730,8 +718,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		String ipInfo = Constants.EMPTY;
 		ServiceInstance instance = null;
 		try {
-			List<ServiceInstance> instanceList = discoveryClient.getInstances(
-				Constants.NOTIFICATION_INSTANCE);
+			List<ServiceInstance> instanceList = discoveryClient.getInstances(Constants.NOTIFICATION_INSTANCE);
 			if (!instanceList.isEmpty()) {
 				instance = instanceList.get(Constants.ZERO);
 			}
@@ -744,52 +731,51 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		return ipInfo;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-    public User updateOrganizationUser(User user) {
-        if (Objects.isNull(user.getId())) {
-            throw new DataNotAcceptableException(1016);
-        }
-        User existingUser = userRepository.findByIdAndTenantIdAndIsActiveTrue(user.getId(), user.getTenantId());
-        if (Objects.isNull(existingUser)) {
-            throw new DataNotFoundException(1010);
-        }
+	public User updateOrganizationUser(User user) {
+		if (Objects.isNull(user.getId())) {
+			throw new DataNotAcceptableException(1016);
+		}
+		User existingUser = userRepository.findByIdAndTenantIdAndIsActiveTrue(user.getId(), user.getTenantId());
+		if (Objects.isNull(existingUser)) {
+			throw new DataNotFoundException(1010);
+		}
 //        existingUser.setCountryId(user.getCountry().getId());
-        existingUser.setCountryCode(user.getCountryCode());
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setPhoneNumber(user.getPhoneNumber());
-        Timezone timezone = new Timezone();
-        timezone.setId(user.getTimezone().getId());
-        existingUser.setTimezone(timezone);
-        existingUser.setGender(user.getGender());
-        
-        System.out.println("existing user -------" + existingUser);
-        return userRepository.save(existingUser);
-    }
+		existingUser.setCountryCode(user.getCountryCode());
+		existingUser.setFirstName(user.getFirstName());
+		existingUser.setLastName(user.getLastName());
+		existingUser.setPhoneNumber(user.getPhoneNumber());
+		Timezone timezone = new Timezone();
+		timezone.setId(user.getTimezone().getId());
+		existingUser.setTimezone(timezone);
+		existingUser.setGender(user.getGender());
+
+		System.out.println("existing user -------" + existingUser);
+		return userRepository.save(existingUser);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-    public Boolean deleteOrganizationUser(CommonRequestDTO requestData) {
-        Long userId = requestData.getId();
-        Long tenantId = requestData.getTenantId();
-        if (Objects.isNull(userId)) {
-            throw new DataNotAcceptableException(1016);
-        }
-        User existingUser = userRepository.findByIdAndIsActiveTrue(userId);
-        if (Objects.isNull(existingUser)) {
-            throw new DataNotFoundException(1010);
-        }
+	public Boolean deleteOrganizationUser(CommonRequestDTO requestData) {
+		Long userId = requestData.getId();
+		Long tenantId = requestData.getTenantId();
+		if (Objects.isNull(userId)) {
+			throw new DataNotAcceptableException(1016);
+		}
+		User existingUser = userRepository.findByIdAndIsActiveTrue(userId);
+		if (Objects.isNull(existingUser)) {
+			throw new DataNotFoundException(1010);
+		}
 
-        existingUser.getOrganizations().removeIf(organization -> organization.getId() == tenantId);
-        System.out.println("delete user after removing oorg in user" + existingUser);
-        existingUser.setDeleted(Constants.BOOLEAN_TRUE);
-        userRepository.save(existingUser);
-        return true;
-    }
-
+		existingUser.getOrganizations().removeIf(organization -> organization.getId() == tenantId);
+		System.out.println("delete user after removing oorg in user" + existingUser);
+		existingUser.setDeleted(Constants.BOOLEAN_TRUE);
+		userRepository.save(existingUser);
+		return true;
+	}
 
 }

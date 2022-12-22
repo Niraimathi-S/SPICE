@@ -19,6 +19,7 @@ import com.mdtlabs.coreplatform.AuthenticationFilter;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.UnitConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
@@ -109,7 +110,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
 	@Autowired
 	private UserApiInterface userApiInterface;
-	
+
 	@Autowired
 	private AuthenticationFilter authenticationFilter;
 
@@ -141,13 +142,12 @@ public class AssessmentServiceImpl implements AssessmentService {
 			} else {
 				patientTracker = patientTrackerService.getPatientTrackerById(assessmentDTO.getPatientTrackId());
 			}
-			
-			
 
 			String riskLevel = "";
 			String riskMessage = "";
 
-			if (patientTracker.getPatientStatus().equals(Constants.ENROLLED) && patientTracker.isInitialReview()
+			if (!Objects.isNull(patientTracker.getPatientStatus())
+					&& patientTracker.getPatientStatus().equals(Constants.ENROLLED) && patientTracker.isInitialReview()
 					&& !patientTracker.isRedRiskPatient()) {
 				patientTracker.setRedRiskPatient(Constants.BOOLEAN_FALSE);
 				riskLevel = calculateRiskLevel(assessmentDTO, patientTracker);
@@ -231,7 +231,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 			}
 			patientTracker.setLastAssessmentDate(new Date());
 			if (patientTracker.getPatientStatus().equals(Constants.ENROLLED)) {
-				// patientTracker.setTenantId(UserSelectedTenantContextHolder.get());
+				patientTracker.setTenantId(UserSelectedTenantContextHolder.get());
 			}
 
 			PatientTreatmentPlan patientTreatmentPlan = patientTreatmentPlanService
@@ -245,6 +245,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 						Constants.WORKFLOW_ASSESSMENT, patientTracker.getId());
 			}
 			patientTrackerService.addOrUpdatePatientTracker(patientTracker);
+			response.setConfirmDiagnosis(patientTracker.getConfirmDiagnosis());
 		}
 
 		return response;
@@ -515,7 +516,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 				assessmentLogId);
 		List<User> users = userApiInterface.getUsersBasedOnOrgId(
 				Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-				UserContextHolder.getUserDto().getTenantId(), Arrays.asList(patientTracker.getTenantId()));
+				UserSelectedTenantContextHolder.get(), Arrays.asList(patientTracker.getTenantId()));
 		List<SmsDTO> smsDTOs = new ArrayList<>();
 		for (User user : users) {
 			Set<Role> roles = user.getRoles();
@@ -532,7 +533,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 		}
 
 		apiInterface.saveOutBoundSMS(Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-				UserContextHolder.getUserDto().getTenantId(), smsDTOs);
+				UserSelectedTenantContextHolder.get(), smsDTOs);
 	}
 
 	/**
@@ -569,7 +570,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 		}
 		return glucoseLog;
 	}
-	
+
 	@Override
 	public void clearApiPermissions() {
 		authenticationFilter.apiPermissionMap.clear();

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.UserProfileDTO;
 import com.mdtlabs.coreplatform.common.model.entity.User;
@@ -51,10 +52,10 @@ public class UserController {
 	private int gridDisplayValue;
 
 	ModelMapper modelMapper = new ModelMapper();
-	
+
 	@Autowired
 	private AdminApiInterface adminApiInterface;
-	
+
 	@Autowired
 	private SpiceApiInterface spiceApiInterface;
 
@@ -257,7 +258,7 @@ public class UserController {
 	public SuccessResponse<Boolean> clearApiPermissions() {
 		userService.clearApiPermissions();
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		long tenantId = UserContextHolder.getUserDto().getTenantId();
+		long tenantId = UserSelectedTenantContextHolder.get();
 		adminApiInterface.clearApiPermissions(token, tenantId);
 		spiceApiInterface.clearApiPermissions(token, tenantId);
 		return new SuccessResponse<>(SuccessCode.API_PERMISSION_CLEARED, Constants.API_ROLES_MAP_CLEARED,

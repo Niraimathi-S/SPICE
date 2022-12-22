@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.reflect.TypeToken;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
@@ -260,7 +261,7 @@ public class PatientLabTestServiceImpl implements PatientLabTestService {
 		requestEntity.setSearchTerm(searchTerm);
 		ResponseEntity<LabTest> labTest = apiInterface.getLabTestByName(
 				Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-				UserContextHolder.getUserDto().getTenantId(), requestEntity);
+				UserSelectedTenantContextHolder.get(), requestEntity);
 		return labTest.getBody();
 	}
 
@@ -283,7 +284,7 @@ public class PatientLabTestServiceImpl implements PatientLabTestService {
 
 		ResponseEntity<List<LabTest>> list = apiInterface.getLabTestsByIds(
 				Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-				UserContextHolder.getUserDto().getTenantId(), labTestIds);
+				UserSelectedTenantContextHolder.get(), labTestIds);
 		return list.getBody();
 	}
 
@@ -412,7 +413,7 @@ public class PatientLabTestServiceImpl implements PatientLabTestService {
 
 		ResponseEntity<Map> userResponse = apiInterface.getLabTestResultsByLabTestId(
 				Constants.BEARER + UserContextHolder.getUserDto().getAuthorization(),
-				UserContextHolder.getUserDto().getTenantId(), labTestId);
+				UserSelectedTenantContextHolder.get(), labTestId);
 		List<LabTestResult> response = modelMapper.map(userResponse.getBody().get("entity"),
 				new TypeToken<List<LabTestResult>>() {
 				}.getType());

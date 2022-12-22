@@ -281,6 +281,22 @@ public class PatientTrackerServiceImpl implements PatientTrackerService {
 				}
 			}
 
+			if (!Objects.isNull(patientSortDTO.getNextBgAssessmentDateAsc())) {
+				if (patientSortDTO.getNextBgAssessmentDateAsc()) {
+					sorts.add(new Sort.Order(Sort.Direction.ASC, FieldConstants.NEXT_BG_ASSESSMENT_DATE));
+				} else {
+					sorts.add(new Sort.Order(Sort.Direction.DESC, FieldConstants.NEXT_BG_ASSESSMENT_DATE));
+				}
+			}
+
+			if (!Objects.isNull(patientSortDTO.getAssessmentDueDateAsc())) {
+				if (patientSortDTO.getAssessmentDueDateAsc()) {
+					sorts.add(new Sort.Order(Sort.Direction.ASC, FieldConstants.LAST_ASSESSMENT_DATE));
+				} else {
+					sorts.add(new Sort.Order(Sort.Direction.DESC, FieldConstants.LAST_ASSESSMENT_DATE));
+				}
+			}
+
 			if (sorts.isEmpty()) {
 				sorts.add(new Sort.Order(Sort.Direction.DESC, FieldConstants.UPDATED_AT));
 			}
@@ -414,20 +430,16 @@ public class PatientTrackerServiceImpl implements PatientTrackerService {
 
 		List<MyPatientListDTO> patientListDTO = new ArrayList<>();
 
-		if (Objects.isNull(patientRequestDTO.getFirstName()) && Objects.isNull(patientRequestDTO.getLastName())
-				&& Objects.isNull(patientRequestDTO.getPhoneNumber())) {
-			throw new DataNotAcceptableException(4006);
-		}
-
-		if (!CommonUtil.validatePhoneNumber(patientRequestDTO.getPhoneNumber())) {
-			throw new SpiceValidation(00002);
-		}
+//		if (Objects.isNull(patientRequestDTO.getFirstName()) && Objects.isNull(patientRequestDTO.getLastName())
+//				&& Objects.isNull(patientRequestDTO.getPhoneNumber())) {
+//			throw new DataNotAcceptableException(4006);
+//		}
 
 		boolean isInvalidData = CommonUtil.validatePatientSearchData(Arrays.asList(patientRequestDTO.getFirstName(),
 				patientRequestDTO.getLastName(), patientRequestDTO.getPhoneNumber()));
 
 		if (isInvalidData) {
-			return responseMap;
+			throw new DataNotAcceptableException(4006);
 		}
 
 		Pageable pageable = getSortingForPatients(patientRequestDTO.getPatientSortDTO());
