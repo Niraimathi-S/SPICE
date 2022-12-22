@@ -1,14 +1,13 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
-
 import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Entity class for patient diagnosis
@@ -49,6 +48,17 @@ public class PatientDiagnosis extends TenantBaseEntity {
 
 	@Column(name = FieldConstants.IS_DIABETES_DIAGNOSIS)
 	private boolean isDiabetesDiagnosis;
+    public String getDiabetesDiagnosis() {
+        return diabetesDiagnosis;
+    }
+
+    public void setDiabetesDiagnosis(String diabetesDiagnosis) {
+        this.diabetesDiagnosis = diabetesDiagnosis;
+    }
+
+    public boolean isDiabetesDiagnosis() {
+        return isDiabetesDiagnosis;
+    }
 
 	public PatientDiagnosis() {
 	}
@@ -70,19 +80,11 @@ public class PatientDiagnosis extends TenantBaseEntity {
 		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
 	}
 
-	public boolean isDiabetesDiagnosis() {
-		return isDiabetesDiagnosis;
-	}
-
 	public void setDiabetesDiagnosis(boolean isDiabetesDiagnosis) {
 		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
 	}
 
 	public void getDiabetesDiagnosis(String diabetesDiagnosis) {
-		this.diabetesDiagnosis = diabetesDiagnosis;
-	}
-
-	public void setDiabetesDiagnosis(String diabetesDiagnosis) {
 		this.diabetesDiagnosis = diabetesDiagnosis;
 	}
 }
