@@ -396,22 +396,4 @@ public class CommonUtil {
 		return matcher.matches();
 	}
 
-	/**
-	 * This method is used to parse email template
-	 * 
-	 * @param htmlTemplate - html template structure
-	 * @param data         - content of email
-	 * @return String - parsed html template
-	 */
-	public static String parseEmailTemplate(String htmlTemplate, Map<String, String> data) {
-		if (data != null && !data.isEmpty()) {
-			String[] result = new String[Constants.ONE];
-			result[Constants.ZERO] = htmlTemplate;
-			data.forEach(
-					(key, value) -> result[Constants.ZERO] = result[Constants.ZERO].replace("${" + key + "}", value));
-			return result[Constants.ZERO];
-		}
-		return htmlTemplate;
-	}
-
 }

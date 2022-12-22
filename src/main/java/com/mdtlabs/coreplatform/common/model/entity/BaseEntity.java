@@ -63,6 +63,20 @@ public class BaseEntity implements Serializable {
 
 	@Column(name = FieldConstants.IS_DELETED)
 	private boolean isDeleted = false;
+	
+	/**
+	 * Default Constructor 
+	 */
+	public BaseEntity () {
+		
+	}
+	
+	/**
+	 * Constructor to set Id 
+	 */
+	public BaseEntity (Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * This method is used to get user value

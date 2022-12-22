@@ -20,10 +20,6 @@ import lombok.Data;
 @Data
 public class CountryDTO {
 	private long id;
-
-    private boolean isDeleted;
-
-	private boolean isActive;
 	
 	@NotEmpty(message = ErrorConstants.COUNTRY_NAME_NOT_NULL)
 	private String name;

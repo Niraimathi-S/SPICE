@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.common;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * <p>
@@ -62,6 +63,7 @@ public final class Constants {
 	public static final String NOTIFICAION_STATUS_PROCESSED = "Notification status processed";
 	public static final String NOTIFICAION_STATUS_FAILED = "Notification status failed";
 	public static final String SAVING_EMAIL_NOTIFICATION_ERROR = "Error while saving notification for email";
+	public static final String HEADER_CLIENT = "client";
 
 	// AESKEY
 	public static final String AES_KEY = "Telec0unseL0r";
@@ -182,8 +184,6 @@ public final class Constants {
 	public static final String SUPER_ADMIN_ROLE_NAME = "ROLE_SUPER_ADMIN";
 	public static final String ADMIN_ROLE_NAME = "ROLE_ADMIN";
 	public static final String USER_ROLE_NAME = "ROLE_USER";
-	public static final String RED_RISK_USER = "ROLE_RED_RISK";
-	public static final String ROLE_SUPER_USER = "SUPER_USER";
 
 	public static final int SUPER_TENANT_ADMINISTRATOR_ID = 0;
 	public static final String USER_SELECTED_TENANT = "userTenant";
@@ -266,7 +266,6 @@ public final class Constants {
 	public static final String GLUCOSE_UNIT_MG_DL = "mg/dL";
 	public static final String GLUCOSE_UNIT_MMOL_L = "mmol/L";
 	public static final String OTHER = "Other";
-	public static final String ROLE_LAB_TECHNICIAN = "LAB_TECHNICIAN";
 	public static final String UNIT = "unit";
 
 	public static final String NEW = "NEW";
@@ -323,9 +322,6 @@ public final class Constants {
 	public static final String NUT = "nut";
 	public static final String HOURS_PER_WEEK = "hrs/week";
 
-	public static final String ROLE_REGION_ADMIN = "REGION_ADMIN";
-	public static final String ROLE_ACCOUNT_ADMIN = "ACCOUNT_ADMIN";
-	public static final String ROLE_OU_ADMIN = "OPERATING_UNIT_ADMIN";
 	public static final String ACCOUNT = "Account";
 	public static final String REGION = "Country";
 	public static final String OPERATING_UNIT = "Operating Unit";
@@ -346,5 +342,51 @@ public final class Constants {
 	public static final List<String> DIABETES_CONFIRM_DIAGNOSIS = Arrays.asList(PRE_DIABETES, DIABETES_MELLITUS_TYPE_1,
 			DIABETES_MELLITUS_TYPE_2);
 	public static final List<String> HTM_CONFIRM_DIAGNOSIS = Arrays.asList(HYPER_TENSION, PRE_HYPER_TENSION);
+	
+	public static final String CLIENT_SPICE_MOBILE = "spice mobile";
+	public static final String CLIENT_SPICE_WEB = "spice web";
+	public static final String ROLE_HEALTH_COACH = "HEALTH_COACH";
+	public static final String ROLE_HEALTH_SCREENER = "HEALTH_SCREENER";
+	public static final String ROLE_HRIO = "HRIO";
+	public static final String ROLE_LAB_TECHNICIAN = "LAB_TECHNICIAN";
+	public static final String ROLE_NURSE = "NURSE";
+	public static final String ROLE_NUTRITIONIST = "NUTRITIONIST";
+	public static final String ROLE_PHARMACIST = "PHARMACIST";
+	public static final String ROLE_PHYSICIAN_PRESCRIBER = "PHYSICIAN_PRESCRIBER";
+	public static final String ROLE_PROVIDER = "PROVIDER";
+	public static final String ROLE_RED_RISK_USER = "ROLE_RED_RISK";
+	public static final Map<String, String> SPICE_MOBILE_ROLES = new HashMap<>();
+	
+	static {
+        SPICE_MOBILE_ROLES.put(ROLE_HEALTH_COACH, ROLE_HEALTH_COACH);
+        SPICE_MOBILE_ROLES.put(ROLE_HEALTH_SCREENER, ROLE_HEALTH_SCREENER);
+        SPICE_MOBILE_ROLES.put(ROLE_HRIO, ROLE_HRIO);
+        SPICE_MOBILE_ROLES.put(ROLE_LAB_TECHNICIAN, ROLE_LAB_TECHNICIAN);
+        SPICE_MOBILE_ROLES.put(ROLE_NURSE, ROLE_NURSE);
+        SPICE_MOBILE_ROLES.put(ROLE_NUTRITIONIST, ROLE_NUTRITIONIST);
+        SPICE_MOBILE_ROLES.put(ROLE_PHARMACIST, ROLE_PHARMACIST);
+        SPICE_MOBILE_ROLES.put(ROLE_PHYSICIAN_PRESCRIBER, ROLE_PHYSICIAN_PRESCRIBER);
+        SPICE_MOBILE_ROLES.put(ROLE_PROVIDER, ROLE_PROVIDER);
+        SPICE_MOBILE_ROLES.put(ROLE_RED_RISK_USER, ROLE_RED_RISK_USER);
+    }
+	
+	public static final String ROLE_ACCOUNT_ADMIN= "ACCOUNT_ADMIN";
+	public static final String ROLE_OPERATING_UNIT_ADMIN = "OPERATING_UNIT_ADMIN";
+	public static final String ROLE_REGION_ADMIN = "REGION_ADMIN";
+	public static final String ROLE_REPORT_ADMIN = "REPORT_ADMIN";
+	public static final String ROLE_SUPER_ADMIN = "SUPER_ADMIN";
+	public static final String ROLE_SYSTEM_ADMIN = "SYSTEM_ADMIN";
+	public static final String ROLE_SUPER_USER = "SUPER_USER";
+	public static final Map<String, String> SPICE_WEB_ROLES = new HashMap<>();
+	
+	static {
+		SPICE_WEB_ROLES.put(ROLE_ACCOUNT_ADMIN, ROLE_ACCOUNT_ADMIN);
+		SPICE_WEB_ROLES.put(ROLE_OPERATING_UNIT_ADMIN, ROLE_OPERATING_UNIT_ADMIN);
+		SPICE_WEB_ROLES.put(ROLE_REGION_ADMIN, ROLE_REGION_ADMIN);
+		SPICE_WEB_ROLES.put(ROLE_REPORT_ADMIN, ROLE_REPORT_ADMIN);
+		SPICE_WEB_ROLES.put(ROLE_SUPER_ADMIN, ROLE_SUPER_ADMIN);
+		SPICE_WEB_ROLES.put(ROLE_SYSTEM_ADMIN, ROLE_SYSTEM_ADMIN);
+		SPICE_WEB_ROLES.put(ROLE_SUPER_USER, ROLE_SUPER_USER);
+	}
 
 }
