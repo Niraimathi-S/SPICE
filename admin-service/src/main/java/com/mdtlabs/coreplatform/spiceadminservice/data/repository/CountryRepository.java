@@ -25,7 +25,8 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	public static final String GET_COUNTRIES_BY_NAME = "select country from Country as "
 		+ "country where lower(country.name) LIKE CONCAT('%',lower(:searchTerm),'%')"
 		+ " AND country.isDeleted=false order by country.updatedBy";
-	public static final String GET_COUNTRIES_COUNT_BY_NAME = "select count(id) from Country as country where lower(country.name)"
+	public static final String GET_COUNTRIES_COUNT_BY_NAME = "select count(id) from Country "
+		+ "as country where lower(country.name)"
 		+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND country.isDeleted=false";
 
 	/**
@@ -104,10 +105,9 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	Page<Country> searchCountries(@Param("searchTerm") String searchTerm, Pageable pageable);
 
 	/**
-	 * Retrives the all countries count based on the search term
+	 * Retrives the all countries count based on the search term.
 	 *
 	 * @param searchTerm
-	 * @return int count
 	 * @author Nandhakumar karthikeyan
 	 */
 	@Query(value = GET_COUNTRIES_COUNT_BY_NAME)

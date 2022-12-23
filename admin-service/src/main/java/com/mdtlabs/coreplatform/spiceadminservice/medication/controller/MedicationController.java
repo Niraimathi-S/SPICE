@@ -93,24 +93,24 @@ public class MedicationController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	public SuccessResponse<List<MedicationDTO>> getAllMedications(@RequestBody RequestDTO requestObject) {
-        Map<String, Object> medications = medicationService.getAllMedications(requestObject);
-        List<Medication> medicationList = medications.containsKey("medicationList")
-            ? (List<Medication>) medications.get("medicationList")
-            : new ArrayList<>();
-        Integer totalMedicationCount = medications.containsKey("totalCount") 
-            ? Integer.parseInt(medications.get("totalCount").toString())
-            : 0;
-        int totalCount = 0;
-        List<MedicationDTO>  medicationDtos = new ArrayList<>();
-        if (!medicationList.isEmpty()) {
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            medicationDtos = modelMapper.map(medicationList, 
-            	new TypeToken<List<MedicationDTO>>() {}.getType());
-            totalCount = totalMedicationCount;
-        }
-        return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, 
-        	medicationDtos, totalCount, HttpStatus.OK);
-     }
+		Map<String, Object> medications = medicationService.getAllMedications(requestObject);
+		List<Medication> medicationList = medications.containsKey("medicationList")
+				? (List<Medication>) medications.get("medicationList")
+				: new ArrayList<>();
+		Integer totalMedicationCount = medications.containsKey("totalCount")
+				? Integer.parseInt(medications.get("totalCount").toString())
+				: 0;
+		int totalCount = 0;
+		List<MedicationDTO> medicationDtos = new ArrayList<>();
+		if (!medicationList.isEmpty()) {
+			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+			medicationDtos = modelMapper.map(medicationList, new TypeToken<List<MedicationDTO>>() {
+			}.getType());
+			totalCount = totalMedicationCount;
+		}
+		return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, medicationDtos, totalCount,
+				HttpStatus.OK);
+	}
 
 
 	/**

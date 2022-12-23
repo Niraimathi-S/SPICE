@@ -24,16 +24,15 @@ import com.mdtlabs.coreplatform.common.model.entity.spice.Medication;
 @Repository
 public interface MedicationRepository extends JpaRepository<Medication, Long> {
 
-
-public static final String GET_ALL_MEDICATIONS = "select * from medicationcountrydetail "
+	public static final String GET_ALL_MEDICATIONS = "select * from medicationcountrydetail "
 		+ "as medication where (:countryId is null or medication.country_id=:countryId) "
 		+ "and medication.tenant_id=:tenantId and medication.is_deleted=false "
 		+ "and (:searchTerm is null or lower(medication.medication_name) LIKE "
 		+ "CONCAT('%',lower(:searchTerm),'%'))";
 
 	public static final String GET_ALL_MEDICATIONS_COUNT = "select count(id) from medication_country_detail as medication where "
-        + "medication.country_id=:countryId and medication.tenant_id=:tenantId and medication.is_deleted=false "
-        + "and (:searchTerm is null or lower(medication.medication_name) LIKE CONCAT('%',lower(:searchTerm),'%'))";
+		+ "medication.country_id=:countryId and medication.tenant_id=:tenantId and medication.is_deleted=false "
+		+ "and (:searchTerm is null or lower(medication.medication_name) LIKE CONCAT('%',lower(:searchTerm),'%'))";
 
 	public static final String UPDATE_MEDICATION_STATUS_BY_ID = "update from Medication as medication set "
 		+ "medication.isDeleted=:status where medication.id = :medicationId AND"
@@ -61,14 +60,14 @@ public static final String GET_ALL_MEDICATIONS = "select * from medicationcountr
 	 * This method is used to get all medications details.
 	 *
 	 * @param countryId - country id
-	 * @param pageable - pageable
+	 * @param pageable  - pageable
 	 * @return List of Medication Entities
 	 */
 	@Query(value = GET_ALL_MEDICATIONS, nativeQuery = true)
-	public Page<Medication> getAllMedications(@Param("searchTerm") String searchTerm, 
+	public Page<Medication> getAllMedications(@Param("searchTerm") String searchTerm,
 		@Param("countryId") Long countryId, @Param("tenantId") Long tenantId, Pageable pageable);
 
-    /**
+	/**
 	 * This method is used to get all medications count.
 	 *
 	 * @param countryId
@@ -76,41 +75,42 @@ public static final String GET_ALL_MEDICATIONS = "select * from medicationcountr
 	 * @return Total count
 	 */
 	@Query(value = GET_ALL_MEDICATIONS_COUNT, nativeQuery = true)
-	public int getAllMedicationsCount(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId, @Param("tenantId") Long tenantId);
+	public int getAllMedicationsCount(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId,
+		@Param("tenantId") Long tenantId);
 
 	/**
 	 * This method is used to update the isdeleted status of a medication.
 	 *
-	 * @param status - true or false
+	 * @param status       - true or false
 	 * @param medicationId - medication id
 	 * @return no.of updated rows
 	 */
 	@Modifying
 	@Transactional
 	@Query(value = UPDATE_MEDICATION_STATUS_BY_ID)
-	public int updateMedicationById(@Param("status") Boolean status,
-		@Param("medicationId") Long medicationId, @Param("tenantId") Long tenantId);
+	public int updateMedicationById(@Param("status") Boolean status, @Param("medicationId") Long medicationId,
+		@Param("tenantId") Long tenantId);
 
 	/**
 	 * This method retrives a single Medicaiton details using mandatory fields.
 	 *
 	 * @param classification - classification
-	 * @param brand - brand
-	 * @param dosageForm - dosage form
-	 * @param country - country form
-	 * @param name - medication name
+	 * @param brand          - brand
+	 * @param dosageForm     - dosage form
+	 * @param country        - country form
+	 * @param name           - medication name
 	 * @return Medication Entity
 	 */
 	@Query(value = GET_MEDICATION_BY_MANDATORY_FIELDS)
 	public Medication getMedicationByFields(@Param("classificationId") long classification,
-		@Param("brandId") long brand, @Param("dosageFormId") long dosageForm,
-		@Param("countryId") long country, @Param("medicationName") String name);
+		@Param("brandId") long brand, @Param("dosageFormId") long dosageForm, @Param("countryId") long country,
+		@Param("medicationName") String name);
 
 	/**
 	 * Searches a medication based on the given condition.
 	 *
 	 * @param searchTerm - search term
-	 * @param countryId - country id
+	 * @param countryId  - country id
 	 * @return List of medication entities
 	 */
 	@Query(value = GET_MEDICATION_BY_MEDICATION_NAME)
@@ -122,8 +122,8 @@ public static final String GET_ALL_MEDICATIONS = "select * from medicationcountr
 	 * data.
 	 *
 	 * @param searchTerm - search term
-	 * @param countryId - country id
-	 * @param pageable - pageable
+	 * @param countryId  - country id
+	 * @param pageable   - pageable
 	 * @return Limited number of Medication Entities.
 	 */
 	@Query(value = GET_ALL_MEDICATIONS, nativeQuery = true)
@@ -133,7 +133,7 @@ public static final String GET_ALL_MEDICATIONS = "select * from medicationcountr
 	/**
 	 * This method retrives a single Medicaiton details using medicationId.
 	 *
-	 * @param id - medication id
+	 * @param id        - medication id
 	 * @param isDeleted - true or false
 	 * @return Medication entity.
 	 */
@@ -142,23 +142,22 @@ public static final String GET_ALL_MEDICATIONS = "select * from medicationcountr
 	/**
 	 * To get other medication details.
 	 *
-	 * @param countryId - country id
-	 * @param medicationName - medication name	
-	 * @param brandName - brand name
+	 * @param countryId          - country id
+	 * @param medicationName     - medication name
+	 * @param brandName          - brand name
 	 * @param classificationName - classification name
-	 * @param dosageFormName - dosage form name
+	 * @param dosageFormName     - dosage form name
 	 * @return Medication entity
 	 */
 	@Query(value = GET_OTHER_MEDICATION, nativeQuery = true)
 	public Medication getOtherMedication(@Param("countryId") long countryId,
 		@Param("medicationName") String medicationName, @Param("brandName") String brandName,
-		@Param("classificationName") String classificationName, 
-		@Param("dosageFormName") String dosageFormName);
+		@Param("classificationName") String classificationName, @Param("dosageFormName") String dosageFormName);
 
 	/**
-	 * Gets a medication based on its id  and tenantId.
+	 * Gets a medication based on its id and tenantId.
 	 *
-	 * @param id medication id
+	 * @param id       medication id
 	 * @param tenantId tenant id
 	 * @return Medication Entity
 	 * @author Niraimathi S

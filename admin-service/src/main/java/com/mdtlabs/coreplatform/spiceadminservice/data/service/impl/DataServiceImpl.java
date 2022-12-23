@@ -105,7 +105,7 @@ public class DataServiceImpl implements DataService {
 			organizationDto.setUsers(users);
 			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,
-				UserSelectedTenantContextHolder.get() ,organizationDto);
+				UserSelectedTenantContextHolder.get(), organizationDto);
 			Organization savedOrganization = response.getBody();
 			countryResponse.setTenantId(savedOrganization.getId());
 			countryResponse = countryRepository.save(countryResponse);
@@ -374,10 +374,10 @@ public class DataServiceImpl implements DataService {
 	 * {@inheritDoc}
 	 */
 	public User updateRegionAdmin(User user) {
-		UserDTO userDTO = UserContextHolder.getUserDto();
-		String token = Constants.BEARER + userDTO.getAuthorization();
+		UserDTO userDto = UserContextHolder.getUserDto();
+		String token = Constants.BEARER + userDto.getAuthorization();
 		ResponseEntity<User> response = userApiInterface.updateAdminUser(
-				token, UserSelectedTenantContextHolder.get(), user);
+			token, UserSelectedTenantContextHolder.get(), user);
 		if (!Objects.isNull(response.getBody())) {
 			user = response.getBody();
 		}
@@ -394,7 +394,7 @@ public class DataServiceImpl implements DataService {
 			UserSelectedTenantContextHolder.get(), requestDto);
 		Boolean isUserDeleted = true;
 		if (!Objects.isNull(response.getBody())) {
-			isUserDeleted= response.getBody();
+			isUserDeleted = response.getBody();
 		}
 		return isUserDeleted;
 	}

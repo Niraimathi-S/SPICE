@@ -63,7 +63,7 @@ public class OperatingUnitController {
 	
 	/**
 	 * To add operating unit admin user.
-	 * 
+	 *
 	 * @param user - account admin user details
 	 * @return User - User entity
 	 * @author Niraimathi S
@@ -76,7 +76,7 @@ public class OperatingUnitController {
 	
 	/**
 	 * To update operating unit admin user.
-	 * 
+	 *
 	 * @param user - updated user details
 	 * @return User - user entity
 	 * @author Niraimathi S
@@ -89,14 +89,14 @@ public class OperatingUnitController {
 	
 	/**
 	 * To delete operating unit admin user.
-	 * 
-	 * @param requestDTO - request data containing user id and tenantId.
+	 *
+	 * @param requestDto - request data containing user id and tenantId.
 	 * @return Boolean
 	 * @author Niraimathi S
 	 */
 	@DeleteMapping(value = "/remove-user")
-	public SuccessResponse<User> deleteAccountAdmin(@RequestBody CommonRequestDTO requestDTO) {
-		operatingUnitService.deleteOUAdmin(requestDTO);
+	public SuccessResponse<User> deleteAccountAdmin(@RequestBody CommonRequestDTO requestDto) {
+		operatingUnitService.deleteOUAdmin(requestDto);
         return new SuccessResponse<>(SuccessCode.OU_ADMIN_DELETE, HttpStatus.OK);
 	}
 	

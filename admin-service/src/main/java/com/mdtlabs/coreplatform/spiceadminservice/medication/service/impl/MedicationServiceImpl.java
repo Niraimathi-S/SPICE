@@ -126,10 +126,10 @@ public class MedicationServiceImpl implements MedicationService {
 
         Map<String, Object> responseMap = new HashMap<>();
 
-        String sortField = Objects.isNull(requestObject.getSortField()) ||
-                requestObject.getSortField().isBlank() ? FieldConstants.MODIFIED_AT : requestObject.getSortField();
-        Direction sortDirection = 0 != requestObject.getSortOrder() &&
-                -1 == requestObject.getSortOrder() ? Sort.Direction.DESC : Sort.Direction.ASC;
+        String sortField = Objects.isNull(requestObject.getSortField()) 
+        	|| requestObject.getSortField().isBlank() ? FieldConstants.MODIFIED_AT : requestObject.getSortField();
+        Direction sortDirection = 0 != requestObject.getSortOrder() 
+        	&& -1 == requestObject.getSortOrder() ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = Pagination.setPagination(requestObject.getSkip(), requestObject.getLimit(),
             Sort.by(sortDirection, sortField));
 
@@ -139,9 +139,9 @@ public class MedicationServiceImpl implements MedicationService {
             formattedSearchTerm = requestObject.getSearchTerm().replaceAll("[^a-zA-Z0-9 ]*", "");
         }
         medications = medicationRepository.getAllMedications(formattedSearchTerm, requestObject.getCountryId(),
-                requestObject.getTenantId(), pageable);
+            requestObject.getTenantId(), pageable);
         int medicationsCount = medicationRepository.getAllMedicationsCount(formattedSearchTerm, requestObject.getCountryId(),
-                requestObject.getTenantId());
+            requestObject.getTenantId());
         responseMap.put("medicationList", medications.stream().collect(Collectors.toList()));
         responseMap.put("totalCount", medicationsCount);
         return responseMap;
