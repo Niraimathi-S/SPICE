@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.spiceadminservice.lab.test.controller;
+package com.mdtlabs.coreplatform.spiceadminservice.labtest.controller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +25,7 @@ import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.LabTest;
 import com.mdtlabs.coreplatform.common.model.entity.spice.LabTestResult;
-import com.mdtlabs.coreplatform.spiceadminservice.lab.test.service.LabTestService;
+import com.mdtlabs.coreplatform.spiceadminservice.labtest.service.LabTestService;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
 

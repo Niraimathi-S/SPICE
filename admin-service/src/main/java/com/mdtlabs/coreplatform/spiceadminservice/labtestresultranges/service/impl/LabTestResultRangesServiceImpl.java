@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.spiceadminservice.lab.test.result.ranges.service.impl;
+package com.mdtlabs.coreplatform.spiceadminservice.labtestresultranges.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ import com.mdtlabs.coreplatform.common.model.dto.spice.LabTestResultRangeDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.LabTestResultRangeRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.LabTestResult;
 import com.mdtlabs.coreplatform.common.model.entity.spice.LabTestResultRange;
-import com.mdtlabs.coreplatform.spiceadminservice.lab.test.repository.LabTestResultRepository;
-import com.mdtlabs.coreplatform.spiceadminservice.lab.test.result.ranges.repository.LabTestResultRangesRepository;
-import com.mdtlabs.coreplatform.spiceadminservice.lab.test.result.ranges.service.LabTestResultRangesService;
+import com.mdtlabs.coreplatform.spiceadminservice.labtest.repository.LabTestResultRepository;
+import com.mdtlabs.coreplatform.spiceadminservice.labtestresultranges.repository.LabTestResultRangesRepository;
+import com.mdtlabs.coreplatform.spiceadminservice.labtestresultranges.service.LabTestResultRangesService;
 
 
 /**

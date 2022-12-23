@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.spiceadminservice.lab.test.repository;
+package com.mdtlabs.coreplatform.spiceadminservice.labtest.repository;
 
 import java.util.List;
 import java.util.Set;

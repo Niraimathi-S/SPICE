@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.spiceadminservice.lab.test.service.impl;
+package com.mdtlabs.coreplatform.spiceadminservice.labtest.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,8 +29,8 @@ import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.LabTest;
 import com.mdtlabs.coreplatform.common.model.entity.spice.LabTestResult;
 import com.mdtlabs.coreplatform.common.util.Pagination;
-import com.mdtlabs.coreplatform.spiceadminservice.lab.test.repository.LabTestRepository;
-import com.mdtlabs.coreplatform.spiceadminservice.lab.test.service.LabTestService;
+import com.mdtlabs.coreplatform.spiceadminservice.labtest.repository.LabTestRepository;
+import com.mdtlabs.coreplatform.spiceadminservice.labtest.service.LabTestService;
 
 /**
  * <p>
