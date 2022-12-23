@@ -1,8 +1,10 @@
 package com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -14,6 +16,7 @@ import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CustomizationRequestDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.spice.RegionCustomization;
 import com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.repository.RegionCustomizationRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.service.RegionCustomizationService;
@@ -84,8 +87,7 @@ public class RegionCustomizationServiceImpl implements RegionCustomizationServic
 	
 	public List<RegionCustomization> getRegionCustomizations(Map<String, Object> requestData) {
 		List<String> regionCustomizationTypes = (List<String>) requestData.get("regionCustomizationTypes");
-		List<String> regionConsentFormTypes = (List<String>) requestData.get("regionConsentFormTypes");
-		
+		List<String> regionConsentFormTypes = (List<String>) requestData.get("regionConsentFormTypes");	
 		String category =null;
 //		
 //		if (regionConsentFormTypes.isEmpty()) {
@@ -93,11 +95,33 @@ public class RegionCustomizationServiceImpl implements RegionCustomizationServic
 //			regionCustomizationTypes.removeAll(regionConsentFormTypes);
 //		} else {
 //			category = Constants.CONSENT_FORM;
-//		}
-		
-		
-		
+//		}			
 		return repository.findByCategoryInAndTypeIn(regionConsentFormTypes, regionCustomizationTypes);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void createRegionCustomizedJSON(Organization organization) {
+		List<RegionCustomization> defaultCustomizations = new ArrayList<>();
+		List<RegionCustomization> regionCustomizationList = new ArrayList<>();
+		defaultCustomizations = repository.findByIsDefaultTrue();
+		if (!Objects.isNull(defaultCustomizations) && !defaultCustomizations.isEmpty()) {
+			regionCustomizationList = defaultCustomizations.stream().map(data -> {
+				RegionCustomization regionCustomization = new RegionCustomization();
+				regionCustomization.setCountryId(organization.getFormDataId());
+				regionCustomization.setType(data.getType());
+				regionCustomization.setCategory(data.getCategory());
+				regionCustomization.setFormInput(data.getFormInput());
+				regionCustomization.setTenantId(organization.getTenantId());
+				return regionCustomization;
+			}).collect(Collectors.toList());
+		}		
+		if (!Objects.isNull(regionCustomizationList) && !regionCustomizationList.isEmpty()) {
+			repository.saveAll(regionCustomizationList);
+		}
+		
+	}
+
 
 }

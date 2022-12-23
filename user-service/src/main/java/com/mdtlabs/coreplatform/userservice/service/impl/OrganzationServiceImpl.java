@@ -3,7 +3,6 @@ package com.mdtlabs.coreplatform.userservice.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -146,6 +145,12 @@ public class OrganzationServiceImpl implements OrganizationService {
 				users.add(user);
 			}
 		}
+		
+		String roleName = organizationDto.getRoles().get(0);
+		Role role = null;
+		if (!roleName.isEmpty()) {
+			role = roleService.getRoleByName(roleName);
+		}
 		for (User user : users) {
 			Set<Organization> userOrganizations = new HashSet<>();
 			if (Objects.isNull(user.getOrganizations()) || user.getOrganizations().isEmpty()) {
@@ -155,6 +160,7 @@ public class OrganzationServiceImpl implements OrganizationService {
 				userOrganizations.add(organization);
 			}
 			user.setOrganizations(userOrganizations);
+			user.setRoles(Set.of(role));
 			userService.addUser(user);
 		}
 		return organization;
@@ -263,5 +269,15 @@ public class OrganzationServiceImpl implements OrganizationService {
 	public Boolean deleteAdminUsers(CommonRequestDTO requestDto) {
 		return userService.deleteOrganizationUser(requestDto);
 	}
+	
+	public Map<String, List<Long>> activateInactivateOrg(long tenantId, String formName, boolean doActivate) {
+        Map<String, List<Long>> childIds = new HashMap<>();
+        childIds = getChildOrganizations(tenantId, formName);
+        List<Long> childOrgIdsToDelete = childIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+        System.out.println("childOrgIdsToDelete " + childOrgIdsToDelete);
+        organizationRepository.activateInactivateChildOrganizations(childOrgIdsToDelete, doActivate);
+        organizationRepository.activateInactivateOrganizations(tenantId, doActivate);
+        return childIds;
+    }
 
 }

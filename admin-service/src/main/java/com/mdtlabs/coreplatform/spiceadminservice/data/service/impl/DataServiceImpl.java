@@ -45,6 +45,7 @@ import com.mdtlabs.coreplatform.spiceadminservice.data.repository.CountryReposit
 import com.mdtlabs.coreplatform.spiceadminservice.data.repository.CountyRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.data.repository.SubCountyRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.data.service.DataService;
+import com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.service.RegionCustomizationService;
 
 /**
  * This class is responsible for performing operations on Country, county and
@@ -63,6 +64,9 @@ public class DataServiceImpl implements DataService {
 
 	@Autowired
 	SubCountyRepository subCountyRepository;
+	
+	@Autowired
+	RegionCustomizationService regionCustomizationService;
 
 	@Autowired
 	UserApiInterface userApiInterface;
@@ -100,10 +104,11 @@ public class DataServiceImpl implements DataService {
 			List<User> users = modelMapper.map(countryDTO.getUsers(), new TypeToken<List<User>>() {
 			}.getType());
 			organizationDTO.setUsers(users);
-			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,
-					UserSelectedTenantContextHolder.get(), organizationDTO);
-			countryResponse.setTenantId(response.getBody().getId());
+			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,UserSelectedTenantContextHolder.get() ,organizationDTO);
+			Organization savedOrganization = response.getBody();
+			countryResponse.setTenantId(savedOrganization.getId());
 			countryResponse = countryRepository.save(countryResponse);
+			regionCustomizationService.createRegionCustomizedJSON(savedOrganization);
 			return countryResponse;
 		}
 	}
@@ -213,7 +218,6 @@ public class DataServiceImpl implements DataService {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		countryOrganizationDTO = modelMapper.map(country, new TypeToken<CountryOrganizationDTO>() {
 		}.getType());
-		System.out.println("UserSelectedTenantContextHolder.get()" + UserSelectedTenantContextHolder.get());
 		List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(),
 				List.of(country.getId()));
 		countryOrganizationDTO.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
@@ -312,7 +316,6 @@ public class DataServiceImpl implements DataService {
 		UserDTO userDto = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDto.getAuthorization();
 
-		System.out.println("UserSelectedTenantContextHolder.get()" + UserSelectedTenantContextHolder.get());
 		if (!countries.isEmpty()) {
 			for (Country country : countries) {
 				CountryListDTO countryListDTO = new CountryListDTO();
@@ -347,27 +350,30 @@ public class DataServiceImpl implements DataService {
 	 * {@inheritDoc}
 	 */
 	public User addRegionAdmin(User user) {
-		System.out.println("user in data impl" + user);
 		Role role = new Role();
 		role.setName(Constants.ROLE_REGION_ADMIN);
 		user.setRoles(Set.of(role));
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		ResponseEntity<User> response = userApiInterface.addAdminUser(token, UserSelectedTenantContextHolder.get(),
 				user);
-		return response.getBody();
+		if (!Objects.isNull(response.getBody())) {
+			user = response.getBody();
+		}
+		return user;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public User updateRegionAdmin(User user) {
-		System.out.println("user in data impl" + user);
 		UserDTO userDTO = UserContextHolder.getUserDto();
-		System.out.println("userDTO____________" + userDTO);
 		String token = Constants.BEARER + userDTO.getAuthorization();
 		ResponseEntity<User> response = userApiInterface.updateAdminUser(token, UserSelectedTenantContextHolder.get(),
 				user);
-		return response.getBody();
+		if (!Objects.isNull(response.getBody())) {
+			user = response.getBody();
+		}
+		return user;
 	}
 
 	/**
@@ -377,6 +383,10 @@ public class DataServiceImpl implements DataService {
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		ResponseEntity<Boolean> response = userApiInterface.deleteAdminUser(token,
 				UserSelectedTenantContextHolder.get(), requestDTO);
-		return true;
+		Boolean isUserDeleted = true;
+		if (!Objects.isNull(response.getBody())) {
+			isUserDeleted= response.getBody();
+		}
+		return isUserDeleted;
 	}
 }

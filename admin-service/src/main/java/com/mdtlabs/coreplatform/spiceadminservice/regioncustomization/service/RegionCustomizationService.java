@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mdtlabs.coreplatform.common.model.dto.spice.CustomizationRequestDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.spice.RegionCustomization;
 
 /**
@@ -43,5 +44,20 @@ public interface RegionCustomizationService {
 	 */
 	public RegionCustomization updateCustomization(RegionCustomization regionCustomization);
 
+	/**
+	 * To get list of region customized data.
+	 * 
+	 * @param requestData - request data containing country Id, tenantId, etc.,
+	 * @return List of RegionCustomization Entity.
+	 * @author Niraimathi S
+	 */
 	public List<RegionCustomization> getRegionCustomizations(Map<String, Object> requestData);
+	
+	/**
+	 * Get default customized JSON and add to newly created region.
+	 * 
+	 * @param organization organization details
+	 * @author Niraimathi S
+	 */
+	public void createRegionCustomizedJSON(Organization organization);
 }

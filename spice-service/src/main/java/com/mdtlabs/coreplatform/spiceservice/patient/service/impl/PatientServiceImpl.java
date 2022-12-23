@@ -194,7 +194,7 @@ public class PatientServiceImpl implements PatientService {
 				patientTracker.setIsConfirmDiagnosis(Constants.BOOLEAN_TRUE);
 			}
 			patientDiagnosis.setHtnDiagnosis(data.getDiagnosisDTO().getIsHtnDiagnosis());
-			patientDiagnosis.setDiabetesDiagnosis(data.getDiagnosisDTO().getIsDiabetesDiagnosis());
+			patientDiagnosis.setIsDiabetesDiagnosis(data.getDiagnosisDTO().getIsDiabetesDiagnosis());
 		}
 
 		if (!Objects.isNull(patientTracker) && patientTracker.isInitialReview() == Constants.BOOLEAN_TRUE) {

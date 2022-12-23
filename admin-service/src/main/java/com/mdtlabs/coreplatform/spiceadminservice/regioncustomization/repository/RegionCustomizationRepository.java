@@ -45,9 +45,33 @@ public interface RegionCustomizationRepository extends JpaRepository<RegionCusto
 	public RegionCustomization findByCountryIdAndCategoryAndType(@Param("countryId") Long countryId,
 			@Param("category") String category, @Param("type") String type, @Param("isDeleted") boolean isDeleted);
 
+	/**
+	 * Gets list of regionCustomization by category and list of types.
+	 * 
+	 * @param category - customization category
+	 * @param regionCustomizationTypes - List of region customization types.
+	 * @return List of RegionCustomization entity
+	 * @author Niraimathi S
+	 */
 	public List<RegionCustomization> findByCategoryAndTypeIn(String category, List<String> regionCustomizationTypes);
 
+	/**
+	 * Gets list of regionCustomization by list of categories and list of types.
+	 * 
+	 * @param category - list of customization category
+	 * @param regionCustomizationTypes - List of region customization types.
+	 * @return List of RegionCustomization entity
+	 * @author Niraimathi S
+	 */
 	public List<RegionCustomization> findByCategoryInAndTypeIn(List<String> regionConsentFormTypes,
 			List<String> regionCustomizationTypes);
+
+	/**
+	 * Gets list of RegionCustomization by isDefault.
+	 * 
+	 * @return List of RegionCustomization entity
+	 * @author Niraimathi S
+	 */
+	public List<RegionCustomization> findByIsDefaultTrue();
 
 }

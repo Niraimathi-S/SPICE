@@ -208,7 +208,6 @@ public class AccountServiceImpl implements AccountService {
 	 * {@inheritDoc}
 	 */
 	public User addAccountAdmin(User user) {
-		System.out.println("user in data impl" + user);
 		Role role = new Role();
 		role.setName(Constants.ROLE_ACCOUNT_ADMIN);
 		user.setRoles(Set.of(role));
@@ -247,7 +246,6 @@ public class AccountServiceImpl implements AccountService {
 		Pageable pageable = Pagination.setPagination(requestDTO.getPageNumber(), requestDTO.getLimit());
 
 		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
-			System.out.println("inside regex replace block");
 			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
 		}
 		List<Account> accounts = accountRepository.getAllAccounts(searchTerm, requestDTO.getTenantId(), pageable);

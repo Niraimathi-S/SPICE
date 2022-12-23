@@ -117,6 +117,7 @@ public interface OrganizationService {
 	 *
 	 * @param user - user details
 	 * @return user - User entity.
+	 * @author Niraimathi S
 	 */
 	User addAdminUsers(User user);
 
@@ -125,6 +126,7 @@ public interface OrganizationService {
 	 *
 	 * @param user - user details
 	 * @return user - user entity
+	 * @author Niraimathi S
 	 */
 	User updateAdminUsers(User user);
 
@@ -133,7 +135,20 @@ public interface OrganizationService {
 	 *
 	 * @param requestDto - request data containing user id and tenantId
 	 * @return Boolean 
+	 * @author Niraimathi S
 	 */
-	Boolean deleteAdminUsers(CommonRequestDTO requestDto);
+	Boolean deleteAdminUsers(CommonRequestDTO requestDTO);
+	
+	/**
+	 * To activate or deactivate an organization.
+	 * 
+	 * @param tenantId - organization Id
+	 * @param formName - Type of organization
+	 * @param doActivate - activation status.
+	 * @return Map<String, List<Long>> - Child organization Ids.
+	 * @author Niraimathi S
+	 */
+	Map<String, List<Long>> activateInactivateOrg(long tenantId, String formName, boolean doActivate);
+
 
 }
