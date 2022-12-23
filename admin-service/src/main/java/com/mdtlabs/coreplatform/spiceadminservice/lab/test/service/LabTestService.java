@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.spiceadminservice.labtest.service;
+package com.mdtlabs.coreplatform.spiceadminservice.lab.test.service;
 
 import java.util.List;
 import java.util.Map;

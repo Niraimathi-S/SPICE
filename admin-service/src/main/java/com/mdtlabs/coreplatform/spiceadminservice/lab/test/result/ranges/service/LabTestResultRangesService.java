@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.spiceadminservice.labtestresultranges.service;
+package com.mdtlabs.coreplatform.spiceadminservice.lab.test.result.ranges.service;
 
 import java.util.List;
 
