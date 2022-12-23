@@ -24,7 +24,6 @@ import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.Medication;
 import com.mdtlabs.coreplatform.common.util.Pagination;
-
 import com.mdtlabs.coreplatform.spiceadminservice.medication.repository.MedicationRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.medication.service.MedicationService;
 
@@ -60,8 +59,8 @@ public class MedicationServiceImpl implements MedicationService {
             throw new BadRequestException(12006);
         } else {
             validateMedication(medication);
-            Medication existingMedication = medicationRepository.getMedicationByIdAndIsDeleted(medication.getId(),
-                    false);
+            Medication existingMedication = medicationRepository
+            	.getMedicationByIdAndIsDeleted(medication.getId(), false);
 
             if (Objects.isNull(existingMedication)) {
                 throw new DataNotFoundException(12008);
@@ -94,20 +93,22 @@ public class MedicationServiceImpl implements MedicationService {
         } 
         
         Medication medicationCountryDetail = medicationRepository.getMedicationByFields(
-                medication.getClassificationId(), medication.getBrandId(), medication.getDosageFormId(),
-                medication.getCountryId(), medication.getMedicationName());
-        if (!Objects.isNull(medicationCountryDetail) && medication.getId() != medicationCountryDetail.getId()) {
+            medication.getClassificationId(), medication.getBrandId(), medication.getDosageFormId(),
+            medication.getCountryId(), medication.getMedicationName());
+        if (!Objects.isNull(medicationCountryDetail) && medication.getId() 
+        	!= medicationCountryDetail.getId()) {
             throw new DataConflictException(12009);
         }
-        return Objects.isNull(medicationCountryDetail) || (medication.getId() == medicationCountryDetail.getId());
+        return Objects.isNull(medicationCountryDetail) || (medication.getId() 
+        	== medicationCountryDetail.getId());
     }
 
     /**
      * {@inheritDoc}
      */
-    public Medication getMedicationById(RequestDTO requestDTO) {
-        Medication medication = medicationRepository.findByIdAndIsDeletedFalseAndTenantId(requestDTO.getId(),
-                requestDTO.getTenantId());
+    public Medication getMedicationById(RequestDTO requestDto) {
+        Medication medication = medicationRepository
+        	.findByIdAndIsDeletedFalseAndTenantId(requestDto.getId(), requestDto.getTenantId());
         if (Objects.isNull(medication)) {
             throw new DataNotFoundException();
         }
@@ -130,7 +131,7 @@ public class MedicationServiceImpl implements MedicationService {
         Direction sortDirection = 0 != requestObject.getSortOrder() &&
                 -1 == requestObject.getSortOrder() ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = Pagination.setPagination(requestObject.getSkip(), requestObject.getLimit(),
-                Sort.by(sortDirection, sortField));
+            Sort.by(sortDirection, sortField));
 
         Page<Medication> medications;
         String formattedSearchTerm = requestObject.getSearchTerm();
@@ -149,20 +150,15 @@ public class MedicationServiceImpl implements MedicationService {
     /**
      * {@inheritDoc}
      */
-    public Boolean deleteMedicationById(RequestDTO requestDTO) {
-        return (1 == medicationRepository.updateMedicationById(Constants.BOOLEAN_TRUE, requestDTO.getId(),
-                requestDTO.getTenantId()));
+    public Boolean deleteMedicationById(RequestDTO requestDto) {
+        return (1 == medicationRepository.updateMedicationById(Constants.BOOLEAN_TRUE, requestDto.getId(),
+                requestDto.getTenantId()));
     }
 
     /**
      * {@inheritDoc}
      */
     public List<Medication> searchMedications(RequestDTO requestObject) {
-//        This validation is not needed. countryid should be get from user data.
-
-//        if (Objects.isNull(requestObject.getCountryId())) {
-//            throw new SpiceValidation(1000);
-//        }
 		String searchTerm = requestObject.getSearchTerm();
 		if (Objects.isNull(searchTerm) || 0 == searchTerm.length()) {
 			throw new DataNotAcceptableException(18008);
@@ -176,7 +172,7 @@ public class MedicationServiceImpl implements MedicationService {
 	 */
 	@Override
 	public Medication getOtherMedication(long countryId) {
-		return medicationRepository.getOtherMedication(countryId, Constants.OTHER, Constants.OTHER, Constants.OTHER,
-				Constants.OTHER);
+		return medicationRepository.getOtherMedication(countryId, 
+		Constants.OTHER, Constants.OTHER, Constants.OTHER, Constants.OTHER);
 	}
 }

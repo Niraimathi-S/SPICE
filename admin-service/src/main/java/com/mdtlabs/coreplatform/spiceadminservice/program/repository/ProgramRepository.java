@@ -14,33 +14,35 @@ import com.mdtlabs.coreplatform.common.model.entity.Program;
 /**
  * This class is a repository class to establish communication between database
  * and server side.
- * 
+ *
  * @author Karthick M
  *
  */
 @Repository
-public interface ProgramRepository extends JpaRepository<Program, Long>{
+public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     public static final String GET_ALL_PROGRAMS =
-    "select program from Program as program where (:countryId is null or program.countryId=:countryId)" +
-    " and program.isDeleted=false and (:searchTerm is null or lower(program.name) LIKE CONCAT('%',lower(:searchTerm),'%')) order by program.updatedAt DESC";
+    	"select program from Program as program where (:countryId is null or program.countryId=:countryId)" 
+    	+ " and program.isDeleted=false and (:searchTerm is null or lower(program.name)"
+    	+ " LIKE CONCAT('%',lower(:searchTerm),'%')) order by program.updatedAt DESC";
 
 
-    public static final String GET_PROGRAM_BY_SITE_IDS = "select program from Program program join program.sites as site where site.id in (:siteIds)";
+    public static final String GET_PROGRAM_BY_SITE_IDS = "select program from Program "
+    	+ "program join program.sites as site where site.id in (:siteIds)";
     /**
-     * Finds the program based on its name and isDeleted
-     * 
-     * @param name
-     * @param isDeleted
+     * Finds the program based on its name and isDeleted.
+     *
+     * @param name - program name
+     * @param isDeleted - true or false
      * @return Program Entity
      */
-    public Program findByNameAndTenantIdAndIsDeleted(String name,long tenantId, boolean isDeleted);
+    public Program findByNameAndTenantIdAndIsDeleted(String name, long tenantId, boolean isDeleted);
 
     /**
-     * Finds the program based on its id and isDeleted
-     * 
-     * @param id
-     * @param isDeleted
+     * Finds the program based on its id and isDeleted.
+     *
+     * @param id - program id
+     * @param isDeleted - true or false
      * @return Program Entity
      */
     public Program findByIdAndIsDeleted(long id, boolean isDeleted);
@@ -48,36 +50,33 @@ public interface ProgramRepository extends JpaRepository<Program, Long>{
 
     /**
      * Finds the program based on searchTerm and its countryId and operatingUnitId and
-     * accountId and siteId 
-     * 
-     * @param searchTerm
-     * @param countryId
-     * @param operatingUnitId
-     * @param accountId
-     * @param siteId
+     * accountId and siteId.
+     *
+     * @param searchTerm - search term
+     * @param countryId - country id
+     * @param pageable - pageable
      * @return Program Entity
      */
     @Query(value = GET_ALL_PROGRAMS)
-    public Page<Program> getAllProgram(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId, Pageable pageable);
+    public Page<Program> getAllProgram(@Param("searchTerm") String searchTerm, 
+    	@Param("countryId") Long countryId, Pageable pageable);
 
     /**
      * Finds the program based on searchTerm and its countryId and operatingUnitId and
-     * accountId and siteId 
-     * 
-     * @param searchTerm
-     * @param countryId
-     * @param operatingUnitId
-     * @param accountId
-     * @param siteId
-     * @param pageable
+     * accountId and siteId.
+     *
+     * @param searchTerm - search term
+     * @param countryId - country id
+     * @param pageable - pageable
      * @return Program Entity
      */
     @Query(value = GET_ALL_PROGRAMS)
-    public Page<Program> searchPrograms(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId, Pageable pageable);
+    public Page<Program> searchPrograms(@Param("searchTerm") String searchTerm,
+    	@Param("countryId") Long countryId, Pageable pageable);
 
     /**
-     * Gets list of programs using list of site Ids
-     * 
+     * Gets list of programs using list of site Ids.
+     *
      * @param siteIds List of siteIds
      * @return List of Program Entities
      */

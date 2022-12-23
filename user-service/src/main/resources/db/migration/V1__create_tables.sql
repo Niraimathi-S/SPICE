@@ -135,7 +135,7 @@ CREATE TABLE user_token (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   is_active BOOLEAN DEFAULT true,
-  is_deleted BOOLEAN DEFAULT
+  is_deleted BOOLEAN DEFAULT false
 );
 
 CREATE TABLE role (
@@ -1432,7 +1432,7 @@ CREATE TABLE country_customization (
     form_input VARCHAR,
     type VARCHAR, 
     category VARCHAR,
-    is_default BOOLEAN DEFAULT,
+    is_default BOOLEAN DEFAULT false,
     tenant_id BIGINT,
     country_id BIGINT, FOREIGN KEY(country_id) REFERENCES country(id),
     created_by BIGINT NOT NULL,
@@ -1491,7 +1491,7 @@ CREATE TABLE sms_template(
 CREATE TABLE sms_template_values(
 	id SERIAL PRIMARY KEY,
 	key VARCHAR,
-	sms_template_id int, FOREIGN KEY (template_id) REFERENCES sms_template(id),
+	sms_template_id int, FOREIGN KEY (sms_template_id) REFERENCES sms_template(id),
 	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -1528,11 +1528,6 @@ CREATE TABLE email_template_value (
   FOREIGN KEY (email_template_id) REFERENCES email_template(id)
 );
 
-INSERT INTO email_template_value (id,"name",email_template_id) VALUES
-     (1,'app_url_email',1),
-     (2,'app_url_email',2),
-     (3,'email',2);
-
 
 INSERT INTO email_template (id,type,vm_content,body,title,app_url) VALUES
      (1,'Forgot_Password','vmContent','<p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/spiceEngage.png" style=\"height:70%;width:10%;"></p><p style=\"font-size: 11pt\>Dear Telecounseling Application User,<br><br>    <p>We have received a request to reset your Telecounseling account password. It was initiated after you selected “Forgot Password” in the Telecounseling software application.    <br><br>    <strong>Please click on this 
@@ -1546,6 +1541,10 @@ If you have any additional questions, please contact the Medtronic LABS Support 
 Team<p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/logo2.png" style="height:6%;width:25%;">','Email_notification','app_url_email'),
      (2,'User_Creation','vmContent','<p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/spiceEngage.png" style=\"height:70%;width:10%;"></p><p style=\"font-size: 11pt\>Dear Telecounseling Application User,<br><br>    <p>Welcome! An account has been created for you in the Telecounseling software application.     <br><br>    <strong>Your account username is your email address {{email}}. To finish setting up your Telecounseling application account, please click on this <a href="{{app_url_email}}">LINK</a> to create your password. </strong>    <br><br>  Once you have set up your password you will be able to access the application. <br><br> If you have any additional questions, please contact the Medtronic LABS Support Team at support@medtroniclabs.org.  <br>      <br>    Sincerely,    <br>    The Medtronic LABS Telecounseling Platform SupportTeam<p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/logo2.png" style="height:6%;width:25%;">','Email_notification','app_url_email');
 
+INSERT INTO email_template_value (id,"name",email_template_id) VALUES
+     (1,'app_url_email',1),
+     (2,'app_url_email',2),
+     (3,'email',2);
 
 INSERT INTO api_role_permission ("method",api,roles) VALUES
 	 ('POST','/user','SUPER_USER'),
@@ -1559,7 +1558,7 @@ INSERT INTO sms_template (body,"type",created_at,updated_at) VALUES
 ','ENROLL_PATIENT','2022-12-16 12:56:09.161','2022-12-16 12:56:09.161');
 
 
-INSERT INTO sms_template_values ("key",template_id,created_at,updated_at) VALUES
+INSERT INTO sms_template_values ("key",sms_template_id,created_at,updated_at) VALUES
 	 ('name',2,'2022-12-16 12:57:17.811','2022-12-16 12:57:17.811'),
 	 ('orgname',2,'2022-12-16 12:57:17.815','2022-12-16 12:57:17.815'),
 	 ('patient_id',2,'2022-12-16 12:57:17.816','2022-12-16 12:57:17.816');

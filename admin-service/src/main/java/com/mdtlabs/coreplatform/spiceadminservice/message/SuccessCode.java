@@ -5,7 +5,7 @@ package com.mdtlabs.coreplatform.spiceadminservice.message;
  * Success code to fetch message from property. Property
  * file(application.property) present in resource folder.
  * </p>
- * 
+ *
  * @author Vigneshkumar created on Jun 30, 2022
  *
  */

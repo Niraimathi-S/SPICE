@@ -20,7 +20,7 @@ import com.mdtlabs.coreplatform.common.model.entity.User;
 
 /**
  * This interface is used to access User service APIs.
- * 
+ *
  * @author Niraimathi S
  *
  */
@@ -28,30 +28,31 @@ import com.mdtlabs.coreplatform.common.model.entity.User;
 public interface UserApiInterface {
 	@PostMapping("/organization/create")
 	public ResponseEntity<Organization> createOrganization(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long headerTenantId,@RequestBody OrganizationDTO organizationDTO);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long headerTenantId,
+		@RequestBody OrganizationDTO organizationDto);
 
 	@PostMapping("/organization/get-child-organizations/{tenantId}")
 	public Map<String, List<Long>> getChildOrganizations(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long headerTenantId, @PathVariable("tenantId") Long tenantId,
-			@RequestBody String formName);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long headerTenantId, @PathVariable("tenantId") Long tenantId,
+		@RequestBody String formName);
 
 	@PostMapping("/user/get-by-tenants")
 	public List<User> getUsersByTenantIds(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody List<Long> tenantIds);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody List<Long> tenantIds);
 
 	@PostMapping("/organization/add-admin-user")
 	public ResponseEntity<User> addAdminUser(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long tenantId,@RequestBody User user);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long tenantId, @RequestBody User user);
 
 	@PutMapping("/organization")
 	public ResponseEntity<Organization> updateOrganization(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId,@RequestBody Organization organization);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody Organization organization);
 
 	@PutMapping("/organization/update-admin-user")
 	public ResponseEntity<User> updateAdminUser(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId,@RequestBody User user);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody User user);
 
 	@DeleteMapping("/organization/delete-admin-user")
 	public ResponseEntity<Boolean> deleteAdminUser(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId,@RequestBody CommonRequestDTO requestDTO);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody CommonRequestDTO requestDto);
 }

@@ -24,7 +24,7 @@ import com.mdtlabs.coreplatform.spiceadminservice.program.service.ProgramService
 /**
  * This class implements the Program interface and contains actual business
  * logic to perform operations on Program entity.
- * 
+ *
  * @author Karthick M
  *
  */
@@ -37,15 +37,14 @@ public class ProgramServiceImpl implements ProgramService {
 	private ModelMapper mapper = new ModelMapper();
 
 	/**
-	 * {@inheritDoc}
-	 */
+	* {@inheritDoc}
+	*/
 	public Program createProgram(Program program) {
 		if (Objects.isNull(program)) {
 			throw new BadRequestException(12006);
 		} else {
-			// name should be unique in country findByNameAndIsDeleted
 			Program existingProgram = programRepository.findByNameAndTenantIdAndIsDeleted(program.getName(),
-					program.getTenantId(), false);
+				program.getTenantId(), false);
 			if (!Objects.isNull(existingProgram)) {
 				throw new DataConflictException(13002);
 			}
@@ -85,14 +84,10 @@ public class ProgramServiceImpl implements ProgramService {
 			if (!Objects.isNull(program.getName())) { // check name from request data
 				throw new DataNotAcceptableException(13004);
 			}
-
 			Program existingProgram = programRepository.findByIdAndIsDeleted(program.getId(), false);
 			if (Objects.isNull(existingProgram)) {
 				throw new DataNotFoundException(13001);
 			}
-//			to remove created_at and created_by from request data
-//			delete data.created_at;
-//			delete data.created_by;
 			program.setCreatedAt(null);
 			program.setCreatedBy(existingProgram.getCreatedBy());
 			mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
@@ -113,8 +108,8 @@ public class ProgramServiceImpl implements ProgramService {
 			formattedSearchTerm = requestObject.getSearchTerm().replaceAll("[^a-zA-Z0-9 ]*", "");
 		}
 
-		Page<Program> programs = programRepository.getAllProgram(formattedSearchTerm, requestObject.getCountryId(),
-				pageable);
+		Page<Program> programs = programRepository
+			.getAllProgram(formattedSearchTerm, requestObject.getCountryId(), pageable);
 		return programs.stream().collect(Collectors.toList());
 
 	}

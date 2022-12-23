@@ -23,8 +23,8 @@ import com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.service.Re
 
 
 /**
- * This service class maintains the CRUD operations for region customization
- * 
+ * This service class maintains the CRUD operations for region customization.
+ *
  * @author Jeyaharini T A
  *
  */
@@ -48,19 +48,19 @@ public class RegionCustomizationServiceImpl implements RegionCustomizationServic
 	/**
 	 * {@inheritDoc}
 	 */
-	public RegionCustomization getCustomization(CustomizationRequestDTO regionCustomizationRequestDTO) {
+	public RegionCustomization getCustomization(CustomizationRequestDTO regionCustomizationRequestDto) {
 		RegionCustomization regionCustomization;
-		if (Objects.isNull(regionCustomizationRequestDTO)) {
+		if (Objects.isNull(regionCustomizationRequestDto)) {
 			throw new DataNotAcceptableException(12006);
 		}
 
-		if (Objects.isNull(regionCustomizationRequestDTO.getCountryId())) {
+		if (Objects.isNull(regionCustomizationRequestDto.getCountryId())) {
 			throw new DataNotAcceptableException(10001);
 		}
 
-		regionCustomization = repository.findByCountryIdAndCategoryAndType(regionCustomizationRequestDTO.getCountryId(),
-				regionCustomizationRequestDTO.getCategory(), regionCustomizationRequestDTO.getType(),
-				Constants.BOOLEAN_FALSE);
+		regionCustomization = repository.findByCountryIdAndCategoryAndType(
+			regionCustomizationRequestDto.getCountryId(), regionCustomizationRequestDto.getCategory(),
+			regionCustomizationRequestDto.getType(), Constants.BOOLEAN_FALSE);
 
 		if (Objects.isNull(regionCustomization)) {
 			throw new DataNotFoundException(22006);
@@ -77,7 +77,7 @@ public class RegionCustomizationServiceImpl implements RegionCustomizationServic
 		}
 
 		RegionCustomization existingRegionCustomization = repository.findById(regionCustomization.getId())
-				.orElseThrow(() -> new DataNotFoundException(22006));
+			.orElseThrow(() -> new DataNotFoundException(22006));
 
 		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 		modelMapper.map(regionCustomization, existingRegionCustomization);
@@ -85,17 +85,12 @@ public class RegionCustomizationServiceImpl implements RegionCustomizationServic
 
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<RegionCustomization> getRegionCustomizations(Map<String, Object> requestData) {
 		List<String> regionCustomizationTypes = (List<String>) requestData.get("regionCustomizationTypes");
-		List<String> regionConsentFormTypes = (List<String>) requestData.get("regionConsentFormTypes");	
-		String category =null;
-//		
-//		if (regionConsentFormTypes.isEmpty()) {
-//			category = Constants.INPUT_FORM;
-//			regionCustomizationTypes.removeAll(regionConsentFormTypes);
-//		} else {
-//			category = Constants.CONSENT_FORM;
-//		}			
+		List<String> regionConsentFormTypes = (List<String>) requestData.get("regionConsentFormTypes");
 		return repository.findByCategoryInAndTypeIn(regionConsentFormTypes, regionCustomizationTypes);
 	}
 	

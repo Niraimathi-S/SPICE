@@ -24,16 +24,16 @@ public interface DataService {
 	/**
 	 * This method is used to add a new Country.
 	 *
-	 * @param country
+	 * @param countryDto - entity
 	 * @return Country Entity
 	 * @author Karthick M
 	 */
-	Country createCountry(CountryOrganizationDTO countryDTO);
+	Country createCountry(CountryOrganizationDTO countryDto);
 
 	/**
 	 * This method is used to update a country details like name.
 	 *
-	 * @param country
+	 * @param country - entity
 	 * @return country Entity
 	 * @author Karthick M
 	 */
@@ -42,7 +42,7 @@ public interface DataService {
 	/**
 	 * This method is used to add a new county under a country.
 	 *
-	 * @param county
+	 * @param county - entity
 	 * @return County entity
 	 * @author Niraimathi S
 	 */
@@ -51,7 +51,7 @@ public interface DataService {
 	/**
 	 * Used to get single county details using county id.
 	 *
-	 * @param id
+	 * @param id - county id
 	 * @return County entity
 	 * @author Niraimathi S
 	 */
@@ -60,7 +60,7 @@ public interface DataService {
 	/**
 	 * Gets all counties under a country using country id.
 	 *
-	 * @param id
+	 * @param id - county id
 	 * @return List of county entities.
 	 * @author Niraimathi S
 	 */
@@ -69,7 +69,7 @@ public interface DataService {
 	/**
 	 * This method is used to update a county.
 	 *
-	 * @param county
+	 * @param county - county id
 	 * @return Updated county entity.
 	 * @author Niraimathi S
 	 */
@@ -78,16 +78,16 @@ public interface DataService {
 	/**
 	 * Used to get all countries and search countries using country name.
 	 *
-	 * @param requestDTO
+	 * @param requestDto - request dto
 	 * @return List of county entities
 	 * @author Niraimathi S
 	 */
-	List<Country> getAllCountries(RequestDTO requestDTO);
+	List<Country> getAllCountries(RequestDTO requestDto);
 
 	/**
 	 * This method is used to add a new SubCounty.
 	 *
-	 * @param subCounty
+	 * @param subCounty - sub county entity
 	 * @return SubCounty Entity
 	 * @author Karthick M
 	 */
@@ -96,7 +96,7 @@ public interface DataService {
 	/**
 	 * Used to get single country details using country id.
 	 *
-	 * @param countryId
+	 * @param countryId - country id
 	 * @return Country entity
 	 * @author Karthick M
 	 */
@@ -105,7 +105,7 @@ public interface DataService {
 	/**
 	 * Used to soft delete subcounty details using subcounty id.
 	 *
-	 * @param subCounty
+	 * @param subCounty - sub county entity
 	 * @return subcounty entity
 	 * @author Karthick M
 	 */
@@ -114,8 +114,8 @@ public interface DataService {
 	/**
 	 * Gets all subcounties based on country and county id.
 	 *
-	 * @param countryId
-	 * @param countyId
+	 * @param countryId - country id
+	 * @param countyId  - county id
 	 * @return List of SubCounty entities.
 	 * @author Niraimathi S
 	 */
@@ -124,31 +124,31 @@ public interface DataService {
 	/**
 	 * Used to get single country details using country id.
 	 *
-	 * @param id
+	 * @param id - sub county id
 	 * @return Country entity
 	 * @author Karthick M
 	 */
 	Subcounty getSubCountyById(long id);
 
-    /**
-     * Gets country list with child organization counts
-     * 
-     * @param requestDTO request data
-     * @return List of countryListDTO
-     */
+	/**
+	 * Gets country list with child organization counts.
+	 *
+	 * @param countryId - country id
+	 * @return List of countryListDTO
+	 */
 	List<Subcounty> getAllSubCountyByCountryId(Long countryId);
 
-    /**
-     * To get add subcounty list based on country id.
-     * 
-     * @param countryId country Id
-     * @return List of Subcounty
-     */
-	Map<String, Object> getCountryList(RequestDTO requestDTO);
-	
+	/**
+	 * To get country list based on country id.
+	 *
+	 * @param requestDto - request dto
+	 * @return Map of Country
+	 */
+	Map<String, Object> getCountryList(RequestDTO requestDto);
+
 	/**
 	 * Gets country by Id without users.
-	 * 
+	 *
 	 * @param countryId country Id
 	 * @return Country entity
 	 */
@@ -156,8 +156,8 @@ public interface DataService {
 
 	/**
 	 * To create a region admin.
-	 * 
-	 * @param user user details 
+	 *
+	 * @param user user details
 	 * @return User entity.
 	 * @author Niraimathi S
 	 */
@@ -165,17 +165,17 @@ public interface DataService {
 
 	/**
 	 * To update an region admin user.
-	 * 
-	 * @param user - User details 
+	 *
+	 * @param user - User details
 	 * @return user - user entity
 	 */
 	User updateRegionAdmin(@Valid User user);
 
 	/**
 	 * To remove an user from country.
-	 * 
-	 * @param requestDTO 
-	 * @return
+	 *
+	 * @param requestDto - request dto
+	 * @return boolean - true or false
 	 */
-	Boolean deleteRegionAdmin(CommonRequestDTO requestDTO);
+	Boolean deleteRegionAdmin(CommonRequestDTO requestDto);
 }

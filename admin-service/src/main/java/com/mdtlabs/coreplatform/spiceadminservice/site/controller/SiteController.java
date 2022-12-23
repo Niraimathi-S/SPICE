@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.model.entity.Site;
-
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.spiceadminservice.site.service.SiteService;
@@ -22,7 +21,7 @@ import com.mdtlabs.coreplatform.spiceadminservice.site.service.SiteService;
 
 /**
  * This controller class maintains CRUD operation for site data.
- * 
+ *
  * @author Jeyaharini T A
  */
 
@@ -35,20 +34,18 @@ public class SiteController {
 	SiteService siteService;
 
 	@PostMapping
-//	@TokenParse
 	public SuccessResponse<Site> addSite(@RequestBody Site site) {
 		return new SuccessResponse<Site>(SuccessCode.SITE_SAVE, siteService.addSite(site), HttpStatus.OK);
 	}
 
 	@PutMapping
-//	@TokenParse
 	public SuccessResponse<Site> updateSite(@RequestBody Site site) {
 		return new SuccessResponse<Site>(SuccessCode.SITE_UPDATE, siteService.updateSite(site), HttpStatus.OK);
 	}
 	
 	/**
 	 * Gets Sites based on tenant its tenant Ids.
-	 * 
+	 *
 	 * @param tenants list if tenant IDs
 	 * @return List of Site Entities
 	 */
@@ -58,8 +55,8 @@ public class SiteController {
 	}
 	
 	/**
-	 * Gets Sites based on operating unit Id
-	 * 
+	 * Gets Sites based on operating unit Id.
+	 *
 	 * @param operatingUnitId operating unit Id
 	 * @return List of Site Entities
 	 */
@@ -70,8 +67,8 @@ public class SiteController {
 	
 	
 	/**
-	 * Gets a site using id and isDeleted fields
-	 * 
+	 * Gets a site using id and isDeleted fields.
+	 *
 	 * @param siteId site id
 	 * @return Site entity
 	 */

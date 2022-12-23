@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import javax.validation.Valid;
 
 import com.mdtlabs.coreplatform.common.model.dto.spice.CustomizationRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.AccountCustomization;
@@ -19,7 +20,6 @@ import com.mdtlabs.coreplatform.spiceadminservice.accountcustomization.service.A
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
 
-import javax.validation.Valid;
 
 /**
  * This controller class maintains CRUD operation for account customization
@@ -37,13 +37,13 @@ public class AccountCustomizationController {
     /**
      * This method is used to add a account customization form data.
      *
-     * @param accountCustomization
-     * @return AccountCustomization
+     * @param accountCustomization - account customization entity
+     * @return AccountCustomization - account customization entity
      * @author Jeyaharini T A
      */
     @PostMapping("/create")
     public SuccessResponse<AccountCustomization> addCustomization(
-            @Valid @RequestBody AccountCustomization accountCustomization) {
+        @Valid @RequestBody AccountCustomization accountCustomization) {
         accountCustomizationService.addAccountCustomization(accountCustomization);
         return new SuccessResponse<>(SuccessCode.ACCOUNT_CUSTOMIZATION_SAVE, HttpStatus.CREATED);
     }
@@ -52,37 +52,37 @@ public class AccountCustomizationController {
      * Get the account customization data details such as screening, enrollment and
      * consent forms based on account id and country id.
      *
-     * @param customizationRequestDTO
+     * @param customizationRequestDto - customization request dto
      * @return AccountCustomization entity.
      * @author Jeyaharini T A
      */
     @GetMapping("/details")
     public SuccessResponse<AccountCustomization> getCustomization(
-            @RequestBody CustomizationRequestDTO customizationRequestDTO) {
+        @RequestBody CustomizationRequestDTO customizationRequestDto) {
         return new SuccessResponse<AccountCustomization>(SuccessCode.GET_ACCOUNT_CUSTOMIZATION,
-                accountCustomizationService.getCustomization(customizationRequestDTO), HttpStatus.OK);
+                accountCustomizationService.getCustomization(customizationRequestDto), HttpStatus.OK);
     }
 
     /**
      * Update account customization data like screening, enrollment forms and
-     * consent data based on id
+     * consent data based on id.
      *
-     * @param accountCustomization
+     * @param accountCustomization entity
      * @return AccountCustomization entity.
      * @author Jeyaharini T A
      */
     @PutMapping("/update")
     public SuccessResponse<AccountCustomization> updateCustomization(
-            @Valid @RequestBody AccountCustomization accountCustomization) {
+        @Valid @RequestBody AccountCustomization accountCustomization) {
         accountCustomizationService.updateCustomization(accountCustomization);
         return new SuccessResponse<>(SuccessCode.ACCOUNT_CUSTOMIZATION_UPDATE, HttpStatus.OK);
     }
 
     /**
-     * To remove account customization by updating is_deleted column
+     * To remove account customization by updating is_deleted column.
      *
-     * @param requestMap
-     * @return boolean
+     * @param requestMap - request map
+     * @return boolean - true or false
      * @author Jeyaharini T A
      */
     @PutMapping("/remove")

@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.model.dto.spice.CustomizationRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.RegionCustomization;
-
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.service.RegionCustomizationService;
 
 /**
  * This controller class maintains CRUD operation for region customization data.
- * 
+ *
  * @author Niraimathi S
  */
 @RestController
@@ -36,13 +35,14 @@ public class RegionCustomizationController {
 
 	/**
 	 * This method is used to add a country customization form data.
-	 * 
-	 * @param regionCustomization
-	 * @return RegionCustomization
+	 *
+	 * @param regionCustomization - entity
+	 * @return RegionCustomization - entity
 	 * @author Niraimathi S
 	 */
 	@RequestMapping(method = RequestMethod.POST, path = "/create")
-	public SuccessResponse<RegionCustomization> addCustomization(@Valid @RequestBody RegionCustomization regionCustomization) {
+	public SuccessResponse<RegionCustomization> addCustomization(@Valid 
+		@RequestBody RegionCustomization regionCustomization) {
 		regionCustomizationService.addCustomization(regionCustomization);
 		return new SuccessResponse<RegionCustomization>(SuccessCode.REGION_CUSTOMIZATION_SAVE, HttpStatus.OK);
 	}
@@ -50,37 +50,38 @@ public class RegionCustomizationController {
 	/**
 	 * Get the region customization data details such as screening, enrollment and
 	 * consent forms based on region organization id.
-	 * 
-	 * @param regionCustomizationRequestDTO
+	 *
+	 * @param regionCustomizationRequestDto - request customization request dto
 	 * @return RegionCustomization entity.
 	 * @author Niraimathi S
 	 */
 	@RequestMapping(method = RequestMethod.GET, path = "/details")
 	public SuccessResponse<RegionCustomization> getCustomization(
-			@RequestBody CustomizationRequestDTO regionCustomizationRequestDTO) {
+		@RequestBody CustomizationRequestDTO regionCustomizationRequestDto) {
 		return new SuccessResponse<RegionCustomization>(SuccessCode.GET_REGION_CUSTOMIZATION,
-				regionCustomizationService.getCustomization(regionCustomizationRequestDTO), HttpStatus.OK);
+			regionCustomizationService.getCustomization(regionCustomizationRequestDto), HttpStatus.OK);
 	}
 
 	/**
 	 * Update region customization data like screening, enrollment forms and consent
-	 * data based on region
-	 * 
-	 * @param regionCustomization
+	 * data based on region.
+	 *
+	 * @param regionCustomization entity
 	 * @return RegionCustomization entity.
 	 * @author Niraimathi S
 	 */
 	@RequestMapping(method = RequestMethod.PUT, path = "/update")
 	public SuccessResponse<RegionCustomization> updateCustomization(
-			@Valid @RequestBody RegionCustomization regionCustomization) {
+		@Valid @RequestBody RegionCustomization regionCustomization) {
 		regionCustomizationService.updateCustomization(regionCustomization);
-		return new SuccessResponse<RegionCustomization>(SuccessCode.REGION_CUSTOMIZATION_UPDATE, HttpStatus.OK);
+		return new SuccessResponse<RegionCustomization>(
+			SuccessCode.REGION_CUSTOMIZATION_UPDATE, HttpStatus.OK);
 	}
 	
 	/**
-	 * Gets list of customizatons 
-	 * 
-	 * @param requestData
+	 * Gets list of customizatons.
+	 *
+	 * @param requestData request data map
 	 * @return List of RegionCustomization
 	 */
 	@PostMapping("/static-data/get-list")

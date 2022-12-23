@@ -39,14 +39,14 @@ public class AccountWorkflowServiceImpl implements AccountWorkflowService {
 			throw new BadRequestException(12006);
 		}
 		boolean containsNullorEmpty = accountWorkflow.getViewScreens().stream()
-				.anyMatch(screen -> (Objects.isNull(screen) || screen.isBlank()));
+			.anyMatch(screen -> (Objects.isNull(screen) || screen.isBlank()));
 		if (containsNullorEmpty) {
 			throw new BadRequestException(25007);
 		}
-//		if (accountWorkflowRepository.existsByNameIgnoreCaseAndCountryId(accountWorkflow.getName(),
-//				accountWorkflow.getCountryId())) {
-//			throw new SpiceValidation(25006);
-//		}
+		//if (accountWorkflowRepository.existsByNameIgnoreCaseAndCountryId(accountWorkflow.getName(),
+		//	accountWorkflow.getCountryId())) {
+		//		throw new SpiceValidation(25006);
+		//}
 
 		accountWorkflow.setWorkflow(accountWorkflow.getName().toLowerCase().replaceAll(" ", "_"));
 		accountWorkflow.setModuleType(FieldConstants.CUSTOMIZED);
@@ -57,22 +57,24 @@ public class AccountWorkflowServiceImpl implements AccountWorkflowService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<AccountWorkflow> getAccountWorkflows(SearchRequestDTO searchRequestDTO) {
+	public List<AccountWorkflow> getAccountWorkflows(SearchRequestDTO searchRequestDto) {
 
-		if (Objects.isNull(searchRequestDTO.getCountryId()) || 0 == searchRequestDTO.getCountryId()) {
+		if (Objects.isNull(searchRequestDto.getCountryId()) || 0 == searchRequestDto.getCountryId()) {
 			throw new DataNotAcceptableException(10001);
 		}
 
-		Pageable pageable = Pagination.setPagination(searchRequestDTO.getPageNumber(), searchRequestDTO.getLimit(),
-				FieldConstants.NAME, true);
+		Pageable pageable = Pagination.setPagination(searchRequestDto.getPageNumber(),
+			searchRequestDto.getLimit(), FieldConstants.NAME, true);
 
 		String formattedSearchTerm = null;
 
-		if (!Objects.isNull(searchRequestDTO.getSearchTerm()) && 0 < searchRequestDTO.getSearchTerm().length()) {
-			formattedSearchTerm = searchRequestDTO.getSearchTerm().replaceAll("[^a-zA-Z0-9]*", "");
+		if (!Objects.isNull(searchRequestDto.getSearchTerm()) && 0 
+			< searchRequestDto.getSearchTerm().length()) {
+			formattedSearchTerm = searchRequestDto.getSearchTerm().replaceAll("[^a-zA-Z0-9]*", "");
 		}
 		Page<AccountWorkflow> accountWorkflows = accountWorkflowRepository
-				.getAccountWorkflowsWithPagination(searchRequestDTO.getCountryId(), formattedSearchTerm, pageable);
+			.getAccountWorkflowsWithPagination(searchRequestDto.getCountryId(),
+			formattedSearchTerm, pageable);
 		return accountWorkflows.stream().collect(Collectors.toList());
 	}
 
@@ -85,17 +87,14 @@ public class AccountWorkflowServiceImpl implements AccountWorkflowService {
 			throw new BadRequestException(12006);
 		}
 
-//		if (Objects.isNull(accountWorkflow.getViewScreens()) || accountWorkflow.getViewScreens().isEmpty()) {
-//			throw new SpiceValidation(25007);
-//		}
 		boolean containsNullorEmpty = accountWorkflow.getViewScreens().stream()
-				.anyMatch(screen -> (Objects.isNull(screen) || screen.isBlank()));
+			.anyMatch(screen -> (Objects.isNull(screen) || screen.isBlank()));
 		if (containsNullorEmpty) {
 			throw new BadRequestException(25007);
 		}
 
 		AccountWorkflow existingAccountWorkflow = accountWorkflowRepository.findById(accountWorkflow.getId())
-				.orElseThrow(() -> new DataNotFoundException(25008));
+			.orElseThrow(() -> new DataNotFoundException(25008));
 		existingAccountWorkflow.setViewScreens(accountWorkflow.getViewScreens());
 		accountWorkflow = accountWorkflowRepository.save(existingAccountWorkflow);
 		return accountWorkflow;
@@ -110,7 +109,7 @@ public class AccountWorkflowServiceImpl implements AccountWorkflowService {
 			throw new DataNotAcceptableException(12006);
 		}
 		AccountWorkflow existingAccountWorkflow = accountWorkflowRepository.findById(id)
-				.orElseThrow(() -> new DataNotFoundException(25008));
+			.orElseThrow(() -> new DataNotFoundException(25008));
 		existingAccountWorkflow.setDeleted(true);
 		accountWorkflowRepository.save(existingAccountWorkflow);
 		return true;

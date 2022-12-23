@@ -26,7 +26,6 @@ import com.mdtlabs.coreplatform.common.model.dto.spice.MedicationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OtherMedicationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.Medication;
-
 import com.mdtlabs.coreplatform.spiceadminservice.medication.service.MedicationService;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
@@ -55,7 +54,8 @@ public class MedicationController {
 	 * @return List of medication entities
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public SuccessResponse<List<MedicationDTO>> addMedication(@Valid @RequestBody List<Medication> medications) {
+	public SuccessResponse<List<MedicationDTO>> addMedication(@Valid @RequestBody 
+		List<Medication> medications) {
 		medicationService.addMedication(medications);
 		return new SuccessResponse<>(SuccessCode.MEDICATION_SAVE, HttpStatus.CREATED);
 	}
@@ -63,7 +63,7 @@ public class MedicationController {
 	/**
 	 * Used to update a medication detail like name, etc.,
 	 *
-	 * @param medication
+	 * @param medication entity
 	 * @return Medication Entity
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
@@ -74,21 +74,21 @@ public class MedicationController {
 
 	/**
 	 * This method is used to retrieve single medication's details using
-	 * medicationId
+	 * medicationId.
 	 *
-	 * @param requestDTO
+	 * @param requestDto - request dto
 	 * @return Medication Entity
 	 */
 	@RequestMapping(value = "/details", method = RequestMethod.GET)
-	public SuccessResponse<Medication> getMedicationById(@RequestBody RequestDTO requestDTO) {
+	public SuccessResponse<Medication> getMedicationById(@RequestBody RequestDTO requestDto) {
 		return new SuccessResponse<Medication>(SuccessCode.GET_MEDICATION,
-				medicationService.getMedicationById(requestDTO), HttpStatus.OK);
+			medicationService.getMedicationById(requestDto), HttpStatus.OK);
 	}
 
 	/**
 	 * This method is used to retreive all medication details.
 	 *
-	 * @param requestObject
+	 * @param requestObject - request dto
 	 * @return List of Medication Entity
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
@@ -101,76 +101,77 @@ public class MedicationController {
             ? Integer.parseInt(medications.get("totalCount").toString())
             : 0;
         int totalCount = 0;
-        List<MedicationDTO>  medicationDTOs = new ArrayList<>();
+        List<MedicationDTO>  medicationDtos = new ArrayList<>();
         if (!medicationList.isEmpty()) {
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            medicationDTOs = modelMapper.map(medicationList, new TypeToken<List<MedicationDTO>>() {}.getType());
+            medicationDtos = modelMapper.map(medicationList, 
+            	new TypeToken<List<MedicationDTO>>() {}.getType());
             totalCount = totalMedicationCount;
         }
-        return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, medicationDTOs, totalCount, HttpStatus.OK);
+        return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, 
+        	medicationDtos, totalCount, HttpStatus.OK);
      }
+
 
 	/**
 	 * Used to soft delete a medication.
 	 *
-	 * @param requestDTO
-	 * @return Boolean
+	 * @param requestDto - request dto
+	 * @return Boolean - true or false
 	 */
 	@RequestMapping(value = "/remove", method = RequestMethod.DELETE)
-	public SuccessResponse<Boolean> deleteMedicationById(@RequestBody RequestDTO requestDTO) {
-		medicationService.deleteMedicationById(requestDTO);
+	public SuccessResponse<Boolean> deleteMedicationById(@RequestBody RequestDTO requestDto) {
+		medicationService.deleteMedicationById(requestDto);
 		return new SuccessResponse<Boolean>(SuccessCode.MEDICATION_STATUS_UPDATE, HttpStatus.OK);
 	}
 
 	/**
 	 * Search and get medications list based on country.
 	 *
-	 * @param requestObject
+	 * @param requestObject - request dto
 	 * @return List of Medication entity
 	 */
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public SuccessResponse<List<MedicationDTO>> searchMedications(@RequestBody RequestDTO requestObject) {
 		List<Medication> medications = medicationService.searchMedications(requestObject);
 		if (!medications.isEmpty()) {
-			List<MedicationDTO> medicationDTOs = modelMapper.map(medications, new TypeToken<List<MedicationDTO>>() {
+			List<MedicationDTO> medicationDtos = modelMapper.map(medications, 
+			new TypeToken<List<MedicationDTO>>() {
 			}.getType());
-			return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, medicationDTOs,
-					medicationDTOs.size(), HttpStatus.OK);
+			return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, medicationDtos,
+					medicationDtos.size(), HttpStatus.OK);
 		}
-		return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, noDataList, 0, HttpStatus.OK);
+		return new SuccessResponse<List<MedicationDTO>>(SuccessCode.GET_MEDICATIONS, 
+			noDataList, 0, HttpStatus.OK);
 	}
 
 	/**
 	 * Used to validate a medication.
 	 *
-	 * @param medication
+	 * @param medication - entity
 	 * @return boolean based on validation
 	 */
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)
 	public SuccessResponse<Boolean> validateMedication(@RequestBody Medication medication) {
 		medicationService.validateMedication(medication);
-//        return new ResponseEntity<Boolean>(medicationService.validateMedication(medication), HttpStatus.OK);
 		return new SuccessResponse<>(SuccessCode.VALIDATE_MEDICATION, HttpStatus.OK);
 	}
 
 	/**
-	 * To get the other medication details
-	 * 
-	 * @param countryId
-	 * @return OtherMedicationDTO
+	 * To get the other medication details.
+	 *
+	 * @param countryId - country id
+	 * @return OtherMedicationDTO - entity
 	 */
 	@GetMapping("/other-medication/{countryId}")
-//	@TokenParse
 	public ResponseEntity<OtherMedicationDTO> getOtherMedications(@PathVariable("countryId") long countryId) {
 
 		Medication medication = medicationService.getOtherMedication(countryId);
 
-		OtherMedicationDTO otherMedicationDTO = modelMapper.map(medication, new TypeToken<OtherMedicationDTO>() {
-		}.getType());
-//		System.out.println("other medication dto in controller" + otherMedicationDTO.toString());
-//		return new SuccessResponse<OtherMedicationDTO>(SuccessCode.GET_OTHER_MEDICATION, otherMedicationDTO,
-//				HttpStatus.OK);
-		return new ResponseEntity<OtherMedicationDTO>(otherMedicationDTO, HttpStatus.OK);
+		OtherMedicationDTO otherMedicationDto = modelMapper.map(medication, 
+			new TypeToken<OtherMedicationDTO>() {
+			}.getType());
+		return new ResponseEntity<OtherMedicationDTO>(otherMedicationDto, HttpStatus.OK);
 	}
 
 }

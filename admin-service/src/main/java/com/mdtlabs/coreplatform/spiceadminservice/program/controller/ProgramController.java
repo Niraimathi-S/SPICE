@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Program;
-
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.spiceadminservice.program.service.ProgramService;
 
 /**
  * This class is a controller class to perform operation on Program entity.
- * 
+ *
  * @author Karthick M
  * 
  */
@@ -37,7 +36,7 @@ public class ProgramController {
 
 	/**
 	 * This method is used to add a new program.
-	 * 
+	 *
 	 * @param program request data containing program details
 	 * @return program Entity.
 	 * @author karthick M
@@ -49,36 +48,36 @@ public class ProgramController {
 	}
 
 	/**
-	 * This method is used to retrieve single program details using programId
-	 * 
+	 * This method is used to retrieve single program details using programId.
+	 *
 	 * @param programId program id to get program entity.
 	 * @return Program Entity
 	 * @author Karthick M
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	public SuccessResponse<Program> getProgramById(@PathVariable(value = "id") long programId) {
-		return new SuccessResponse<Program>(SuccessCode.GET_PROGRAM, programService.getProgramById(programId),
-				HttpStatus.OK);
+		return new SuccessResponse<Program>(SuccessCode.GET_PROGRAM, 
+			programService.getProgramById(programId), HttpStatus.OK);
 	}
 
 	/**
-	 * This method is used to retrieve single program details using programId
-	 * 
+	 * This method is used to retrieve single program details using programId.
+	 *
 	 * @param request request data
 	 * @return Program Entity
 	 * @author Karthick M
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public SuccessResponse<Program> getPrograms(@RequestBody RequestDTO request) {
-		return new SuccessResponse<Program>(SuccessCode.GET_PROGRAM, programService.getAllPrograms(request),
-				HttpStatus.OK);
+		return new SuccessResponse<Program>(SuccessCode.GET_PROGRAM, 
+			programService.getAllPrograms(request), HttpStatus.OK);
 	}
 
 	/**
 	 * Used to soft delete a program.
-	 * 
-	 * @param programId
-	 * @return Boolean
+	 *
+	 * @param programId - program id
+	 * @return Boolean - true or false
 	 * @author Karthick M
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -89,8 +88,8 @@ public class ProgramController {
 
 	/**
 	 * Used to update a program detail like name, etc.,
-	 * 
-	 * @param program
+	 *
+	 * @param program - entity
 	 * @return program Entity
 	 * @author Karthick M
 	 */
@@ -101,11 +100,11 @@ public class ProgramController {
 	}
 	
     /**
-     * Gets list of programs using list of site Ids
-     * 
-     * @param siteIds List of siteIds
-     * @return List of Program Entities
-     */
+    * Gets list of programs using list of site Ids.
+    *
+    * @param siteIds List of siteIds
+    * @return List of Program Entities
+    */
 	@PostMapping("/get-by-site-ids")
 	public List<Program> getProgramsBySiteIds(@RequestBody List<Long> siteIds) {
 		return programService.getProgramsBySiteIds(siteIds);

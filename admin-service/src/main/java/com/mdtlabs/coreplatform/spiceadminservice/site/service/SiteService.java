@@ -4,31 +4,39 @@ import java.util.List;
 
 import com.mdtlabs.coreplatform.common.model.entity.Site;
 
+/**
+ * <p>
+ * This an interface class for site module you can implemented this class in any
+ * class.
+ * </p>
+ *
+ * @author VigneshKumar created on Jun 30, 2022
+ */
 public interface SiteService {
 
 	/**
-	 * To add a site
-	 * 
-	 * @param site
+	 * To add a site.
+	 *
+	 * @param site - entity
 	 * @return Site entity
 	 * @author Jeyaharini T A
 	 */
 	public Site addSite(Site site);
 
 	/**
-	 * To update a site
-	 * 
-	 * @param site
+	 * To update a site.
+	 *
+	 * @param site entity
 	 * @return Site entity
 	 * @author Jeyaharini T A
 	 */
 	public Site updateSite(Site site);
 
 	/**
-	 * To activate or deactive a site
-	 * 
-	 * @param id
-	 * @param isActiveStatus
+	 * To activate or deactive a site.
+	 *
+	 * @param id - site id
+	 * @param isActiveStatus - true or false
 	 * @return Site entity
 	 * @author Jeyaharini T A
 	 */
@@ -36,7 +44,7 @@ public interface SiteService {
 
 	/**
 	 * Gets list of sites using tenantIds.
-	 * 
+	 *
 	 * @param tenants List of tenantIds
 	 * @return List of Site Entities.
 	 * @author Niraimathi S
@@ -45,15 +53,15 @@ public interface SiteService {
 
 	/**
 	 * Gets list if sites based onperating unit Id.
-	 * 
+	 *
 	 * @param operatingUnitId operating unit Id.
 	 * @return List of Site Entities.
 	 */
 	public List<Site> getSitesByOperatingUnitId(Long operatingUnitId);
 
 	/**
-	 * Gets a site using id and isDeleted fields
-	 * 
+	 * Gets a site using id and isDeleted fields.
+	 *
 	 * @param siteId site id
 	 * @return Site entity
 	 */

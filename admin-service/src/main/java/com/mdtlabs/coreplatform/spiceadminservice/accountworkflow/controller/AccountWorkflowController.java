@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.AccountWorkflow;
-
 import com.mdtlabs.coreplatform.spiceadminservice.accountworkflow.service.AccountWorkflowService;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
 
 /**
  * This controller class maintains CRUD operation for account workflow data.
- * 
+ *
  * @author Jeyaharini T A
  */
 
@@ -38,47 +37,49 @@ public class AccountWorkflowController {
 
 	/**
 	 * This method is used to add an account workflow data.
-	 * 
-	 * @param accountWorkflow
-	 * @return AccountWorkflow
+	 *
+	 * @param accountWorkflow - entity
+	 * @return AccountWorkflow - entity
 	 * @author Jeyaharini T A
 	 */
 	@PostMapping("/create")
-	public SuccessResponse<AccountWorkflow> addAccountWorkflow(@Valid @RequestBody AccountWorkflow accountWorkflow) {
+	public SuccessResponse<AccountWorkflow> addAccountWorkflow(@Valid @RequestBody 
+		AccountWorkflow accountWorkflow) {
 		accountWorkflowService.addAccountWorkflow(accountWorkflow);
 		return new SuccessResponse<>(SuccessCode.ACCOUNT_WORKFLOW_SAVE, HttpStatus.CREATED);
 	}
 
 	/**
-	 * This method is used to retrieve account workflow details with the condition
-	 * 
-	 * @param searchRequestDTO
+	 * This method is used to retrieve account workflow details with the condition.
+	 *
+	 * @param searchRequestDto - search request dto
 	 * @return Account workflow entity
 	 * @author Jeyaharini T A
 	 */
 	@GetMapping("/list")
-	public SuccessResponse<AccountWorkflow> getAccountWorkflows(@RequestBody SearchRequestDTO searchRequestDTO) {
+	public SuccessResponse<AccountWorkflow> getAccountWorkflows(@RequestBody SearchRequestDTO searchRequestDto) {
 		return new SuccessResponse<AccountWorkflow>(SuccessCode.GET_ACCOUNT_WORKFLOW,
-				accountWorkflowService.getAccountWorkflows(searchRequestDTO), HttpStatus.OK);
+				accountWorkflowService.getAccountWorkflows(searchRequestDto), HttpStatus.OK);
 	}
 
 	/**
-	 * Used to update an account workflow view screens
-	 * 
+	 * Used to update an account workflow view screens.
+	 *
 	 * @param accountWorkflow workflow
 	 * @return Account workflow Entity
 	 * @author Jeyaharini T A
 	 */
 	@PutMapping("/update")
-	public SuccessResponse<AccountWorkflow> updateAccountWorkflow(@Valid @RequestBody AccountWorkflow accountWorkflow) {
+	public SuccessResponse<AccountWorkflow> updateAccountWorkflow(@Valid @RequestBody
+		AccountWorkflow accountWorkflow) {
 		accountWorkflowService.updateAccountWorkflow(accountWorkflow);
 		return new SuccessResponse<>(SuccessCode.ACCOUNT_WORKFLOW_UPDATE, HttpStatus.OK);
 	}
 
 	/**
 	 * Used to delete an account workflow by its id.
-	 * 
-	 * @param id
+	 *
+	 * @param id - workflow id
 	 * @return AccountWorkflow entity
 	 * @author Jeyaharini T A
 	 */
@@ -89,8 +90,8 @@ public class AccountWorkflowController {
 	}
 	
 	/**
-	 * Gets all wokrflows
-	 * 
+	 * Gets all wokrflows.
+	 *
 	 * @return List of AccountWorkflows
 	 */
 	@GetMapping("/get-all-workflows")

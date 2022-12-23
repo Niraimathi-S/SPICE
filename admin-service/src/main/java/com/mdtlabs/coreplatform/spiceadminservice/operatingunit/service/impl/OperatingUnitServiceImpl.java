@@ -31,7 +31,7 @@ import com.mdtlabs.coreplatform.spiceadminservice.operatingunit.service.Operatin
 
 /**
  * This Class contains the business logic for operating unit entity.
- * 
+ *
  * @author N
  *
  */
@@ -47,37 +47,38 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, Object> getOperatingUnitList(RequestDTO requestDTO) {
-		String searchTerm = requestDTO.getSearchTerm();
+	public Map<String, Object> getOperatingUnitList(RequestDTO requestDto) {
+		String searchTerm = requestDto.getSearchTerm();
 		int totalCount = 0;
-		if (0 == requestDTO.getSkip()) {
+		if (0 == requestDto.getSkip()) {
 			totalCount = operatingUnitRepository.countByIsDeletedFalse();
 		}
-		Pageable pageable = Pagination.setPagination(requestDTO.getSkip(), requestDTO.getLimit());
+		Pageable pageable = Pagination.setPagination(requestDto.getSkip(), requestDto.getLimit());
 
 		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
 			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
 		}
-		List<Operatingunit> operatingunits = operatingUnitRepository.findOperatingUnitList(searchTerm, pageable)
-				.stream().collect(Collectors.toList());
-		List<OperatingUnitListDTO> operatingUnitListDTOs = new ArrayList<>();
+		List<Operatingunit> operatingunits = operatingUnitRepository
+			.findOperatingUnitList(searchTerm, pageable).stream().collect(Collectors.toList());
+		List<OperatingUnitListDTO> operatingUnitListDtos = new ArrayList<>();
 		UserDTO userDto = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDto.getAuthorization();
 
-		System.out.println("UserSelectedTenantContextHolder.get()" + UserSelectedTenantContextHolder.get());
 		if (!operatingunits.isEmpty()) {
 			for (Operatingunit operatingunit : operatingunits) {
-				OperatingUnitListDTO operatingUnitListDTO = new OperatingUnitListDTO();
-				operatingUnitListDTO.setId(operatingunit.getId());
-				operatingUnitListDTO.setName(operatingunit.getName());
-				operatingUnitListDTO.setTenantId(operatingunit.getTenantId());
+				OperatingUnitListDTO operatingUnitListDto = new OperatingUnitListDTO();
+				operatingUnitListDto.setId(operatingunit.getId());
+				operatingUnitListDto.setName(operatingunit.getName());
+				operatingUnitListDto.setTenantId(operatingunit.getTenantId());
 				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
-						UserSelectedTenantContextHolder.get(), UserSelectedTenantContextHolder.get(), "account");
-				operatingUnitListDTO.setSiteCount(childOrgList.get("siteIds").size());
-				operatingUnitListDTOs.add(operatingUnitListDTO);
+					UserSelectedTenantContextHolder.get(),
+					UserSelectedTenantContextHolder.get(), "account");
+				operatingUnitListDto.setSiteCount(childOrgList.get("siteIds").size());
+				operatingUnitListDtos.add(operatingUnitListDto);
 			}
 		}
-		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, operatingUnitListDTOs);
+		Map<String, Object> response = Map.of(Constants.COUNT, 
+			totalCount, Constants.DATA, operatingUnitListDtos);
 		return response;
 	}
 	

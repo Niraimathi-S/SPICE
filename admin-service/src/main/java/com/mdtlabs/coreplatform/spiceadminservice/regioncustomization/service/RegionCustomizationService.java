@@ -8,8 +8,8 @@ import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.spice.RegionCustomization;
 
 /**
- * This service class maintains the CRUD operations for region customization
- * 
+ * This service class maintains the CRUD operations for region customization.
+ *
  * @author Jeyaharini T A
  *
  */
@@ -17,8 +17,8 @@ public interface RegionCustomizationService {
 
 	/**
 	 * This method is used to add a country customization form data.
-	 * 
-	 * @param regionCustomization
+	 *
+	 * @param regionCustomization entity
 	 * @return RegionCustomization entity.
 	 * @author Niraimathi S
 	 */
@@ -27,18 +27,18 @@ public interface RegionCustomizationService {
 	/**
 	 * Get the region customization data details such as screening, enrollment and
 	 * consent forms based on region customization id, type and category.
-	 * 
-	 * @param regionCustomizationRequestDTO
+	 *
+	 * @param regionCustomizationRequestDto entity
 	 * @return RegionCustomization entity.
 	 * @author Niraimathi S
 	 */
-	public RegionCustomization getCustomization(CustomizationRequestDTO regionCustomizationRequestDTO);
+	public RegionCustomization getCustomization(CustomizationRequestDTO regionCustomizationRequestDto);
 
 	/**
 	 * Update region customization data like screening, enrollment forms and consent
-	 * data based on country id and region customization id
-	 * 
-	 * @param regionCustomization
+	 * data based on country id and region customization id.
+	 *
+	 * @param regionCustomization entity
 	 * @return Count of rows updated.regionFormData
 	 * @author Niraimathi S
 	 */

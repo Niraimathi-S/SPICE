@@ -28,7 +28,7 @@ import com.mdtlabs.coreplatform.spiceadminservice.operatingunit.service.Operatin
 
 /**
  * This controller class handles all the API requests for OperatingUnit entity.
- * 
+ *
  * @author Niraimathi S
  *
  */
@@ -42,19 +42,23 @@ public class OperatingUnitController {
 	
 	/**
 	 * To get Operating unit list with its child organization counts.
-	 * 
-	 * @param requestDTO - request data containing search term, skip, limit, etc.,
-	 * @return List<OperatingUnitListDTO> - List of operating units.
+	 *
+	 * @param requestDto - request data containing search term, skip, limit, etc.,
+	 * @return List(OperatingUnitListDTO) - List of operating units.
 	 * @author Niraimathi S 
 	 */
 	@PostMapping("/list")
-	public SuccessResponse<List<OperatingUnitListDTO>> getOperatingUnitList(@RequestBody RequestDTO requestDTO) {
-    	Map<String, Object> response = operatingUnitService.getOperatingUnitList(requestDTO);
-    	Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0 : Integer.parseInt(response.get(Constants.COUNT).toString());
+	public SuccessResponse<List<OperatingUnitListDTO>> getOperatingUnitList(
+		@RequestBody RequestDTO requestDto) {
+    	Map<String, Object> response = operatingUnitService.getOperatingUnitList(requestDto);
+    	Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) 
+    		? 0 : Integer.parseInt(response.get(Constants.COUNT).toString());
     	if (0 == totalCount) {
-        	return new SuccessResponse<List<OperatingUnitListDTO>>(SuccessCode.GET_COUNTRY,response.get(Constants.DATA), HttpStatus.OK);
+        	return new SuccessResponse<List<OperatingUnitListDTO>>(
+        	SuccessCode.GET_COUNTRY, response.get(Constants.DATA), HttpStatus.OK);
 		}
-    	return new SuccessResponse<List<OperatingUnitListDTO>>(SuccessCode.GET_COUNTRY,response.get(Constants.DATA), totalCount , HttpStatus.OK);
+    	return new SuccessResponse<List<OperatingUnitListDTO>>(
+    		SuccessCode.GET_COUNTRY, response.get(Constants.DATA), totalCount, HttpStatus.OK);
 	}
 	
 	/**

@@ -77,18 +77,17 @@ public class DataServiceImpl implements DataService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Country createCountry(CountryOrganizationDTO countryDTO) {
-		if (Objects.isNull(countryDTO)) {
+	public Country createCountry(CountryOrganizationDTO countryDto) {
+		if (Objects.isNull(countryDto)) {
 			throw new BadRequestException(12006);
 		} else {
-			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 			List<Country> existingCountryByCodeOrName = countryRepository
-					.findByCountryCodeOrName(countryDTO.getCountryCode(), countryDTO.getName());
+				.findByCountryCodeOrName(countryDto.getCountryCode(), countryDto.getName());
 			if (!existingCountryByCodeOrName.isEmpty()) {
 				throw new DataConflictException(19001);
 			}
 			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			Country country = modelMapper.map(countryDTO, new TypeToken<Country>() {
+			Country country = modelMapper.map(countryDto, new TypeToken<Country>() {
 			}.getType());
 			Country countryResponse = countryRepository.save(country);
 
@@ -96,15 +95,17 @@ public class DataServiceImpl implements DataService {
 			organization.setFormName(Constants.COUNTRY);
 			organization.setName(countryResponse.getName());
 			organization.setFormDataId(countryResponse.getId());
-			OrganizationDTO organizationDTO = new OrganizationDTO();
-			organizationDTO.setOrganization(organization);
-			organizationDTO.setRoles(List.of(Constants.ROLE_REGION_ADMIN));
-			organizationDTO.setSiteOrganization(Constants.BOOLEAN_FALSE);
+			OrganizationDTO organizationDto = new OrganizationDTO();
+			organizationDto.setOrganization(organization);
+			organizationDto.setRoles(List.of(Constants.ROLE_REGION_ADMIN));
+			organizationDto.setSiteOrganization(Constants.BOOLEAN_FALSE);
 			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			List<User> users = modelMapper.map(countryDTO.getUsers(), new TypeToken<List<User>>() {
+			List<User> users = modelMapper.map(countryDto.getUsers(), new TypeToken<List<User>>() {
 			}.getType());
-			organizationDTO.setUsers(users);
-			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,UserSelectedTenantContextHolder.get() ,organizationDTO);
+			organizationDto.setUsers(users);
+			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,
+				UserSelectedTenantContextHolder.get() ,organizationDto);
 			Organization savedOrganization = response.getBody();
 			countryResponse.setTenantId(savedOrganization.getId());
 			countryResponse = countryRepository.save(countryResponse);
@@ -126,18 +127,19 @@ public class DataServiceImpl implements DataService {
 				throw new DataNotFoundException(19004);
 			}
 			List<Country> existingCountryByCodeOrName = countryRepository
-					.findByCountryCodeOrName(country.getCountryCode(), country.getName());
+				.findByCountryCodeOrName(country.getCountryCode(), country.getName());
 			Map<String, Long> nameMap = new HashMap<>();
 			Map<String, Long> codeMap = new HashMap<>();
 			for (Country element : existingCountryByCodeOrName) {
 				nameMap.put(element.getName(), element.getId());
 				codeMap.put(element.getCountryCode(), element.getId());
 			}
-			if (nameMap.keySet().contains(country.getName()) && nameMap.get(country.getName()) != country.getId()) {
+			if (nameMap.keySet().contains(country.getName()) && nameMap.get(country.getName()) 
+				!= country.getId()) {
 				throw new DataConflictException(19001);
 			}
 			if (codeMap.keySet().contains(country.getCountryCode())
-					&& codeMap.get(country.getCountryCode()) != country.getId()) {
+				&& codeMap.get(country.getCountryCode()) != country.getId()) {
 				throw new DataConflictException(19007);
 			}
 			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
@@ -176,7 +178,8 @@ public class DataServiceImpl implements DataService {
 		if (Objects.isNull(county)) {
 			throw new BadRequestException(12006);
 		}
-		County existingCounty = countyRepository.findByCountryIdAndName(county.getCountryId(), county.getName());
+		County existingCounty = countyRepository
+			.findByCountryIdAndName(county.getCountryId(), county.getName());
 		if (!Objects.isNull(existingCounty)) {
 			throw new DataConflictException(19002);
 		}
@@ -208,21 +211,21 @@ public class DataServiceImpl implements DataService {
 	 */
 	@Override
 	public CountryOrganizationDTO getCountryById(long countryId) {
-		UserDTO userDTO = UserContextHolder.getUserDto();
-		String token = Constants.BEARER + userDTO.getAuthorization();
 		Country country = countryRepository.findByIdAndIsDeleted(countryId, false);
 		if (Objects.isNull(country)) {
 			throw new DataNotFoundException(19004);
 		}
-		CountryOrganizationDTO countryOrganizationDTO = new CountryOrganizationDTO();
+		CountryOrganizationDTO countryOrganizationDto = new CountryOrganizationDTO();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		countryOrganizationDTO = modelMapper.map(country, new TypeToken<CountryOrganizationDTO>() {
+		countryOrganizationDto = modelMapper.map(country, new TypeToken<CountryOrganizationDTO>() {
 		}.getType());
+		UserDTO userDto = UserContextHolder.getUserDto();
+		String token = Constants.BEARER + userDto.getAuthorization();
 		List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(),
-				List.of(country.getId()));
-		countryOrganizationDTO.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
+			List.of(country.getId()));
+		countryOrganizationDto.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
 		}.getType()));
-		return countryOrganizationDTO;
+		return countryOrganizationDto;
 	}
 
 	/**
@@ -231,7 +234,8 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public County updateCounty(County county) {
 		getCountyById(county.getId());
-		County countyDetails = countyRepository.findByCountryIdAndName(county.getCountryId(), county.getName());
+		County countyDetails = countyRepository.findByCountryIdAndName(
+			county.getCountryId(), county.getName());
 		if (!Objects.isNull(countyDetails) && county.getId() != countyDetails.getId()) {
 			throw new DataConflictException(19002);
 		}
@@ -261,8 +265,8 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public Subcounty updateSubCounty(Subcounty subCounty) {
 		getSubCountyById(subCounty.getId());
-		Subcounty subCountyDetails = subCountyRepository.findByCountryIdAndCountyIdAndName(subCounty.getCountryId(),
-				subCounty.getCountyId(), subCounty.getName());
+		Subcounty subCountyDetails = subCountyRepository.findByCountryIdAndCountyIdAndName(
+			subCounty.getCountryId(), subCounty.getCountyId(), subCounty.getName());
 		if (!Objects.isNull(subCountyDetails) && subCountyDetails.getId() != subCounty.getId()) {
 			throw new DataConflictException(19003);
 		}
@@ -300,17 +304,21 @@ public class DataServiceImpl implements DataService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, Object> getCountryList(RequestDTO requestDTO) {
-		String searchTerm = requestDTO.getSearchTerm();
+	public Map<String, Object> getCountryList(RequestDTO requestDto) {
+		String searchTerm = requestDto.getSearchTerm();
 		int totalCount = 0;
-		Pageable pageable = Pagination.setPagination(requestDTO.getSkip(), requestDTO.getLimit(), Constants.CREATED_AT, Constants.BOOLEAN_FALSE);
+		if (0 == requestDto.getSkip()) {
+			totalCount = countryRepository.countByIsDeletedFalse();
+		}
+		Pageable pageable = Pagination.setPagination(requestDto.getSkip(), 
+			requestDto.getLimit(), Constants.CREATED_AT, Constants.BOOLEAN_FALSE);
 		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
 			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
 		}
 		List<Country> countries = countryRepository.searchCountries(searchTerm, pageable).stream()
-				.collect(Collectors.toList());
-		List<CountryListDTO> countryListDTOs = new ArrayList<>();
-		if (0 == requestDTO.getSkip()) {
+			.collect(Collectors.toList());
+		List<CountryListDTO> countryListDtos = new ArrayList<>();
+		if (0 == requestDto.getSkip()) {
             totalCount = countryRepository.getCountryCountByName(searchTerm);
 		}
 		UserDTO userDto = UserContextHolder.getUserDto();
@@ -318,20 +326,20 @@ public class DataServiceImpl implements DataService {
 
 		if (!countries.isEmpty()) {
 			for (Country country : countries) {
-				CountryListDTO countryListDTO = new CountryListDTO();
-				countryListDTO.setId(country.getId());
-				countryListDTO.setName(country.getName());
-				countryListDTO.setTenantId(country.getTenantId());
+				CountryListDTO countryListDto = new CountryListDTO();
+				countryListDto.setId(country.getId());
+				countryListDto.setName(country.getName());
+				countryListDto.setTenantId(country.getTenantId());
 				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
-						UserSelectedTenantContextHolder.get(), UserSelectedTenantContextHolder.get(),
-						Constants.COUNTRY);
-				countryListDTO.setAccountsCount(childOrgList.get("accountIds").size());
-				countryListDTO.setOUCount(childOrgList.get("operatingUnitIds").size());
-				countryListDTO.setSiteCount(childOrgList.get("siteIds").size());
-				countryListDTOs.add(countryListDTO);
+					UserSelectedTenantContextHolder.get(), UserSelectedTenantContextHolder.get(),
+					Constants.COUNTRY);
+				countryListDto.setAccountsCount(childOrgList.get("accountIds").size());
+				countryListDto.setOUCount(childOrgList.get("operatingUnitIds").size());
+				countryListDto.setSiteCount(childOrgList.get("siteIds").size());
+				countryListDtos.add(countryListDto);
 			}
 		}
-		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, countryListDTOs);
+		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, countryListDtos);
 		return response;
 	}
 
@@ -354,8 +362,8 @@ public class DataServiceImpl implements DataService {
 		role.setName(Constants.ROLE_REGION_ADMIN);
 		user.setRoles(Set.of(role));
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		ResponseEntity<User> response = userApiInterface.addAdminUser(token, UserSelectedTenantContextHolder.get(),
-				user);
+		ResponseEntity<User> response = userApiInterface
+			.addAdminUser(token, UserSelectedTenantContextHolder.get(), user);
 		if (!Objects.isNull(response.getBody())) {
 			user = response.getBody();
 		}
@@ -368,21 +376,22 @@ public class DataServiceImpl implements DataService {
 	public User updateRegionAdmin(User user) {
 		UserDTO userDTO = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDTO.getAuthorization();
-		ResponseEntity<User> response = userApiInterface.updateAdminUser(token, UserSelectedTenantContextHolder.get(),
-				user);
+		ResponseEntity<User> response = userApiInterface.updateAdminUser(
+				token, UserSelectedTenantContextHolder.get(), user);
 		if (!Objects.isNull(response.getBody())) {
 			user = response.getBody();
 		}
 		return user;
+
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Boolean deleteRegionAdmin(CommonRequestDTO requestDTO) {
+	public Boolean deleteRegionAdmin(CommonRequestDTO requestDto) {
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		ResponseEntity<Boolean> response = userApiInterface.deleteAdminUser(token,
-				UserSelectedTenantContextHolder.get(), requestDTO);
+			UserSelectedTenantContextHolder.get(), requestDto);
 		Boolean isUserDeleted = true;
 		if (!Objects.isNull(response.getBody())) {
 			isUserDeleted= response.getBody();

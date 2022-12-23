@@ -14,68 +14,72 @@ import com.mdtlabs.coreplatform.common.model.entity.spice.AccountCustomization;
 
 /**
  * This repository interface has the needed customized functions for account
- * customization
- * 
+ * customization.
+ *
  * @author Jeyaharini T A
  *
  */
 @Repository
 public interface AccountCustomizationRepository extends JpaRepository<AccountCustomization, Long> {
 
-	public static final String GET_ACCOUNT_CUSOMIZATION_WITH_CONDITIONS = "SELECT accountcustomization FROM AccountCustomization as accountcustomization "
-			+ " WHERE (accountcustomization.countryId = :countryId) AND (accountcustomization.accountId = :accountId) AND (:category IS null OR accountcustomization.category = :category)"
-			+ " AND (:type IS null OR upper(accountcustomization.type) = upper(:type))"
-			+ " AND (:clinicalWorkflowId IS null OR workflow_id = :clinicalWorkflowId)  AND accountcustomization.isDeleted= :isDeleted";
+	public static final String GET_ACCOUNT_CUSOMIZATION_WITH_CONDITIONS = "SELECT accountcustomization"
+		+ " FROM AccountCustomization as accountcustomization  WHERE"
+		+ " (accountcustomization.countryId = :countryId) AND"
+		+ " (accountcustomization.accountId = :accountId) AND (:category IS null OR "
+		+ " accountcustomization.category = :category) AND "
+		+ " (:type IS null OR upper(accountcustomization.type)"
+		+ " = upper(:type)) AND (:clinicalWorkflowId IS null OR workflow_id = :clinicalWorkflowId)"
+		+ "  AND accountcustomization.isDeleted= :isDeleted";
 
-	public static final String REMOVE_ACCOUNT_CUSTOMIZATION = "UPDATE AccountCustomization SET isDeleted = :isDeleted, tenantId = :tenantId WHERE id = :id ";
+	public static final String REMOVE_ACCOUNT_CUSTOMIZATION = "UPDATE AccountCustomization "
+		+ "SET isDeleted = :isDeleted, tenantId = :tenantId WHERE id = :id ";
 
 	/**
-	 * Gets a Account customization by Id And Is Deleted.
-	 * 
-	 * @param id
-	 * @param isDeleted
-	 * @return AccountCustomization entity.
-	 * @author Jeyaharini T A
-	 */
+	* Gets a Account customization by Id And Is Deleted.
+	*
+	* @param id - account customization id
+	* @param isDeleted - true or false
+	* @return AccountCustomization entity.
+	* @author Jeyaharini T A
+	*/
 	public AccountCustomization findByIdAndIsDeleted(Long id, Boolean isDeleted);
 
 	/**
-	 * To get a Account customization details with conditions
-	 * 
-	 * @param countryId
-	 * @Param accountId
-	 * @param category
-	 * @param type
-	 * @return AccountCustomization entity
-	 * @author Jeyaharini T A
-	 */
+	* To get a Account customization details with conditions.
+	*
+	* @param countryId - country id
+	* @Param accountId - account id
+	* @param category - category
+	* @param type - type
+	* @return AccountCustomization entity
+	* @author Jeyaharini T A
+	*/
 	@Query(value = GET_ACCOUNT_CUSOMIZATION_WITH_CONDITIONS)
 	public AccountCustomization getAccountCustomization(@Param("countryId") Long countryId,
-			@Param("accountId") Long accountId, @Param("category") String category, @Param("type") String type,
-			@Param("clinicalWorkflowId") Long clinicalWorklowId, @Param("isDeleted") boolean isDeleted);
+		@Param("accountId") Long accountId, @Param("category") String category, @Param("type") String type,
+		@Param("clinicalWorkflowId") Long clinicalWorklowId, @Param("isDeleted") boolean isDeleted);
 
 	/**
-	 * To remove a account customization
-	 * 
-	 * @param isDeleted
-	 * @param tenantId
-	 * @return AccountCustomization
-	 * @author Jeyaharini T A
-	 */
+	* To remove a account customization.
+	*
+	* @param isDeleted - true or false
+	* @param tenantId - tenant id
+	* @author Jeyaharini T A
+	*/
 	@Modifying
 	@Transactional
 	@Query(value = REMOVE_ACCOUNT_CUSTOMIZATION)
 	public void removeAccountCustomization(@Param("isDeleted") boolean isDeleted, @Param("tenantId") long tenantId,
-			@Param("id") long id);
+		@Param("id") long id);
 			
 	/**
-	 * Gets list by countryID, category list and type list.
-	 * 
-	 * @param countryId countryId
-	 * @param category list of category
-	 * @param screenTypes lsit of types
-	 * @return List of AccountCustomization entites.
-	 */
+	* Gets list by countryID, category list and type list.
+	*
+	* @param countryId countryId
+	* @param category list of category
+	* @param screenTypes lsit of types
+	* @return List of AccountCustomization entites.
+	*/
 	public List<AccountCustomization> findByCountryIdAndCategoryInAndTypeIn(Long countryId, List<String> category,
-			List<String> screenTypes);
+		List<String> screenTypes);
 }

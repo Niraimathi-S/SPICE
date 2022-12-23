@@ -19,23 +19,25 @@ import com.mdtlabs.coreplatform.common.model.entity.spice.AccountWorkflow;
  */
 @Repository
 public interface AccountWorkflowRepository extends JpaRepository<AccountWorkflow, Long> {
-	public static final String GET_ACCOUT_WORKFLOWS = "SELECT accountworkflow FROM AccountWorkflow AS accountworkflow"
-			+ " WHERE accountworkflow.countryId = :countryId AND accountworkflow.isDeleted=false AND accountworkflow.isActive=true "
-			+ " AND (:searchTerm IS null OR lower(accountworkflow.name) LIKE CONCAT('%',lower(:searchTerm),'%') )";
+	public static final String GET_ACCOUT_WORKFLOWS = "SELECT accountworkflow FROM AccountWorkflow"
+		+ " AS accountworkflow WHERE accountworkflow.countryId = :countryId "
+		+ " AND accountworkflow.isDeleted=false AND accountworkflow.isActive=true "
+		+ " AND (:searchTerm IS null OR lower(accountworkflow.name) "
+		+ " LIKE CONCAT('%',lower(:searchTerm),'%') )";
 
 	/**
 	 * To check if there is any account workflow for the given country has the same
-	 * name
-	 * 
-	 * @param name
-	 * @param countryId
-	 * @return boolean
+	 * name.
+	 *
+	 * @param name - name
+	 * @param countryId - country id
+	 * @return boolean - true or false
 	 * @author Jeyaharini T A
 	 */
 	public boolean existsByNameIgnoreCaseAndCountryId(String name, long countryId);
 
 	/**
-	 * To find the account workflows by country id and search term
+	 * To find the account workflows by country id and search term.
 	 *
 	 * @param countryid country id
 	 * @param searchTerm search term
@@ -45,25 +47,25 @@ public interface AccountWorkflowRepository extends JpaRepository<AccountWorkflow
 	 */
 	@Query(value = GET_ACCOUT_WORKFLOWS)
 	public Page<AccountWorkflow> getAccountWorkflowsWithPagination(@Param("countryId") long countryid,
-			@Param("searchTerm") String searchTerm, Pageable pageable);
+		@Param("searchTerm") String searchTerm, Pageable pageable);
 
 	/**
-	 * To find the account workflow by country id
-	 * 
-	 * @param countryid
-	 * @param searchTerm
+	 * To find the account workflow by country id.
+	 *
+	 * @param countryid - country id
+	 * @param searchTerm - search term
 	 * @return AccountWorkflow Entity
 	 * @author Jeyaharini T A
 	 */
 	@Query(value = GET_ACCOUT_WORKFLOWS)
 	public List<AccountWorkflow> getAllAccountWorkflows(@Param("countryId") long countryid,
-			@Param("searchTerm") String searchTerm);
+		@Param("searchTerm") String searchTerm);
 
 	/**
-	 * To check the if the given account workflow exists or not
-	 * 
-	 * @param id
-	 * @param isDeleted
+	 * To check the if the given account workflow exists or not.
+	 *
+	 * @param id - workflow id
+	 * @param isDeleted - boolean
 	 * @return AccountWorkflow Entity
 	 */
 	public AccountWorkflow findByIdAndIsDeleted(long id, boolean isDeleted);

@@ -14,7 +14,14 @@ import com.mdtlabs.coreplatform.common.util.CommonUtil;
 import com.mdtlabs.coreplatform.spiceadminservice.site.repository.SiteRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.site.service.SiteService;
 
-
+/**
+ * <p>
+ * This service class contain all the business logic for user module and perform
+ * all the user operation here.
+ * </p>
+ *
+ * @author VigneshKumar created on Jun 30, 2022
+ */
 @Service
 public class SiteServiceImpl implements SiteService {
 
@@ -36,7 +43,8 @@ public class SiteServiceImpl implements SiteService {
 			throw new SpiceValidation(00001);
 		}
 
-		if (!Objects.isNull(site.getPhoneNumber()) && !CommonUtil.validatePhoneNumber(site.getPhoneNumber())) {
+		if (!Objects.isNull(site.getPhoneNumber()) 
+			&& !CommonUtil.validatePhoneNumber(site.getPhoneNumber())) {
 			throw new SpiceValidation(00002);
 		}
 
@@ -53,7 +61,8 @@ public class SiteServiceImpl implements SiteService {
 		if (!Objects.isNull(site.getEmail()) && !CommonUtil.validateEmail(site.getEmail())) {
 			throw new SpiceValidation(00001);
 		}
-		if (!Objects.isNull(site.getPhoneNumber()) && !CommonUtil.validatePhoneNumber(site.getPhoneNumber())) {
+		if (!Objects.isNull(site.getPhoneNumber()) 
+			&& !CommonUtil.validatePhoneNumber(site.getPhoneNumber())) {
 			throw new SpiceValidation(00002);
 		}
 		Site existingSite = siteRepository.findById(site.getId()).get();

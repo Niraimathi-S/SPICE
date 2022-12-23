@@ -59,28 +59,29 @@ public class DataController {
 	/**
 	 * Gets all countries.
 	 *
-	 * @param requestDTO
-	 * @return
+	 * @param requestDto - request dto
+	 * @return List - list of country dto
 	 * @author Niraimathi S
 	 */
 	@RequestMapping(value = "/country", method = RequestMethod.GET)
-	public SuccessResponse<List<CountryDTO>> getAllCountries(@RequestBody RequestDTO requestDTO) {
+	public SuccessResponse<List<CountryDTO>> getAllCountries(@RequestBody RequestDTO requestDto) {
 		SpiceLogger.logInfo("Getting All Country Details");
-		List<Country> countries = dataService.getAllCountries(requestDTO);
+		List<Country> countries = dataService.getAllCountries(requestDto);
 
 		if (!countries.isEmpty()) {
 			List<CountryDTO> countryDtos = modelMapper.map(countries, new TypeToken<List<CountryDTO>>() {
 			}.getType());
-			return new SuccessResponse<List<CountryDTO>>(SuccessCode.GET_COUNTRIES, countryDtos, countryDtos.size(),
-					HttpStatus.OK);
+			return new SuccessResponse<List<CountryDTO>>(SuccessCode.GET_COUNTRIES, 
+				countryDtos, countryDtos.size(), HttpStatus.OK);
 		}
-		return new SuccessResponse<List<CountryDTO>>(SuccessCode.GET_COUNTRIES, noDataList, 0, HttpStatus.OK);
+		return new SuccessResponse<List<CountryDTO>>(SuccessCode.GET_COUNTRIES, 
+			noDataList, 0, HttpStatus.OK);
 	}
 
 	/**
 	 * This method adds a new county.
 	 *
-	 * @param county
+	 * @param county - entity
 	 * @return County entity.
 	 * @author Niraimathi S
 	 */
@@ -94,8 +95,8 @@ public class DataController {
 	/**
 	 * This method gets a county from the database using id.
 	 *
-	 * @param id
-	 * @return
+	 * @param id - county id
+	 * @return SuccessResponse(County) - county entity 
 	 * @author Niraimathi S
 	 */
 	@RequestMapping(value = "/county/{id}", method = RequestMethod.GET)
@@ -107,7 +108,7 @@ public class DataController {
 	/**
 	 * Used to retrieve all counties under a country based on country id.
 	 *
-	 * @param id
+	 * @param id - county id
 	 * @return List of County entities.
 	 * @author Niraimathi S
 	 */
@@ -115,17 +116,16 @@ public class DataController {
 	public List<County> getAllCountyByCountryId(@PathVariable(value = "id") long id) {
 		SpiceLogger.logInfo("Getting all County based on Country");
 		List<County> counties = dataService.getAllCountyByCountryId(id);
-//
-//        if (counties.isEmpty()) {
-//            return new SuccessResponse<List<County>>(SuccessCode.GET_COUNTIES, noDataList, 0, HttpStatus.OK);
-////        }
+		//if (counties.isEmpty()) {
+		//    return new SuccessResponse<List<County>>(SuccessCode.GET_COUNTIES, noDataList, 0, HttpStatus.OK);
+		////}
 		return counties;
 	}
 
 	/**
 	 * Used to update a county detail.
 	 *
-	 * @param county
+	 * @param county - county entity
 	 * @return updated county entity.
 	 * @author Niraimathi S
 	 */
@@ -139,20 +139,20 @@ public class DataController {
 	/**
 	 * This method is used to add a new Country.
 	 *
-	 * @param country
+	 * @param countryDto - country dto
 	 * @return Country Entity.
 	 * @author karthick M
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/country")
-	public SuccessResponse<Country> createCountry(@Valid @RequestBody CountryOrganizationDTO countryDTO) {
-		dataService.createCountry(countryDTO);
+	public SuccessResponse<Country> createCountry(@Valid @RequestBody CountryOrganizationDTO countryDto) {
+		dataService.createCountry(countryDto);
 		return new SuccessResponse<>(SuccessCode.COUNTRY_SAVE, HttpStatus.CREATED);
 	}
 
 	/**
-	 * Used to update a country detail like name, etc.,
+	 * Used to update a country detail like name, etc.
 	 *
-	 * @param country
+	 * @param country - country entity
 	 * @return country Entity
 	 * @author Karthick M
 	 */
@@ -166,7 +166,7 @@ public class DataController {
 	/**
 	 * This method is used to add a new subcounty.
 	 *
-	 * @param subCounty
+	 * @param subCounty - sub county entity
 	 * @return subcounty Entity.
 	 * @author karthick M
 	 */
@@ -178,9 +178,9 @@ public class DataController {
 	}
 
 	/**
-	 * This method is used to retrieve single country details using countryId
+	 * This method is used to retrieve single country details using countryId.
 	 *
-	 * @param countryId
+	 * @param countryId - country id
 	 * @return Country Entity
 	 * @author Karthick M
 	 */
@@ -192,7 +192,7 @@ public class DataController {
 	}
 
 	/**
-	 * Used to update a subCounty detail like name, etc.,
+	 * Used to update a subCounty detail like name, etc.
 	 *
 	 * @return subCounty Entity
 	 * @author Karthick M
@@ -205,53 +205,54 @@ public class DataController {
 	}
 
 	/**
-	 * This method is used to retrieve single countries details using countryId
+	 * This method is used to retrieve single countries details using countryId.
 	 *
-	 * @param subCountyId
+	 * @param subCountyId - sub county id
 	 * @return Country Entity
 	 * @author Karthick M
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/subcounty/{id}")
 	public SuccessResponse<Subcounty> getSubCountyById(@PathVariable(value = "id") long subCountyId) {
 		SpiceLogger.logInfo("Getting a list of County based on Country");
-		return new SuccessResponse<Subcounty>(SuccessCode.GET_SUBCOUNTY, dataService.getSubCountyById(subCountyId),
-				HttpStatus.OK);
+		return new SuccessResponse<Subcounty>(SuccessCode.GET_SUBCOUNTY, 
+			dataService.getSubCountyById(subCountyId), HttpStatus.OK);
 	}
 
 	/**
 	 * Gets all subcounties based on country and county id.
 	 *
-	 * @param countryId
-	 * @param countyId
+	 * @param countryId - country id
+	 * @param countyId - county id
 	 * @return List of SubCounty entities.
 	 * @author Niraimathi S
 	 */
 	@RequestMapping(value = "/subcounty-list/{countryid}/{countyid}", method = RequestMethod.GET)
 	public SuccessResponse<List<Subcounty>> getAllSubCounty(@PathVariable(value = "countryid") long countryId,
-			@PathVariable(value = "countyid") long countyId) {
+		@PathVariable(value = "countyid") long countyId) {
 		SpiceLogger.logInfo("Getting a SubCountry based on CountryId and countyId");
 		List<Subcounty> subCounties = dataService.getAllSubCounty(countryId, countyId);
 		if (subCounties.isEmpty()) {
-			return new SuccessResponse<List<Subcounty>>(SuccessCode.GET_SUBCOUNTIES, noDataList, 0, HttpStatus.OK);
+			return new SuccessResponse<List<Subcounty>>(
+			SuccessCode.GET_SUBCOUNTIES, noDataList, 0, HttpStatus.OK);
 		}
-		return new SuccessResponse<List<Subcounty>>(SuccessCode.GET_SUBCOUNTIES, subCounties, subCounties.size(),
-				HttpStatus.OK);
+		return new SuccessResponse<List<Subcounty>>(
+			SuccessCode.GET_SUBCOUNTIES, subCounties, subCounties.size(), HttpStatus.OK);
 	}
 
 	/**
-	 * Gets country list with child organization counts
-	 * 
-	 * @param requestDTO request data
+	 * Gets country list with child organization counts.
+	 *
+	 * @param requestDto request data
 	 * @return List of countryListDTO
 	 */
 	@PostMapping(value = "/country/list")
-	public SuccessResponse<List<CountryListDTO>> getCountryList(@RequestBody RequestDTO requestDTO) {
-		Map<String, Object> response = dataService.getCountryList(requestDTO);
+	public SuccessResponse<List<CountryListDTO>> getCountryList(@RequestBody RequestDTO requestDto) {
+		Map<String, Object> response = dataService.getCountryList(requestDto);
 		Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0
-				: Integer.parseInt(response.get(Constants.COUNT).toString());
+			: Integer.parseInt(response.get(Constants.COUNT).toString());
 		if (0 == totalCount) {
-			return new SuccessResponse<List<CountryListDTO>>(SuccessCode.GET_COUNTRY, response.get(Constants.DATA),
-					HttpStatus.OK);
+			return new SuccessResponse<List<CountryListDTO>>(
+				SuccessCode.GET_COUNTRY, response.get(Constants.DATA), HttpStatus.OK);
 		}
 		return new SuccessResponse<List<CountryListDTO>>(SuccessCode.GET_COUNTRY, response.get(Constants.DATA),
 				totalCount, HttpStatus.OK);
@@ -259,7 +260,7 @@ public class DataController {
 
 	/**
 	 * To get add subcounty list based on country id.
-	 * 
+	 *
 	 * @param countryId country Id
 	 * @return List of Subcounty
 	 */
@@ -271,7 +272,7 @@ public class DataController {
 
 	/**
 	 * Gets country by Id without users.
-	 * 
+	 *
 	 * @param countryId country Id
 	 * @return Country entity
 	 */
@@ -282,7 +283,7 @@ public class DataController {
 	
 	/**
 	 * Adds an region admin user.
-	 * 
+	 *
 	 * @param user - user details
 	 * @return User - user entity.
 	 * @author Niraimathi S
@@ -295,7 +296,7 @@ public class DataController {
 	
 	/**
 	 * Updates an region admin user.
-	 * 
+	 *
 	 * @param user - updated user details
 	 * @return User - User entity
 	 * @author Niraimathi S
@@ -308,14 +309,14 @@ public class DataController {
 	
 	/**
 	 * To remove an region admin user.
-	 * 
-	 * @param requestDTO - request data containing user Id and tenantId.
+	 *
+	 * @param requestDto - request data containing user Id and tenantId.
 	 * @return User - user entity
 	 * @author Niraimathi S
 	 */
 	@DeleteMapping(value = "/country/remove-user")
-	public SuccessResponse<User> removeRegionAdmin(@RequestBody CommonRequestDTO requestDTO) {
-		dataService.deleteRegionAdmin(requestDTO);
+	public SuccessResponse<User> removeRegionAdmin(@RequestBody CommonRequestDTO requestDto) {
+		dataService.deleteRegionAdmin(requestDto);
         return new SuccessResponse<>(SuccessCode.REGION_ADMIN_DELETE, HttpStatus.OK);
 	}
 
