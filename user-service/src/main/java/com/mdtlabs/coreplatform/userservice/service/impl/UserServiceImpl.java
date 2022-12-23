@@ -66,7 +66,7 @@ import com.mdtlabs.coreplatform.common.model.entity.Role;
 import com.mdtlabs.coreplatform.common.model.entity.Timezone;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
-import com.mdtlabs.coreplatform.common.model.entity.spice.OutBoundEmail;
+import com.mdtlabs.coreplatform.common.model.entity.OutBoundEmail;
 import com.mdtlabs.coreplatform.common.repository.GenericRepository;
 import com.mdtlabs.coreplatform.common.repository.UserTokenRepository;
 import com.mdtlabs.coreplatform.common.util.CommonUtil;
