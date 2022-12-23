@@ -1,5 +1,6 @@
 package com.mdtlabs.coreplatform.common.model.entity.spice;
 
+import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
 import com.mdtlabs.coreplatform.common.model.entity.TenantBaseEntity;
@@ -38,7 +39,7 @@ public class PatientDiagnosis extends TenantBaseEntity {
 	private String diabetesPatientType;
 
 	@Column(name = FieldConstants.DIABETES_DIAGNOSIS)
-	private String diabDiagnosis;
+	private String diabetesDiagnosis;
 
 	@Column(name = FieldConstants.DIABETES_DIAG_CONTROLLED_TYPE)
 	private String diabetesDiagControlledType;
@@ -47,14 +48,14 @@ public class PatientDiagnosis extends TenantBaseEntity {
 	private boolean isHtnDiagnosis;
 
 	@Column(name = FieldConstants.IS_DIABETES_DIAGNOSIS)
-	private boolean isDiabetesDiagnosis;
-    public String getDiabetesDiagnosis() {
-        return diabetesDiagnosis;
-    }
-
-    public void setDiabetesDiagnosis(String diabetesDiagnosis) {
-        this.diabetesDiagnosis = diabetesDiagnosis;
-    }
+	private Boolean isDiabetesDiagnosis = Constants.BOOLEAN_FALSE;
+//    public String getDiabetesDiagnosis() {
+//        return diabetesDiagnosis;
+//    }
+//
+//    public void setDiabetesDiagnosis(String diabetesDiagnosis) {
+//        this.diabetesDiagnosis = diabetesDiagnosis;
+//    }
 
     public boolean isDiabetesDiagnosis() {
         return isDiabetesDiagnosis;
@@ -74,20 +75,19 @@ public class PatientDiagnosis extends TenantBaseEntity {
 		this.diabetesYearOfDiagnosis = diabetesYearOfDiagnosis;
 		this.htnPatientType = htnPatientType;
 		this.diabetesPatientType = diabetesPatientType;
-		this.diabDiagnosis = diabetesDiagnosis;
+		this.diabetesDiagnosis = diabetesDiagnosis;
 		this.diabetesDiagControlledType = diabetesDiagControlledType;
 		this.isHtnDiagnosis = isHtnDiagnosis;
 		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
 	}
 
-<<<<<<< Updated upstream
-	public void setDiabetesDiagnosis(boolean isDiabetesDiagnosis) {
-		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
-	}
+//
+//	public void setDiabetesDiagnosis(boolean isDiabetesDiagnosis) {
+//		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
+//	}
+//
+//	public void getDiabetesDiagnosis(String diabetesDiagnosis) {
+//		this.diabetesDiagnosis = diabetesDiagnosis;
+//	}
 
-	public void getDiabetesDiagnosis(String diabetesDiagnosis) {
-		this.diabetesDiagnosis = diabetesDiagnosis;
-	}
-=======
->>>>>>> Stashed changes
 }

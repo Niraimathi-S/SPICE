@@ -41,7 +41,7 @@ public final class TableConstants {
 	public static final String TABLE_SYMPTOM = "symptom";
 	public static final String TABLE_PATIENT_SYMPTOM = "patient_symptom";
 
-	public static final String TABLE_REGION_CUSTOMISATION = "countrycustomization";
+	public static final String TABLE_REGION_CUSTOMIZATION = "country_customization";
 	public static final String TABLE_SCREENING_LOG = "screening_log";
 	public static final String TABLE_GLUCOSE_LOG = "glucose_log";
 	public static final String TABLE_PATIENT_TRACKER = "patient_tracker";

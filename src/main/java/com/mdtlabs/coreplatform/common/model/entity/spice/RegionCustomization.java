@@ -15,7 +15,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = TableConstants.TABLE_REGION_CUSTOMISATION)
+@Table(name = TableConstants.TABLE_REGION_CUSTOMIZATION)
 public class RegionCustomization extends TenantBaseEntity {
 
     private static final long serialVersionUID = -8642271760727722638L;
@@ -35,11 +35,7 @@ public class RegionCustomization extends TenantBaseEntity {
     @NotNull(message = ErrorConstants.COUNTRY_ID_NOT_NULL)
     @Column(name = FieldConstants.COUNTRY_ID)
     private Long countryId;
-
-    @Column(name = FieldConstants.IS_DELETED)
-    private Boolean isDeleted = false;
-
-    @Column(name = FieldConstants.IS_ACTIVE)
-    private Boolean isActive = true;
-
+    
+    @Column(name = FieldConstants.IS_DEFAULT)
+    private boolean isDefault;
 }
