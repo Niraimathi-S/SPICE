@@ -2,7 +2,6 @@ package com.mdtlabs.coreplatform.common.model.dto;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.model.entity.EmailTemplate;
@@ -60,6 +59,14 @@ public class EmailDTO implements Serializable {
 	
 	public EmailDTO() {
 
+	}
+	
+	public EmailDTO(String to, String cc, String bcc, String subject, String body) {
+		this.to = to;
+		this.cc = cc;
+		this.bcc = bcc;
+		this.subject = subject;
+		this.body = body;
 	}
 
 	public EmailDTO(String subject, String body, String to) {

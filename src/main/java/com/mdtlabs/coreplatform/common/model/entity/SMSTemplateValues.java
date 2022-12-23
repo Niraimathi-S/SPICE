@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.common.model.entity.spice;
+package com.mdtlabs.coreplatform.common.model.entity;
 
 import java.util.Date;
 

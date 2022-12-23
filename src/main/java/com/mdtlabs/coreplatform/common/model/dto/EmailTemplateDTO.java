@@ -1,4 +1,4 @@
-package com.mdtlabs.coreplatform.common.model.dto.spice;
+package com.mdtlabs.coreplatform.common.model.dto;
 
 import java.util.List;
 
