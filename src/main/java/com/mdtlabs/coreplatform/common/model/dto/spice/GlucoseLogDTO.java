@@ -1,6 +1,7 @@
 package com.mdtlabs.coreplatform.common.model.dto.spice;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -10,54 +11,70 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class GlucoseLogDTO {
 
-	  private Integer hb1ac;
+	private Long id;
 
-	    private String hb1acUnit;
+	private Float hba1c;
 
-	    private String glucoseType;
+	private String hba1cUnit;
 
-	    private Float glucoseValue;
+	private String glucoseType;
 
-	    private Date lastMealTime;
+	private Float glucoseValue;
 
-	    private Date glucoseDateTime;
+	private Date lastMealTime;
 
-	    private String glucoseUnit;
+	private Date glucoseDateTime;
 
-	    private String type;
+	private String glucoseUnit;
 
-	    private Boolean isBeforeDiabetesDiagnosis;
+	private String type;
 
-	    private Long glucoseId;
+	private Boolean isBeforeDiabetesDiagnosis;
 
-	    private boolean isLatest;
-	    
-	    private Long patientTrackId;
-	    
-	    private boolean isUpdatedFromEnrollment;
-	    
-	    private Long screeningId;
-	    
-	    private Long tenantId;
+	private Long glucoseId;
 
-	    public GlucoseLogDTO(String glucoseType, Float glucoseValue, Date lastMealTime, Date glucoseDateTime,
-	                         String glucoseUnit) {
-	        this.glucoseType = glucoseType;
-	        this.glucoseValue = glucoseValue;
-	        this.lastMealTime = lastMealTime;
-	        this.glucoseDateTime = glucoseDateTime;
-	        this.glucoseUnit = glucoseUnit;
-	    }
+	private boolean isLatest;
+	
+	private Long patientTrackId;
+	
+	private boolean isUpdatedFromEnrollment;
+	
+	private Long screeningId;
+	
+	private Long tenantId;
 
-	    public GlucoseLogDTO(String glucoseType, Float glucoseValue, String glucoseUnit) {
-	        this.glucoseType = glucoseType;
-	        this.glucoseValue = glucoseValue;
-	        this.glucoseUnit = glucoseUnit;
-	    }
+	private Date createdAt;
+    
+    private List<String> symptomList;
 
-	    public GlucoseLogDTO() {
-	    }
+	public GlucoseLogDTO(String glucoseType, Float glucoseValue, Date lastMealTime, Date glucoseDateTime,
+							String glucoseUnit) {
+		this.glucoseType = glucoseType;
+		this.glucoseValue = glucoseValue;
+		this.lastMealTime = lastMealTime;
+		this.glucoseDateTime = glucoseDateTime;
+		this.glucoseUnit = glucoseUnit;
+	}
 
-	   
+	public GlucoseLogDTO(String glucoseType, Float glucoseValue, String glucoseUnit) {
+		this.glucoseType = glucoseType;
+		this.glucoseValue = glucoseValue;
+		this.glucoseUnit = glucoseUnit;
+	}
+
+	public GlucoseLogDTO() {
+	}
+
+	public GlucoseLogDTO(Long id, Float hba1c, String hba1cUnit, String glucoseType, Float glucoseValue,
+			Date glucoseDateTime, String glucoseUnit, Date createdAt) {
+		this.id = id;
+		this.hba1c = hba1c;
+		this.hba1cUnit = hba1cUnit;
+		this.glucoseType = glucoseType;
+		this.glucoseValue = glucoseValue;
+		this.glucoseDateTime = glucoseDateTime;
+		this.glucoseUnit = glucoseUnit;
+		this.createdAt = createdAt;
+	}   
 
 }

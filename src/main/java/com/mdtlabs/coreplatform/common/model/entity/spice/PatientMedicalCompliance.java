@@ -32,7 +32,7 @@ public class PatientMedicalCompliance extends TenantBaseEntity {
     @Column(name = FieldConstants.BP_LOG_ID)
     private Long bpLogId;
 
-    @Column(name = FieldConstants.ASSESSMENT_LOG_ID)
+    @Column(name = FieldConstants.PATIENT_ASSESSMENT_ID)
     private Long assessmentLogId;
 
 }

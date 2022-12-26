@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.common.model.dto.spice;
 import java.util.List;
 import java.util.Map;
 
+import com.mdtlabs.coreplatform.common.model.dto.spice.GlucoseLogDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.GlucoseLog;
 
 import lombok.Data;
@@ -16,11 +17,11 @@ public class PatientGlucoseLogDTO {
 
 	private int skip;
 
-	private List<GlucoseLog> glucoseLogList;
+	private List<GlucoseLogDTO> glucoseLogList;
 
-	private List<String> symptomList;
+	// private List<String> symptomList;
 
-	private GlucoseLog latestGlucoseLog;
+	private GlucoseLogDTO latestGlucoseLog;
 
-	private Map<String, Object> glucoseThreshold;
+	private List<Map<String, Object>> glucoseThreshold;
 }

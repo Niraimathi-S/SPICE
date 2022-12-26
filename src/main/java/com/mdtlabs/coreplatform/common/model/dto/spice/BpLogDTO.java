@@ -1,5 +1,6 @@
 package com.mdtlabs.coreplatform.common.model.dto.spice;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,8 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BpLogDTO {
+	
+	private Long id;
 
     private Long tenantId; 
 
@@ -74,6 +77,10 @@ public class BpLogDTO {
 
     private String otherInsurance;
     
+    private Date createdAt;
+    
+    private List<String> symptomList;
+    
     public BpLogDTO(
             Integer avgSystolic,
              Integer avgDiastolic,
@@ -97,5 +104,29 @@ public class BpLogDTO {
          this.bmi = bmi;
      }
 
+	public BpLogDTO(Long id, Integer avgSystolic, Integer avgDiastolic,
+			Integer avgPulse, Date createdAt) {
+        super();
+        this.id = id;
+        this.avgSystolic = avgSystolic;
+        this.avgDiastolic = avgDiastolic;
+        this.avgPulse = avgPulse;
+        this.createdAt = createdAt;
+    }
 
+
+//	public BpLogDTO(Long id, @NotNull(message = ErrorConstants.MISSING, groups = { Default.class,
+//			main.java.com.mdtlabs.coreplatform.common.model.dto.spice.ScreeningInfo.class,
+//			main.java.com.mdtlabs.coreplatform.common.model.dto.spice.EnrollmentInfo.class }) Integer avgSystolic,
+//			@NotNull(message = MISSING, groups = { Default.class,
+//					main.java.com.mdtlabs.coreplatform.common.model.dto.spice.ScreeningInfo.class,
+//					main.java.com.mdtlabs.coreplatform.common.model.dto.spice.EnrollmentInfo.class }) Integer avgDiastolic,
+//			Integer avgPulse, Date createdAt) {
+//		super();
+//		this.id = id;
+//		this.avgSystolic = avgSystolic;
+//		this.avgDiastolic = avgDiastolic;
+//		this.avgPulse = avgPulse;
+//		this.createdAt = createdAt;
+//	}
 }

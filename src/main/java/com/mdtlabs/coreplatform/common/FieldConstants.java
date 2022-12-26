@@ -172,11 +172,11 @@ public final class FieldConstants {
 	public static final String LAST_MENSTRUAL_PERIOD_DATE = "last_menstrual_period_date";
 	public static final String IS_PREGNANT = "is_pregnant";
 	public static final String PATIENT_TRACK_ID = "patient_track_id";
-	public static final String HB1AC = "hba1c";
+	public static final String HBA1C = "hba1c";
 	public static final String TEMPERATURE = "temperature";
 	public static final String BP_LOG_ID = "bp_log_id";
 	public static final String GLUCOSE_LOG_ID = "glucose_log_id";
-	public static final String ASSESSMENT_LOG_ID = "assessment_log_id";
+	public static final String PATIENT_ASSESSMENT_ID = "patient_assessment_id";
 	public static final String CORE_TYPE = "core_type";
 	public static final String IS_DELETED = "is_deleted";
 	public static final String DISPLAY_ORDER = "display_order";

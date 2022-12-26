@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -18,6 +19,7 @@ import java.util.Date;
  *
  * @author AkashGopinath Created on 25 Aug 2022
  */
+@JsonComponent
 public class CustomDateSerializer extends StdSerializer<Date> {
 
     public static String USER_ZONE_ID;

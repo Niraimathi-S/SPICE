@@ -49,17 +49,6 @@ public class PatientDiagnosis extends TenantBaseEntity {
 
 	@Column(name = FieldConstants.IS_DIABETES_DIAGNOSIS)
 	private Boolean isDiabetesDiagnosis = Constants.BOOLEAN_FALSE;
-//    public String getDiabetesDiagnosis() {
-//        return diabetesDiagnosis;
-//    }
-//
-//    public void setDiabetesDiagnosis(String diabetesDiagnosis) {
-//        this.diabetesDiagnosis = diabetesDiagnosis;
-//    }
-
-    public boolean isDiabetesDiagnosis() {
-        return isDiabetesDiagnosis;
-    }
 
 	public PatientDiagnosis() {
 	}
@@ -80,14 +69,5 @@ public class PatientDiagnosis extends TenantBaseEntity {
 		this.isHtnDiagnosis = isHtnDiagnosis;
 		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
 	}
-
-//
-//	public void setDiabetesDiagnosis(boolean isDiabetesDiagnosis) {
-//		this.isDiabetesDiagnosis = isDiabetesDiagnosis;
-//	}
-//
-//	public void getDiabetesDiagnosis(String diabetesDiagnosis) {
-//		this.diabetesDiagnosis = diabetesDiagnosis;
-//	}
 
 }

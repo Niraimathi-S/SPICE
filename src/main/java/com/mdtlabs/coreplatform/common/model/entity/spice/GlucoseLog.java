@@ -20,8 +20,8 @@ public class GlucoseLog extends TenantBaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = FieldConstants.HB1AC)
-	private Float hb1ac;
+	@Column(name = FieldConstants.HBA1C)
+	private Float hba1c;
 
 	@Column(name = FieldConstants.GLUCOSE_TYPE)
 	private String glucoseType;
@@ -63,7 +63,7 @@ public class GlucoseLog extends TenantBaseEntity {
 	private Date bgTakenOn;
 
 	@Transient
-	private boolean isRedRiskPatient = false;
+	private boolean isRedRiskPatient;
 
 	@Column(name = FieldConstants.RISK_LEVEL)
 	private String riskLevel;

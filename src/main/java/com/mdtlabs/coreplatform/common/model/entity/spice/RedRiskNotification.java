@@ -27,7 +27,7 @@ public class RedRiskNotification extends TenantBaseEntity {
     @Column(name = FieldConstants.STATUS)
     private String status;
 
-    @Column(name = FieldConstants.ASSESSMENT_LOG_ID)
+    @Column(name = FieldConstants.PATIENT_ASSESSMENT_ID)
     private Long assessmentLogId;
 
 }

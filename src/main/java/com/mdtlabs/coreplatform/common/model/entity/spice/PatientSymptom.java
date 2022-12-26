@@ -40,7 +40,7 @@ public class PatientSymptom extends TenantBaseEntity {
 	@Column(name = FieldConstants.GLUCOSE_LOG_ID)
 	private Long glucoseLogId;
 
-	@Column(name = FieldConstants.ASSESSMENT_LOG_ID)
+	@Column(name = FieldConstants.PATIENT_ASSESSMENT_ID)
 	private Long assessmentLogId;
 
 }

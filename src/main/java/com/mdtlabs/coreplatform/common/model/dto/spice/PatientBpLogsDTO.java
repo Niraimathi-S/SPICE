@@ -19,11 +19,11 @@ public class PatientBpLogsDTO {
 
 	private int skip;
 
-	private List<BpLog> bpLogList;
+	private List<BpLogDTO> bpLogList;
 
-	private List<String> symptomList;
+//	private List<String> symptomList;
 
-	private BpLog latestBpLog;
+	private BpLogDTO latestBpLog;
 
 	private Map<String, Integer> bpThreshold;
     

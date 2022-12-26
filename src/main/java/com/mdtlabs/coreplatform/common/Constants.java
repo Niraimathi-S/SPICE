@@ -45,7 +45,7 @@ public final class Constants {
 	public static final String CURRENT_TIMESTAMP_DATE_FORMAT = "yyyy.MM.dd.HH.mm.ss";
 	public static final String DATE = "DATE";
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
-	public static String DATE_FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS[XXX]";
+	public static String DATE_FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss[XXX]";
 	public static String DATE_FORMAT = "dd MMM, yyyy";
 	public static final String NO_DATA_FOUND = "No Data Found";
 	public static final List<String> NO_DATA_LIST = Arrays.asList(NO_DATA_FOUND);
