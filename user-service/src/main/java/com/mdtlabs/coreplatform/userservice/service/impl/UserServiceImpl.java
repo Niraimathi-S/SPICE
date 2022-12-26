@@ -41,6 +41,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.common.reflect.TypeToken;
 import com.mdtlabs.coreplatform.AuthenticationFilter;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
@@ -262,7 +263,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 * @param requestUsers         List of users to validate
 	 * @return List(User) - List of user entities
 	 */
-	public List<User> validateUser(Long parentOrganizationId, List<User> requestUsers) {
+	public List<User> validateUsers(Long parentOrganizationId, List<User> requestUsers) {
 		if (Objects.isNull(requestUsers) || 0 == requestUsers.size()) {
 			throw new DataNotAcceptableException(10000);
 		}
@@ -283,6 +284,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			validatedUsers = userRepository.findByIsActiveTrueAndIdIn(existingUsersIds);
 			if (validatedUsers.size() != existingUsersIds.size()) {
 				throw new DataNotFoundException(1102);
+			}
+			if (!Objects.isNull(validatedUsers) && !validatedUsers.isEmpty()) {
+				List<Long> userTenantsList = validatedUsers.stream().map(user -> user.getTenantId())
+					.collect(Collectors.toList());
+			    organizationService.validateParentOrganization(parentOrganizationId, userTenantsList);
+//				users.addAll(validatedUsers);
 			}
 		} else if (Objects.isNull(parentOrganizationId) && !existingUsersIds.isEmpty()) {
 			throw new DataConflictException(1103);
@@ -788,6 +795,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		existingUser.setDeleted(Constants.BOOLEAN_TRUE);
 		userRepository.save(existingUser);
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public UserDTO validateUser(Map<String, String> requestData) {
+		String email = requestData.get(Constants.EMAIL);
+		if (email.isBlank()) {
+			throw new DataNotAcceptableException(5003);
+		}
+		User user = userRepository.findByUsernameIgnoreCaseAndIsDeletedFalse(email);
+		System.out.println("user after validation++++++++=="+ user);
+		UserDTO userDTO = modelMapper.map(user, new TypeToken<UserDTO>() {
+		}.getType());
+		return userDTO;
 	}
 
 }

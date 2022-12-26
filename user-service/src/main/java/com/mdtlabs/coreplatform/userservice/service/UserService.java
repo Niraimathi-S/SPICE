@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.userservice.service;
 import java.util.List;
 import java.util.Map;
 
+import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
@@ -199,7 +200,15 @@ public interface UserService {
 	 * @return List(User) - List of User entities
 	 * @author Niraimathi S
 	 */
-	List<User> validateUser(Long parentOrganizationId, List<User> requestUsers);
+	List<User> validateUsers(Long parentOrganizationId, List<User> requestUsers);
+
+	/**
+	 * Validates a user by its username and return it if exists.
+	 * 
+	 * @param email username 
+	 * @return User entity.
+	 */
+	UserDTO validateUser(Map<String, String> email);
 
 
 }

@@ -130,13 +130,13 @@ public class OrganzationServiceImpl implements OrganizationService {
 		organization = organizationRepository.save(organization);
 		List<User> validatedUsers = new ArrayList<>();
 		List<User> users = new ArrayList<>();
-		validatedUsers = userService.validateUser(organization.getParentOrganizationId(), 
+		validatedUsers = userService.validateUsers(organization.getParentOrganizationId(), 
 			organizationDto.getUsers());
 
 		if (!Objects.isNull(validatedUsers) && !validatedUsers.isEmpty()) {
-			List<Long> userTenantsList = validatedUsers.stream().map(user -> user.getTenantId())
-				.collect(Collectors.toList());
-			validateParentOrganization(organization.getParentOrganizationId(), userTenantsList);
+//			List<Long> userTenantsList = validatedUsers.stream().map(user -> user.getTenantId())
+//				.collect(Collectors.toList());
+//			validateParentOrganization(organization.getParentOrganizationId(), userTenantsList);
 			users.addAll(validatedUsers);
 		}
 
@@ -270,6 +270,9 @@ public class OrganzationServiceImpl implements OrganizationService {
 		return userService.deleteOrganizationUser(requestDto);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map<String, List<Long>> activateInactivateOrg(long tenantId, String formName, boolean doActivate) {
         Map<String, List<Long>> childIds = new HashMap<>();
         childIds = getChildOrganizations(tenantId, formName);

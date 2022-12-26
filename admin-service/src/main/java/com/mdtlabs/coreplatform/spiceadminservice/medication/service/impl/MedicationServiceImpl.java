@@ -150,9 +150,14 @@ public class MedicationServiceImpl implements MedicationService {
     /**
      * {@inheritDoc}
      */
-    public Boolean deleteMedicationById(RequestDTO requestDto) {
-        return (1 == medicationRepository.updateMedicationById(Constants.BOOLEAN_TRUE, requestDto.getId(),
-                requestDto.getTenantId()));
+    public Boolean deleteMedicationById(RequestDTO requestDTO) {
+    	if (Objects.isNull(requestDTO.getId()) || Objects.isNull(requestDTO.getTenantId())) {
+			throw new DataNotAcceptableException(12012);
+		}
+    	Medication medication = getMedicationById(requestDTO);
+    	medication.setDeleted(Constants.BOOLEAN_TRUE);
+    	
+        return (null != medicationRepository.save(medication));
     }
 
     /**

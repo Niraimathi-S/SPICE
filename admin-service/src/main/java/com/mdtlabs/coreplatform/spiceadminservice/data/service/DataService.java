@@ -177,5 +177,13 @@ public interface DataService {
 	 * @param requestDto - request dto
 	 * @return boolean - true or false
 	 */
-	Boolean deleteRegionAdmin(CommonRequestDTO requestDto);
+	Boolean deleteRegionAdmin(CommonRequestDTO requestDTO);
+
+	/**
+	 * To get all active countries.
+	 * 
+	 * @param isActive - isactive status
+	 * @return List of country entities.
+	 */
+	List<Country> getAllCountries(Boolean isActive);
 }

@@ -150,5 +150,12 @@ public interface OrganizationService {
 	 */
 	Map<String, List<Long>> activateInactivateOrg(long tenantId, String formName, boolean doActivate);
 
+	/**
+	 * To validate parent organization .
+	 * 
+	 * @param parentOrganizationId - parent organization Id
+	 * @param tenantIds - List of tenant ids
+	 */
+	void validateParentOrganization(Long parentOrganizationId, List<Long> tenantIds);
 
 }

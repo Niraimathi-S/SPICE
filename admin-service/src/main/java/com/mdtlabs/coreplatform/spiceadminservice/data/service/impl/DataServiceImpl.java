@@ -12,9 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -156,9 +154,7 @@ public class DataServiceImpl implements DataService {
 	 */
 	@Override
 	public List<Country> getAllCountries(RequestDTO requestObject) {
-		int pageNumber = 0 != requestObject.getPageNumber() ? requestObject.getPageNumber() : 0;
-		int limit = 0 != requestObject.getLimit() ? requestObject.getLimit() : 10;
-		Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(FieldConstants.NAME).ascending());
+		Pageable pageable = Pagination.setPagination(requestObject.getSkip(), requestObject.getLimit(), FieldConstants.NAME, Constants.BOOLEAN_TRUE);
 		Page<Country> countries;
 		if (!Objects.isNull(requestObject.getSearchTerm()) && 0 < requestObject.getSearchTerm().length()) {
 			String formattedSearchTerm = requestObject.getSearchTerm().replaceAll("[^a-zA-Z0-9]*", "");
@@ -331,8 +327,8 @@ public class DataServiceImpl implements DataService {
 				countryListDto.setName(country.getName());
 				countryListDto.setTenantId(country.getTenantId());
 				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
-					UserSelectedTenantContextHolder.get(), UserSelectedTenantContextHolder.get(),
-					Constants.COUNTRY);
+						UserSelectedTenantContextHolder.get(), country.getTenantId(),
+						Constants.COUNTRY);
 				countryListDto.setAccountsCount(childOrgList.get("accountIds").size());
 				countryListDto.setOUCount(childOrgList.get("operatingUnitIds").size());
 				countryListDto.setSiteCount(childOrgList.get("siteIds").size());
@@ -397,5 +393,14 @@ public class DataServiceImpl implements DataService {
 			isUserDeleted = response.getBody();
 		}
 		return isUserDeleted;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<Country> getAllCountries(Boolean isActive) {
+		List<Country> countries = new ArrayList<>();
+		countries = countryRepository.findByIsActive(isActive);
+		return countries;
 	}
 }

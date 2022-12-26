@@ -1,6 +1,7 @@
 package com.mdtlabs.coreplatform.spiceadminservice.data.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -146,5 +147,13 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	* @return Number of countries.
 	*/
 	int countByIsDeletedFalse();
+
+	/**
+	 * To find Active countries.
+	 * 
+	 * @param isActive - isActive status
+	 * @return List of Country Entities
+	 */
+	List<Country> findByIsActive(Boolean isActive);
 
 }

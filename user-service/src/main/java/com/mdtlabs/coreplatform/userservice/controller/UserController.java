@@ -283,5 +283,17 @@ public class UserController {
 	public ResponseEntity<String> validateSession() {
 		return ResponseEntity.ok().body(Constants.SESSSION_ALIVE);
 	}
+	
+	/**
+	 * Validates a user by its username and return it if exists.
+	 * 
+	 * @param email username 
+	 * @return User entity.
+	 */
+	@PostMapping("/validate-user")
+	public SuccessResponse<UserDTO> validateUsers(@RequestBody Map<String, String> email) {
+		return new SuccessResponse<>(SuccessCode.GET_USER, userService.validateUser(email),
+				HttpStatus.OK);
+	}
 
 }

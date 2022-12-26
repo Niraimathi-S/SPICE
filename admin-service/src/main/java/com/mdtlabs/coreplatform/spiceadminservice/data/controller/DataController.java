@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
@@ -318,6 +319,21 @@ public class DataController {
 	public SuccessResponse<User> removeRegionAdmin(@RequestBody CommonRequestDTO requestDto) {
 		dataService.deleteRegionAdmin(requestDto);
         return new SuccessResponse<>(SuccessCode.REGION_ADMIN_DELETE, HttpStatus.OK);
+	}
+	
+	/**
+	 * Gets all countries.
+	 *
+	 * @param requestDTO
+	 * @return
+	 * @author Niraimathi S
+	 */
+	@RequestMapping(value = "/countries", method = RequestMethod.GET)
+	public SuccessResponse<List<Country>> getCountries(@RequestParam Boolean isActive ) {
+		SpiceLogger.logInfo("Getting All Country Details");
+		List<Country> countries = dataService.getAllCountries(isActive);
+
+		return new SuccessResponse<List<Country>>(SuccessCode.GET_COUNTRIES, countries, 0, HttpStatus.OK);
 	}
 
 }

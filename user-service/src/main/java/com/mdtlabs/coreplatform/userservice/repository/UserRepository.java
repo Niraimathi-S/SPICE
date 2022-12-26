@@ -122,4 +122,12 @@ public interface UserRepository extends JpaRepository<User, Long>, PagingAndSort
 	 */
 	public User findByIdAndIsActiveTrue(Long userId);
 
+	/**
+	 * Validates a user by its username and return it if exists.
+	 * 
+	 * @param email username 
+	 * @return User entity.
+	 */
+	public User findByUsernameIgnoreCaseAndIsDeletedFalse(String email);
+
 }
