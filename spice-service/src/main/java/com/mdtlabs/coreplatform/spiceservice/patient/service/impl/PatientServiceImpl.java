@@ -366,7 +366,7 @@ public class PatientServiceImpl implements PatientService {
 	private GlucoseLog constructGlucoseLogData(EnrollmentRequestDTO data) {
 		GlucoseLog glucoseLog = data.getGlucoseLog();
 		if (!Objects.isNull(glucoseLog)
-				&& (!Objects.isNull(glucoseLog.getGlucoseValue()) || !Objects.isNull(glucoseLog.getHb1ac()))) {
+				&& (!Objects.isNull(glucoseLog.getGlucoseValue()) || !Objects.isNull(glucoseLog.getHba1c()))) {
 			if (!Objects.isNull(glucoseLog.getGlocoseLogId())) {
 				glucoseLog.setId(glucoseLog.getGlocoseLogId());
 				glucoseLog.setUpdatedFromEnrollment(Constants.BOOLEAN_TRUE);

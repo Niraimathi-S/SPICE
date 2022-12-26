@@ -31,40 +31,37 @@ import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 @Validated
 public class BpLogController {
 
-    @Autowired
-    BpLogService bpLogService;
-     
-    /**
-     * This method is used to add a new Bp log.
-     *
-     * @param bpLog
-     * @return BpLog Entity.
-     * @author Karthick Murugesan
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public SuccessResponse<Map<String, Object>> addBpLog(@Valid @RequestBody BpLog bpLog) {
-        BpLog bpLogResponse = bpLogService.addBpLog(bpLog, Constants.BOOLEAN_TRUE);
-        return new SuccessResponse<Map<String, Object>>(
-                SuccessCode.BP_LOG_SAVE,
-                Map.of("avg_systolic", bpLogResponse.getAvgSystolic(), "avg_diastolic", bpLogResponse.getAvgDiastolic(), "bmi", bpLogResponse.getBmi()),
-                HttpStatus.CREATED
-        );
-    }
+	@Autowired
+	BpLogService bpLogService;
 
-    /**
-     * This method is used to fetch bp logs using patient tracker id
-     *
-     * @param patientBpLogsRequestDto
-     * @return PatientBpLogsDto Entity
-     * @author Victor Jefferson
-     */
-    @RequestMapping(value = "/patient-bpLogsList", method = RequestMethod.POST)
-    public SuccessResponse<PatientBpLogsDTO> getBpLogsByPatientTrackId(@RequestBody RequestDTO patientBpLogsRequestDto) {
-        return new SuccessResponse<PatientBpLogsDTO>(
-                SuccessCode.GET_BP_LOG_LIST,
-                bpLogService.getPatientBPLogsWithSymptoms(patientBpLogsRequestDto),
-                HttpStatus.OK
-        );
-    }
-    
+	/**
+	 * This method is used to add a new Bp log.
+	 *
+	 * @param bpLog
+	 * @return BpLog Entity.
+	 * @author Karthick Murugesan
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public SuccessResponse<Map<String, Object>> addBpLog(@Valid @RequestBody BpLog bpLog) {
+		BpLog bpLogResponse = bpLogService.addBpLog(bpLog, Constants.BOOLEAN_TRUE);
+		return new SuccessResponse<Map<String, Object>>(SuccessCode.BP_LOG_SAVE,
+				Map.of("avg_systolic", bpLogResponse.getAvgSystolic(), "avg_diastolic", bpLogResponse.getAvgDiastolic(),
+						"bmi", bpLogResponse.getBmi()),
+				HttpStatus.CREATED);
+	}
+
+	/**
+	 * This method is used to fetch bp logs using patient tracker id
+	 *
+	 * @param patientBpLogsRequestDto
+	 * @return PatientBpLogsDto Entity
+	 * @author Victor Jefferson
+	 */
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public SuccessResponse<PatientBpLogsDTO> getBpLogsByPatientTrackId(
+			@RequestBody RequestDTO patientBpLogsRequestDto) {
+		return new SuccessResponse<PatientBpLogsDTO>(SuccessCode.GET_BP_LOG_LIST,
+				bpLogService.getPatientBPLogsWithSymptoms(patientBpLogsRequestDto), HttpStatus.OK);
+	}
+
 }

@@ -163,7 +163,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 			Long glucoseId = null;
 			if (!Objects.isNull(assessmentDTO.getGlucoseLog())
 					&& (!Objects.isNull(assessmentDTO.getGlucoseLog().getGlucoseValue())
-							|| !Objects.isNull(assessmentDTO.getGlucoseLog().getHb1ac()))) {
+							|| !Objects.isNull(assessmentDTO.getGlucoseLog().getHba1c()))) {
 				GlucoseLog glucoseLog = constructGlucoseLog(assessmentDTO);
 
 				glucoseLog = glucoseLogService.addGlucoseLog(glucoseLog, Constants.BOOLEAN_FALSE);
@@ -491,7 +491,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 				assessmentDTO.setBpLog(bpLog);
 				String riskLevel = calculateRiskLevel(assessmentDTO, patientTracker);
 				bpLog.setRiskLevel(RedRiskService.convertRiskLevelToBPRiskLevel(riskLevel));
-				bpLog.setRedRiskPatient(Constants.BOOLEAN_TRUE);
+//				bpLog.setRedRiskPatient(Constants.BOOLEAN_TRUE);
 				bpLog = bpLogService.addBpLog(bpLog, Constants.BOOLEAN_TRUE);
 				if (riskLevel.equals(Constants.HIGH)) {
 					addRedRiskNotification(patientTracker, existingBpLog.getId(), null, null);

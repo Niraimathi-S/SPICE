@@ -32,8 +32,11 @@ public interface BpLogRepository extends JpaRepository<BpLog, Long> {
 
 	public static final String UPDATE_BP_LOG_LATEST_STATUS = "update BpLog as bplog set bplog.isLatest=:isLatest where bplog.patientTrackId=:patientTrackId";
 
-	static final String GET_BP_LOGS = "Select * from bplog where patient_track_id=:patientTrackId and "
-			+ "is_deleted=false order by modified_at DESC";
+	static final String GET_BP_LOGS = "Select * from bp_log where patient_track_id=:patientTrackId and "
+			+ "is_deleted=false order by updated_at DESC";
+
+	static final String GET_BP_LOGS_COUNT = "Select count(*) from bp_log where patient_track_id=:patientTrackId and "
+	+ "is_deleted=false";  
 
 	/**
 	 * Find Bplog by patientTracker and isDeleted and isLatest
@@ -91,4 +94,11 @@ public interface BpLogRepository extends JpaRepository<BpLog, Long> {
 
 	public BpLog findFirstByPatientTrackIdAndIsDeletedOrderByBpTakenOnDesc(long patientTrackId, Boolean booleanFalse);
 
+	/**
+	 * Gets Bplog count based on bplogId
+	 *
+	 * @param id       PatientTrackId
+	 */
+	@Query(value = GET_BP_LOGS_COUNT, nativeQuery = true)
+	public Integer totalBpLogCount(@Param("patientTrackId") Long id);
 }

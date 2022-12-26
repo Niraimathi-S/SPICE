@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
+import com.mdtlabs.coreplatform.common.model.dto.spice.GlucoseLogDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.PatientGlucoseLogDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.spice.GlucoseLog;
@@ -32,148 +34,166 @@ import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.Patien
 /**
  * This class implements the GlucoseLogService interface and contains actual
  * business logic to perform operations on GlucoseLog entity.
- * 
- * @author Karthick Murugesan
  *
+ * @author Karthick Murugesan
  */
 @Service
 public class GlucoseLogServiceImpl implements GlucoseLogService {
 
-	@Autowired
-	private GlucoseLogRepository glucoseLogRepository;
+    @Autowired
+    private GlucoseLogRepository glucoseLogRepository;
 
-	@Autowired
-	private PatientTrackerService patientTrackerService;
+    @Autowired
+    private PatientTrackerService patientTrackerService;
 
-	@Autowired
-	private PatientSymptomService patientSymptomService;
+    @Autowired
+    private PatientSymptomService patientSymptomService;
 
-	@Autowired
-	private PatientTreatmentPlanService patientTreatmentPlanService;
+    @Autowired
+    private PatientTreatmentPlanService patientTreatmentPlanService;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public GlucoseLog addGlucoseLog(GlucoseLog glucoseLog, boolean isPatientTrackerUpdate) {
+    /**
+     * {@inheritDoc}
+     */
+    public GlucoseLog addGlucoseLog(GlucoseLog glucoseLog, boolean isPatientTrackerUpdate) {
 
-		if (Objects.isNull(glucoseLog)) {
-			throw new BadRequestException(1000);
-		} else {
-			if (!Objects.isNull(glucoseLog.getGlucoseValue()) || !Objects.isNull(glucoseLog.getGlucoseType())
-					|| !Objects.isNull(glucoseLog.getGlucoseDateTime())
-					|| !Objects.isNull(glucoseLog.getLastMealTime())) {
-				validateGlucoseLog(glucoseLog);
-			}
-			if (Objects.isNull(glucoseLog.getId())) {
-				updateGlucoseLogLatestStatus(glucoseLog);
-			}
+        if (Objects.isNull(glucoseLog)) {
+            throw new BadRequestException(1000);
+        } else {
+            if (!Objects.isNull(glucoseLog.getGlucoseValue()) || !Objects.isNull(glucoseLog.getGlucoseType())
+                    || !Objects.isNull(glucoseLog.getGlucoseDateTime())
+                    || !Objects.isNull(glucoseLog.getLastMealTime())) {
+                validateGlucoseLog(glucoseLog);
+            }
+            if (Objects.isNull(glucoseLog.getId())) {
+                updateGlucoseLogLatestStatus(glucoseLog);
+            }
 
-			// Need to set assessment tenant id from user tenantid
+            // Need to set assessment tenant id from user tenantid
 
-			glucoseLog.setLatest(Constants.BOOLEAN_TRUE);
-			if (Objects.isNull(glucoseLog.getBgTakenOn())) {
-				glucoseLog.setBgTakenOn(new Date());
-			}
-			GlucoseLog glucoseLogResponse = glucoseLogRepository.save(glucoseLog);
+            glucoseLog.setLatest(Constants.BOOLEAN_TRUE);
+            if (Objects.isNull(glucoseLog.getBgTakenOn())) {
+                glucoseLog.setBgTakenOn(new Date());
+            }
+            GlucoseLog glucoseLogResponse = glucoseLogRepository.save(glucoseLog);
 
-			if (isPatientTrackerUpdate) {
-				PatientTreatmentPlan patientTreatmentPlan = patientTreatmentPlanService
-						.getPatientTreatmentPlan(glucoseLog.getPatientTrackId());
-				Date nextBGAssessmentDate = null;
-				if (!Objects.isNull(patientTreatmentPlan)) {
-					nextBGAssessmentDate = patientTreatmentPlanService.getTreatmentPlanFollowupDate(
-							patientTreatmentPlan.getBgCheckFrequency(), Constants.DEFAULT);
-					// Note: There is no next bg assessment date for frequency name - pysician
-					// approval pending status
-				}
-				patientTrackerService.UpdatePatientTrackerForGlucoseLog(glucoseLog.getPatientTrackId(), glucoseLog,
-						nextBGAssessmentDate);
-			}
-			return glucoseLogResponse;
-		}
-	}
+            if (isPatientTrackerUpdate) {
+                PatientTreatmentPlan patientTreatmentPlan = patientTreatmentPlanService
+                        .getPatientTreatmentPlan(glucoseLog.getPatientTrackId());
+                Date nextBGAssessmentDate = null;
+                if (!Objects.isNull(patientTreatmentPlan)) {
+                    nextBGAssessmentDate = patientTreatmentPlanService.getTreatmentPlanFollowupDate(
+                            patientTreatmentPlan.getBgCheckFrequency(), Constants.DEFAULT);
+                    // Note: There is no next bg assessment date for frequency name - pysician
+                    // approval pending status
+                }
+                patientTrackerService.UpdatePatientTrackerForGlucoseLog(glucoseLog.getPatientTrackId(), glucoseLog,
+                        nextBGAssessmentDate);
+            }
+            return glucoseLogResponse;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void validateGlucoseLog(GlucoseLog glucoseLog) {
-		if (Objects.isNull(glucoseLog.getGlucoseValue()) || Objects.isNull(glucoseLog.getGlucoseType())
-				|| Objects.isNull(glucoseLog.getGlucoseDateTime()) || Objects.isNull(glucoseLog.getGlucoseUnit())) {
-			throw new BadRequestException(7005);
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public void validateGlucoseLog(GlucoseLog glucoseLog) {
+        if (Objects.isNull(glucoseLog.getGlucoseValue()) || Objects.isNull(glucoseLog.getGlucoseType())
+                || Objects.isNull(glucoseLog.getGlucoseDateTime()) || Objects.isNull(glucoseLog.getGlucoseUnit())) {
+            throw new BadRequestException(7005);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void updateGlucoseLogLatestStatus(GlucoseLog glucoseLog) {
-		glucoseLogRepository.updateGlucoseLogLatestStatus(glucoseLog.getPatientTrackId(), false);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public void updateGlucoseLogLatestStatus(GlucoseLog glucoseLog) {
+        glucoseLogRepository.updateGlucoseLogLatestStatus(glucoseLog.getPatientTrackId(), false);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public GlucoseLog getGlucoseLogById(long glucoseLogId) {
-		GlucoseLog glucoseLog = glucoseLogRepository.findById(glucoseLogId).get();
-		if (Objects.isNull(glucoseLog)) {
-			throw new DataNotFoundException(7004);
-		}
-		return glucoseLog;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public GlucoseLog getGlucoseLogById(long glucoseLogId) {
+        GlucoseLog glucoseLog = glucoseLogRepository.findById(glucoseLogId).get();
+        if (Objects.isNull(glucoseLog)) {
+            throw new DataNotFoundException(7004);
+        }
+        return glucoseLog;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public GlucoseLog getGlucoseLogByPatientTrackId(long patientTrackId) {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, -1);
-		Date yesterday = cal.getTime();
-		GlucoseLog glucoseLog = glucoseLogRepository.findByPatientTrackIdAndIsCreatedToday(patientTrackId, yesterday);
-		if (null == glucoseLog) {
-			return null;
-		}
-		return glucoseLog;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public GlucoseLog getGlucoseLogByPatientTrackId(long patientTrackId) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        Date yesterday = cal.getTime();
+        GlucoseLog glucoseLog = glucoseLogRepository.findByPatientTrackIdAndIsCreatedToday(patientTrackId, yesterday);
+        if (null == glucoseLog) {
+            return null;
+        }
+        return glucoseLog;
+    }
 
-	public GlucoseLog getGlucoseLogByPatientTrackIdAndIsLatest(long patientTrackId, boolean isLatest) {
-		return glucoseLogRepository.findByPatientTrackIdAndIsDeletedAndIsLatest(patientTrackId, Constants.BOOLEAN_FALSE,
-				isLatest);
-	}
+    public GlucoseLog getGlucoseLogByPatientTrackIdAndIsLatest(long patientTrackId, boolean isLatest) {
+        return glucoseLogRepository.findByPatientTrackIdAndIsDeletedAndIsLatest(patientTrackId, Constants.BOOLEAN_FALSE,
+                isLatest);
+    }
 
-	public PatientGlucoseLogDTO getPatientGlucoseLogsWithSymptoms(RequestDTO requestData) {
-		PatientGlucoseLogDTO glucoseLogsDTO = new PatientGlucoseLogDTO();
-		if (Objects.isNull(requestData.getPatientTrackId())) {
-			throw new DataNotAcceptableException(10010);
-		}
-		Pageable pageable = Pagination.setPagination(requestData.getPageNumber(), requestData.getLimit());
-		Page<GlucoseLog> glucoseLogs = glucoseLogRepository.getGlucoseLogs(requestData.getPatientTrackId(), pageable);
+    public PatientGlucoseLogDTO getPatientGlucoseLogsWithSymptoms(RequestDTO requestData) {
+        PatientGlucoseLogDTO glucoseLogsDTO = new PatientGlucoseLogDTO();
+        if (Objects.isNull(requestData.getPatientTrackId())) {
+            throw new DataNotAcceptableException(10010);
+        }
+        Pageable pageable = Pagination.setPagination(requestData.getSkip(), requestData.getLimit());
+        Page<GlucoseLog> glucoseLogs = glucoseLogRepository.getGlucoseLogs(requestData.getPatientTrackId(), pageable);
 
-		if (!glucoseLogs.isEmpty() && requestData.isLatestRequired()) {
-			glucoseLogsDTO.setLatestGlucoseLog(glucoseLogs.toList().get(0));
-			List<PatientSymptom> patientSymptoms = patientSymptomService
-					.getSymptomsByPatientTracker(requestData.getPatientTrackId());
-			List<String> names = patientSymptoms.stream()
-					.map(symptom -> !Objects.isNull(symptom.getOtherSymptom()) ? symptom.getOtherSymptom()
-							: symptom.getName())
-					.collect(Collectors.toList());
-			glucoseLogsDTO.setSymptomList(names);
-		}
-		if (!Objects.isNull(requestData.getSort())) {
-			if (requestData.getSort().keySet().contains(FieldConstants.CREATED_AT)) {
-				// Sort by patient bplog data to ascending order
-				List<GlucoseLog> glucoseLogList = glucoseLogs.stream().sorted(
-						(glucoselog1, glucoselog2) -> glucoselog1.getCreatedAt().compareTo(glucoselog2.getCreatedAt()))
-						.collect(Collectors.toList());
-				glucoseLogsDTO.setGlucoseLogList(glucoseLogList);
-			}
-		} else {
-			System.out.println("in else block");
-			glucoseLogsDTO.setGlucoseLogList(glucoseLogs.toList());
-		}
+        if (!glucoseLogs.isEmpty() && requestData.isLatestRequired() && requestData.getSkip() == 0) {
+            GlucoseLog latestGlucoseLog = glucoseLogs.toList().get(0);
+            glucoseLogsDTO.setTotal(glucoseLogRepository.totalGlucoseLogCount(requestData.getPatientTrackId()));
+            glucoseLogsDTO.setLatestGlucoseLog(new GlucoseLogDTO(latestGlucoseLog.getId(), latestGlucoseLog.getHba1c(), latestGlucoseLog.getHba1cUnit(), latestGlucoseLog.getGlucoseType(), latestGlucoseLog.getGlucoseValue()
+                    , latestGlucoseLog.getGlucoseDateTime(), latestGlucoseLog.getGlucoseUnit(), latestGlucoseLog.getCreatedAt()));
+            // glucoseLogs.toList().get(0));
+            List<PatientSymptom> patientSymptoms = patientSymptomService
+                    .getSymptomsByPatientTracker(requestData.getPatientTrackId());
+            List<String> names = patientSymptoms.stream()
+                    .map(symptom -> !Objects.isNull(symptom.getOtherSymptom()) ? symptom.getOtherSymptom()
+                            : symptom.getName())
+                    .collect(Collectors.toList());
+            glucoseLogsDTO.getLatestGlucoseLog().setSymptomList(names);
+        }
+        if (!Objects.isNull(requestData.getSort())) {
+            if (requestData.getSort().keySet().contains(FieldConstants.CREATED_AT)) {
+                // Sort by patient bplog data to ascending order
+                List<GlucoseLog> glucoseLogList = glucoseLogs.stream().sorted(
+                                (glucoselog1, glucoselog2) -> glucoselog1.getCreatedAt().compareTo(glucoselog2.getCreatedAt()))
+                        .collect(Collectors.toList());
+                glucoseLogsDTO.setGlucoseLogList(glucoseLogList.stream().map(
+                        glucoselog -> new GlucoseLogDTO(glucoselog.getId(), glucoselog.getHba1c(), glucoselog.getHba1cUnit(), glucoselog.getGlucoseType(), glucoselog.getGlucoseValue()
+                                , glucoselog.getGlucoseDateTime(), glucoselog.getGlucoseUnit(), glucoselog.getCreatedAt())
+                ).collect(Collectors.toList()));
+            }
+        } else {
+            System.out.println("in else block");
+            glucoseLogsDTO.setGlucoseLogList(glucoseLogs.toList().stream().map(
+                    glucoselog -> new GlucoseLogDTO(glucoselog.getId(), glucoselog.getHba1c(), glucoselog.getHba1cUnit(), glucoselog.getGlucoseType(), glucoselog.getGlucoseValue()
+                            , glucoselog.getGlucoseDateTime(), glucoselog.getGlucoseUnit(), glucoselog.getCreatedAt())
+            ).collect(Collectors.toList()));
+        }
+        glucoseLogsDTO.setLimit(requestData.getLimit());
+        glucoseLogsDTO.setSkip(requestData.getSkip());
+//		glucoseLogsDTO.setGlucoseThreshold(Map.of(Constants.FBS, Constants.FBS_MMOL_L, Constants.RBS,
+//				Constants.RBS_MMOL_L, Constants.UNIT, Constants.GLUCOSE_UNIT_MMOL_L));
+        List<Map<String, Object>> thresholds = new ArrayList<>();
+        thresholds.add(Map.of(Constants.FBS, Constants.FBS_MMOL_L, Constants.RBS,
+                Constants.RBS_MMOL_L, Constants.UNIT, Constants.GLUCOSE_UNIT_MMOL_L));
+        thresholds.add(Map.of(Constants.FBS, Constants.FBS_MG_DL, Constants.RBS,
+                Constants.RBS_MG_DL, Constants.UNIT, Constants.GLUCOSE_UNIT_MG_DL));
 
-		glucoseLogsDTO.setGlucoseThreshold(Map.of(Constants.FBS, Constants.FBS_MMOL_L, Constants.RBS,
-				Constants.RBS_MMOL_L, Constants.UNIT, Constants.GLUCOSE_UNIT_MMOL_L));
-		return glucoseLogsDTO;
-	}
+        glucoseLogsDTO.setGlucoseThreshold(thresholds);
+
+        return glucoseLogsDTO;
+    }
 
 }

@@ -35,8 +35,11 @@ public interface GlucoseLogRepository extends JpaRepository<GlucoseLog, Long> {
     "update GlucoseLog as glucoselog set glucoselog.isLatest=:isLatest where glucoselog.id=:id";
 
     public static final String GET_GLUCOSE_LOGS = 
-    "Select * from glucoselog where patient_track_id=:patientTrackId and " +
-	"is_deleted=false order by modified_at DESC";
+    "Select * from glucose_log where patient_track_id=:patientTrackId and " +
+	"is_deleted=false order by updated_at DESC";
+
+    public static final String GET_GLUCOSE_LOG_COUNT = "Select count(*) from glucose_log where patient_track_id=:patientTrackId and " +
+	"is_deleted=false";
 
     /**
      * This method fetches a single Glucose log by patient track id.
@@ -78,4 +81,12 @@ public interface GlucoseLogRepository extends JpaRepository<GlucoseLog, Long> {
 
 	public GlucoseLog findFirstByPatientTrackIdAndIsDeletedOrderByBgTakenOnDesc(Long patientTrackId,
 			Boolean booleanFalse);
+
+    /**
+	 * Gets glucoselog count based on glucoselogId
+	 *
+     * @param id PatientTrackId
+	 */
+	@Query(value = GET_GLUCOSE_LOG_COUNT, nativeQuery = true)
+	public Integer totalGlucoseLogCount(@Param("patientTrackId") Long id);
 }

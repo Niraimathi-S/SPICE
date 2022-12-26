@@ -57,7 +57,7 @@ public class GlucoseLogController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public SuccessResponse<GlucoseLog> getGlucoseLogById(@PathVariable(value = FieldConstants.ID) long glucoseLogId) {
         return new SuccessResponse<GlucoseLog>(
-                SuccessCode.GET_GLUCOSE_LOG,
+                SuccessCode.GET_GLUCOSE_LOG_LIST,
                 glucoseLogService.getGlucoseLogById(glucoseLogId),
                 HttpStatus.OK
         );
@@ -70,10 +70,10 @@ public class GlucoseLogController {
      * @return PatientBpLogsDto Entity
      * @author Victor Jefferson
      */
-    @RequestMapping(value = "/patient-glucoseLogsList", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     public SuccessResponse<PatientGlucoseLogDTO> getBpLogsByPatientTrackId(@RequestBody RequestDTO patientBpLogsRequestDto) {
         return new SuccessResponse<PatientGlucoseLogDTO>(
-                SuccessCode.GET_BP_LOG_LIST,
+                SuccessCode.GET_GLUCOSE_LOG_LIST,
                 glucoseLogService.getPatientGlucoseLogsWithSymptoms(patientBpLogsRequestDto),
                 HttpStatus.OK
         );
