@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -38,8 +39,9 @@ public class Account extends TenantBaseEntity {
 	private boolean isUsersRestricted;
 	
 	@NotNull(message = ErrorConstants.COUNTRY_ID_NOT_NULL)
-	@Column(name = FieldConstants.COUNTRY_ID)
-	private Long countryId;
+	@ManyToOne
+	@JoinColumn(name = FieldConstants.COUNTRY_ID)
+	private Country country;
 
 	@NotNull(message = ErrorConstants.CLINICAL_WORKFLOW_NOT_NULL)
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -13,6 +13,8 @@ public class PaginateDTO {
 	private int limit;
 
 	private int pageNumber;
+	
+	private int skip;
 
 	private Map<String, String> sort;
 }

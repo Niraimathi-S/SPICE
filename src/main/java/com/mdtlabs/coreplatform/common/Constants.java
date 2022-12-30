@@ -3,6 +3,9 @@ package com.mdtlabs.coreplatform.common;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.domain.Sort.Order;
+
 import java.util.HashMap;
 
 /**
@@ -91,7 +94,7 @@ public final class Constants {
 	public static final String LOG_PREFIX_RESPONSE = "|<";
 	public static final String SPLIT_CONTENT = "\r\n|\r|\n";
 	public static final String BEARER = "Bearer ";
-	public static final long AUTH_TOKEN_EXPIRY_MINUTES = 15; // 30
+	public static final long AUTH_TOKEN_EXPIRY_MINUTES = 60; // 30
 	public static final long REFRESH_TOKEN_EXPIRY_HOURS = 30; // 8
 	public static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 	public static final String MESSAGE = "message";
@@ -378,6 +381,8 @@ public final class Constants {
 	public static final String ROLE_SYSTEM_ADMIN = "SYSTEM_ADMIN";
 	public static final String ROLE_SUPER_USER = "SUPER_USER";
 	public static final Map<String, String> SPICE_WEB_ROLES = new HashMap<>();
+	public static final String UPDATED_AT = "updatedAt";
+	public static final String COUNTRY_ID = "countryId";
 	
 	static {
 		SPICE_WEB_ROLES.put(ROLE_ACCOUNT_ADMIN, ROLE_ACCOUNT_ADMIN);

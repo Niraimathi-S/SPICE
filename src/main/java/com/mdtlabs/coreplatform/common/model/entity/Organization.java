@@ -20,6 +20,16 @@ import lombok.Data;
 @Table(name = "organization")
 public class Organization extends TenantBaseEntity {
 
+	public Organization(String formName, String name, Long parentOrganizationId) {
+		super();
+		this.formName = formName;
+		this.name = name;
+		this.parentOrganizationId = parentOrganizationId;
+	}
+
+	public Organization() {
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = FieldConstants.FORM_DATA_ID)

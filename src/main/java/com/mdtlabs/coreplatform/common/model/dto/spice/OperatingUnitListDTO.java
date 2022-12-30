@@ -10,6 +10,12 @@ import lombok.Data;
  */
 @Data
 public class OperatingUnitListDTO {
+	public OperatingUnitListDTO(long id, String name, Long tenantId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.tenantId = tenantId;
+	}
 	private long id;
 	private String name;
 	private int siteCount;

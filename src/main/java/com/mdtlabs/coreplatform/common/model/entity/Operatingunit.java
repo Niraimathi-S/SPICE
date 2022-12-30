@@ -2,6 +2,8 @@ package com.mdtlabs.coreplatform.common.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -24,7 +26,8 @@ public class Operatingunit extends BaseEntity {
 	@Column(name = FieldConstants.NAME, unique = true)
 	private String name;
 
-	@Column(name = FieldConstants.ACCOUNT_ID)
+	@ManyToOne
+	@JoinColumn(name = FieldConstants.ACCOUNT_ID)
 	private Long accountId;
 
 	@Column(name = FieldConstants.COUNTRY_ID)
