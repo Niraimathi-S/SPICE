@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
@@ -47,6 +48,15 @@ public interface AccountService {
 	 */
 	public Account getAccountById(long id);
 
+	
+	/**
+	 * To get Account details along with account admin users.
+	 * 
+	 * @param id - account id
+	 * @return Account entity
+	 */
+	public AccountOrganizationDTO getAccountDetails(CommonRequestDTO requestDTO);
+	
 	/**
 	 * To activate or deactivate account by updating isActive column.
 	 *
@@ -115,5 +125,17 @@ public interface AccountService {
 	 * @return List(Account) - List of Account Entities
 	 * @author Niraimathi S
 	 */
-	public List<Account> getAllAccounts(SearchRequestDTO requestDto);
+	public Map<String, Object> getAllAccounts(SearchRequestDTO requestDto);
+
+	/**
+	 * To activate or deactivate list of accounts.
+	 * 
+	 * @param accounts - account list 
+	 * @param isActive - isActive value
+	 * @author Niraimathi S
+	 */
+	public void activateDeactivateAccountsList(List<Long> accounts, boolean isActive);
+	
+	public Integer getCountByCountryId(Long countryId);
+
 }

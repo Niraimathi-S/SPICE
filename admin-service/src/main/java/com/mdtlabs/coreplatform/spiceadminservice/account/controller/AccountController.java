@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
@@ -68,8 +70,7 @@ public class AccountController {
 	@PutMapping("/update")
 	public SuccessResponse<Account> updateAccount(@Valid @RequestBody Account account) {
 		accountService.updateAccount(account);
-		return new SuccessResponse<Account>(SuccessCode.ACCOUNT_UPDATE,
-				HttpStatus.OK);
+		return new SuccessResponse<Account>(SuccessCode.ACCOUNT_UPDATE, HttpStatus.OK);
 	}
 
 	/**
@@ -79,10 +80,10 @@ public class AccountController {
 	 * @return Account entity
 	 * @author Jeyaharini T A
 	 */
-	@GetMapping("/{id}")
-	public SuccessResponse<Account> getAccountById(@PathVariable("id") long id) {
-		return new SuccessResponse<Account>(SuccessCode.GET_ACCOUNT, 
-			accountService.getAccountById(id), HttpStatus.OK);
+	@PostMapping("/details")
+	public SuccessResponse<AccountOrganizationDTO> getAccountDetails(@RequestBody CommonRequestDTO requestDTO) {
+		return new SuccessResponse<AccountOrganizationDTO>(SuccessCode.GET_ACCOUNT,
+				accountService.getAccountDetails(requestDTO), HttpStatus.OK);
 	}
 
 	/**
@@ -114,7 +115,8 @@ public class AccountController {
 	/**
 	 * Gets all deactivated accounts.
 	 *
-	 * @param searchRequestDto Request object containing search term and pagination information to get accounts.
+	 * @param searchRequestDto Request object containing search term and pagination
+	 *                         information to get accounts.
 	 * @return List of Account entities
 	 * @author Jeyaharini T A
 	 */
@@ -122,13 +124,12 @@ public class AccountController {
 	public SuccessResponse<List<Account>> getAllDeactivedAccounts(@RequestBody SearchRequestDTO searchRequestDto) {
 		List<Account> deactivatedAccountsList = accountService.getDeactivatedAccounts(searchRequestDto);
 		if (!deactivatedAccountsList.isEmpty()) {
-			return new SuccessResponse<List<Account>>(SuccessCode.GET_DEACTIVATE_ACCOUNT,
-				deactivatedAccountsList, deactivatedAccountsList.size(), HttpStatus.OK);
+			return new SuccessResponse<List<Account>>(SuccessCode.GET_DEACTIVATE_ACCOUNT, deactivatedAccountsList,
+					deactivatedAccountsList.size(), HttpStatus.OK);
 		}
-		return new SuccessResponse<List<Account>>(SuccessCode.GET_DEACTIVATE_ACCOUNT, 
-			noDataList, 0, HttpStatus.OK);
+		return new SuccessResponse<List<Account>>(SuccessCode.GET_DEACTIVATE_ACCOUNT, noDataList, 0, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * To get an account by its Id.
 	 *
@@ -139,7 +140,7 @@ public class AccountController {
 	public Account getAccount(@PathVariable("id") long id) {
 		return accountService.getAccountById(id);
 	}
-	
+
 	/**
 	 * This method is used to clear the api permission role map.
 	 * 
@@ -152,77 +153,81 @@ public class AccountController {
 	/**
 	 * To get List of account details with child organization counts.
 	 *
-	 * @param requestDto - request data containing search term, pagination details, etc.,
+	 * @param requestDto - request data containing search term, pagination details,
+	 *                   etc.,
 	 * @return List(Account) - List of account Entities
 	 * @author Niraimathi S
 	 */
 	@PostMapping("/list")
 	public SuccessResponse<List<Account>> getAccountList(@RequestBody RequestDTO requestDto) {
 		Map<String, Object> response = accountService.getAccountList(requestDto);
-    	Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0 : 
-    		Integer.parseInt(response.get(Constants.COUNT).toString());
-    	if (0 == totalCount) {
-        	return new SuccessResponse<List<Account>>(SuccessCode.GET_ACCOUNT, 
-        		response.get(Constants.DATA), HttpStatus.OK);
+		Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0
+				: Integer.parseInt(response.get(Constants.COUNT).toString());
+		if (0 == totalCount) {
+			return new SuccessResponse<List<Account>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA),
+					HttpStatus.OK);
 		}
-    	return new SuccessResponse<List<Account>>(SuccessCode.GET_ACCOUNT,
-    		response.get(Constants.DATA), totalCount, HttpStatus.OK);
+		return new SuccessResponse<List<Account>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA), totalCount,
+				HttpStatus.OK);
 	}
-	
+
 	/**
-	* To get list of accounts details.
-	*
-	* @param requestDto - request data 
-	* @return List(Account) - List of Account Entities
-	* @author Niraimathi S
- 	*/
-    @GetMapping("account-list")
-	public SuccessResponse<List<Account>> getAllAccounts(@RequestBody SearchRequestDTO requestDto) {
-		List<Account> accountList = accountService.getAllAccounts(requestDto);
-		if (!accountList.isEmpty()) {
-			return new SuccessResponse<List<Account>>(SuccessCode.GET_ACCOUNT,
-				accountList, accountList.size(), HttpStatus.OK);
+	 * To get list of accounts details.
+	 *
+	 * @param requestDto - request data
+	 * @return List(Account) - List of Account Entities
+	 * @author Niraimathi S
+	 */
+	@PostMapping("/account-list")
+	public SuccessResponse<List<AccountDTO>> getAllAccounts(@RequestBody SearchRequestDTO requestDto) {
+		Map<String, Object> response = accountService.getAllAccounts(requestDto);
+		Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0
+				: Integer.parseInt(response.get(Constants.COUNT).toString());
+		if (0 == totalCount) {
+			return new SuccessResponse<List<AccountDTO>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA),
+					HttpStatus.OK);
 		}
-		return new SuccessResponse<List<Account>>(SuccessCode.GET_ACCOUNT, noDataList, 0, HttpStatus.OK);
+		return new SuccessResponse<List<AccountDTO>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA), totalCount,
+				HttpStatus.OK);
 
 	}
-	
+
 	/**
-	* To add account admin user.
-	*
-	* @param user - account admin user details
-	* @return User - User entity
-	* @author Niraimathi S
-	*/
+	 * To add account admin user.
+	 *
+	 * @param user - account admin user details
+	 * @return User - User entity
+	 * @author Niraimathi S
+	 */
 	@PostMapping(value = "/add-user")
 	public SuccessResponse<User> addAccountAdmin(@RequestBody @Valid User user) {
 		accountService.addAccountAdmin(user);
-        return new SuccessResponse<>(SuccessCode.REGION_ADMIN_SAVE, HttpStatus.CREATED);
+		return new SuccessResponse<>(SuccessCode.REGION_ADMIN_SAVE, HttpStatus.CREATED);
 	}
-	
+
 	/**
-	* To update account admin user.
-	*
-	* @param user - updated user details
-	* @return User - user entity
-	* @author Niraimathi S
-	*/
+	 * To update account admin user.
+	 *
+	 * @param user - updated user details
+	 * @return User - user entity
+	 * @author Niraimathi S
+	 */
 	@PutMapping(value = "/update-user")
 	public SuccessResponse<User> updateAccountAdmin(@RequestBody @Valid User user) {
 		accountService.updateAccountAdmin(user);
-        return new SuccessResponse<>(SuccessCode.REGION_ADMIN_UPDATE, HttpStatus.OK);
+		return new SuccessResponse<>(SuccessCode.REGION_ADMIN_UPDATE, HttpStatus.OK);
 	}
-	
+
 	/**
-	* To delete account admin user.
-	*
-	* @param requestDto - request data containing user id and tenantId.
-	* @return Boolean
-	* @author Niraimathi S
-	*/
+	 * To delete account admin user.
+	 *
+	 * @param requestDto - request data containing user id and tenantId.
+	 * @return Boolean
+	 * @author Niraimathi S
+	 */
 	@DeleteMapping(value = "/remove-user")
 	public SuccessResponse<User> deleteAccountAdmin(@RequestBody CommonRequestDTO requestDto) {
 		accountService.deleteAccountAdmin(requestDto);
-        return new SuccessResponse<>(SuccessCode.REGION_ADMIN_DELETE, HttpStatus.OK);
-	}	
+		return new SuccessResponse<>(SuccessCode.REGION_ADMIN_DELETE, HttpStatus.OK);
+	}
 }

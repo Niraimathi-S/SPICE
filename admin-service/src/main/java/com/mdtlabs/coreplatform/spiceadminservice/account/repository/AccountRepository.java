@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.model.entity.Account;
 
 /**
@@ -30,17 +31,22 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	public static final String UPDATE_ACCOUNT = "UPDATE Account AS account "
 		+ "SET account.clinicalWorkflows = :clinicalWorkflows WHERE account.id = :id";
 
-	public static final String ACCOUNT_DETAILS = "SELECT account FROM Account WHERE ";
-
 	public static final String GET_ACCOUNTS_BY_NAME = "select account from Account as account"
 		+ " where lower(account.name) LIKE CONCAT('%',lower(:searchTerm),'%')"
-		+ " AND account.isDeleted=false";
+		+ " AND account.isDeleted=false AND account.isActive=true AND account.country.id=:countryId";
 
 	public static final String GET_ACCOUNT_LIST = "select account from Account as account"
-		+ " where (:tenantId is null or account.tenantId=:tenantId) and "
+		+ " where account.country.id=:countryId and "
 		+ "account.isDeleted=false and account.isActive=true and "
 		+ "(:searchTerm is null or lower(account.name) LIKE CONCAT('%',lower(:searchTerm),'%'))";
 
+	public static final String COUNT_BY_COUNTRY_ID = "select count(account) from Account as account "
+		+ "where account.country.id = :countryId And account.isDeleted=false And account.isActive=true";
+	
+	public static final String COUNT_BY_NAME = "select count(account.id) from Account as account"
+			+ " where lower(account.name) LIKE CONCAT('%',lower(:searchTerm),'%')"
+			+ " AND account.isDeleted=false AND account.isActive=true AND account.country.id=:countryId";
+	
 	/**
 	 * To get the account by id.
 	 *
@@ -111,7 +117,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	 * @return List - list of account
 	 */
 	@Query(value = GET_ACCOUNTS_BY_NAME)
-	public List<Account> findAccountList(@Param(value = "searchTerm") String searchTerm, Pageable pageable);
+	public List<Account> findAccountList(@Param(value = "searchTerm") String searchTerm, @Param("countryId") Long countryId,Pageable pageable);
 
 	/**
 	 * This method is used to get all accounts.
@@ -120,9 +126,52 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	 * @param tenantId - tenant id
 	 * @param pageable - pageable
 	 * @return List - list of account
+	 * @author Niraimathi S
 	 */
 	@Query(value = GET_ACCOUNT_LIST)
-	List<Account> getAllAccounts(@Param("searchTerm") String searchTerm, @Param("tenantId") long tenantId,
+	List<Account> getAllAccounts(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId,
 		Pageable pageable);
+
+	/**
+	 * Gets account by tenantId,isDeleted and isActive fields.
+	 * 
+	 * @param id - account Id
+	 * @param tenantId - tenant Id
+	 * @param isActive - isActive field
+	 * @param isDeleted - isDeleted field
+	 * @return Account entity 
+	 * @author Niraimathi S
+	 */
+	public Account findByIdAndTenantIdAndIsActiveAndIsDeleted(Long id, Long tenantId, boolean isActive, 
+		boolean isDeleted);
+
+	/**
+	 * Gets List of accounts by list of tenant IDs, isActive and isDeleted fields.
+	 * 
+	 * @param isActive - isActive 
+	 * @param tenantList - list of tenant IDs
+	 * @return List(Account) - List of account entities
+	 */
+	public List<Account> findByIsDeletedFalseAndIsActiveAndTenantIdIn(boolean isActive, List<Long> tenantList);
+
+	/**
+	 * To get count of accounts using country Id.
+	 * 
+	 * @param countryId
+	 * @return
+	 */
+	@Query(value = COUNT_BY_COUNTRY_ID)
+	public int countByCountryId(@Param(Constants.COUNTRY_ID) Long countryId);
+
+	/**
+	 * To get account count using name.
+	 * 
+	 * @param searchTerm - account name to search
+	 * @param countryId - countryId
+	 * @return int - Account count
+	 */
+	@Query(value = COUNT_BY_NAME)
+	public int getAccountsCount(@Param(value = "searchTerm") String searchTerm, 
+		@Param("countryId") Long countryId);
 
 }

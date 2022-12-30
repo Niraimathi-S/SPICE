@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.reflect.TypeToken;
 import com.mdtlabs.coreplatform.common.Constants;
@@ -39,11 +40,14 @@ import com.mdtlabs.coreplatform.common.model.entity.Subcounty;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.util.Pagination;
 import com.mdtlabs.coreplatform.spiceadminservice.UserApiInterface;
+import com.mdtlabs.coreplatform.spiceadminservice.account.service.AccountService;
 import com.mdtlabs.coreplatform.spiceadminservice.data.repository.CountryRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.data.repository.CountyRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.data.repository.SubCountyRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.data.service.DataService;
+import com.mdtlabs.coreplatform.spiceadminservice.operatingunit.service.OperatingUnitService;
 import com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.service.RegionCustomizationService;
+import com.mdtlabs.coreplatform.spiceadminservice.site.service.SiteService;
 
 /**
  * This class is responsible for performing operations on Country, county and
@@ -55,61 +59,95 @@ import com.mdtlabs.coreplatform.spiceadminservice.regioncustomization.service.Re
 public class DataServiceImpl implements DataService {
 
 	@Autowired
-	CountyRepository countyRepository;
+	private CountyRepository countyRepository;
 
 	@Autowired
-	CountryRepository countryRepository;
+	private CountryRepository countryRepository;
 
 	@Autowired
-	SubCountyRepository subCountyRepository;
-	
-	@Autowired
-	RegionCustomizationService regionCustomizationService;
+	private SubCountyRepository subCountyRepository;
 
 	@Autowired
-	UserApiInterface userApiInterface;
+	private RegionCustomizationService regionCustomizationService;
 
-	ModelMapper modelMapper = new ModelMapper();
+	@Autowired
+	private AccountService accountService;
+
+	@Autowired
+	private OperatingUnitService operatingUnitService;
+
+	@Autowired
+	private SiteService siteService;
+
+	@Autowired
+	private UserApiInterface userApiInterface;
+
+	private ModelMapper modelMapper = new ModelMapper();
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Country createCountry(CountryOrganizationDTO countryDto) {
-		if (Objects.isNull(countryDto)) {
+//	@Transactional
+//	public Country createCountry(CountryOrganizationDTO countryDto) {
+//		if (Objects.isNull(countryDto)) {
+//			throw new BadRequestException(12006);
+//		} else {
+//			List<Country> existingCountryByCodeOrName = countryRepository
+//					.findByCountryCodeOrName(countryDto.getCountryCode(), countryDto.getName());
+//			if (!existingCountryByCodeOrName.isEmpty()) {
+//				throw new DataConflictException(19001);
+//			}
+//			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//			Country country = modelMapper.map(countryDto, new TypeToken<Country>() {
+//			}.getType());
+//			Country countryResponse = countryRepository.save(country);
+//			Organization organization = new Organization();
+//			organization.setFormName(Constants.COUNTRY);
+//			organization.setName(countryResponse.getName());
+//			organization.setFormDataId(countryResponse.getId());
+//			OrganizationDTO organizationDto = new OrganizationDTO();
+//			organizationDto.setOrganization(organization);
+//			organizationDto.setRoles(List.of(Constants.ROLE_REGION_ADMIN));
+//			organizationDto.setSiteOrganization(Constants.BOOLEAN_FALSE);
+//			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//			List<User> users = modelMapper.map(countryDto.getUsers(), new TypeToken<List<User>>() {
+//			}.getType());
+//
+//			for (User user : users) {
+//				user.setCountry(countryResponse);
+//			}
+//			organizationDto.setUsers(users);
+//			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+//			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,
+//					UserSelectedTenantContextHolder.get(), organizationDto);
+//			Organization savedOrganization = response.getBody();
+//			countryResponse.setTenantId(savedOrganization.getId());
+//			countryResponse = countryRepository.save(countryResponse);
+//			regionCustomizationService.createRegionCustomizedJSON(savedOrganization);
+//			return countryResponse;
+//		}
+//	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Transactional
+	public Country createCountry(Country country) {
+		if (Objects.isNull(country)) {
 			throw new BadRequestException(12006);
 		} else {
 			List<Country> existingCountryByCodeOrName = countryRepository
-				.findByCountryCodeOrName(countryDto.getCountryCode(), countryDto.getName());
+					.findByCountryCodeOrName(country.getCountryCode(), country.getName());
 			if (!existingCountryByCodeOrName.isEmpty()) {
 				throw new DataConflictException(19001);
 			}
-			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			Country country = modelMapper.map(countryDto, new TypeToken<Country>() {
-			}.getType());
-			Country countryResponse = countryRepository.save(country);
-
-			Organization organization = new Organization();
-			organization.setFormName(Constants.COUNTRY);
-			organization.setName(countryResponse.getName());
-			organization.setFormDataId(countryResponse.getId());
-			OrganizationDTO organizationDto = new OrganizationDTO();
-			organizationDto.setOrganization(organization);
-			organizationDto.setRoles(List.of(Constants.ROLE_REGION_ADMIN));
-			organizationDto.setSiteOrganization(Constants.BOOLEAN_FALSE);
-			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			List<User> users = modelMapper.map(countryDto.getUsers(), new TypeToken<List<User>>() {
-			}.getType());
-			organizationDto.setUsers(users);
-			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-			ResponseEntity<Organization> response = userApiInterface.createOrganization(token,
-				UserSelectedTenantContextHolder.get(), organizationDto);
-			Organization savedOrganization = response.getBody();
-			countryResponse.setTenantId(savedOrganization.getId());
-			countryResponse = countryRepository.save(countryResponse);
-			regionCustomizationService.createRegionCustomizedJSON(savedOrganization);
-			return countryResponse;
+//			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//			Country country = modelMapper.map(countryDto, new TypeToken<Country>() {
+//			}.getType());
+			return countryRepository.save(country);
 		}
+
 	}
 
 	/**
@@ -125,19 +163,18 @@ public class DataServiceImpl implements DataService {
 				throw new DataNotFoundException(19004);
 			}
 			List<Country> existingCountryByCodeOrName = countryRepository
-				.findByCountryCodeOrName(country.getCountryCode(), country.getName());
+					.findByCountryCodeOrName(country.getCountryCode(), country.getName());
 			Map<String, Long> nameMap = new HashMap<>();
 			Map<String, Long> codeMap = new HashMap<>();
 			for (Country element : existingCountryByCodeOrName) {
 				nameMap.put(element.getName(), element.getId());
 				codeMap.put(element.getCountryCode(), element.getId());
 			}
-			if (nameMap.keySet().contains(country.getName()) && nameMap.get(country.getName()) 
-				!= country.getId()) {
+			if (nameMap.keySet().contains(country.getName()) && nameMap.get(country.getName()) != country.getId()) {
 				throw new DataConflictException(19001);
 			}
 			if (codeMap.keySet().contains(country.getCountryCode())
-				&& codeMap.get(country.getCountryCode()) != country.getId()) {
+					&& codeMap.get(country.getCountryCode()) != country.getId()) {
 				throw new DataConflictException(19007);
 			}
 			String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
@@ -154,7 +191,8 @@ public class DataServiceImpl implements DataService {
 	 */
 	@Override
 	public List<Country> getAllCountries(RequestDTO requestObject) {
-		Pageable pageable = Pagination.setPagination(requestObject.getSkip(), requestObject.getLimit(), FieldConstants.NAME, Constants.BOOLEAN_TRUE);
+		Pageable pageable = Pagination.setPagination(requestObject.getSkip(), requestObject.getLimit(),
+				FieldConstants.NAME, Constants.BOOLEAN_TRUE);
 		Page<Country> countries;
 		if (!Objects.isNull(requestObject.getSearchTerm()) && 0 < requestObject.getSearchTerm().length()) {
 			String formattedSearchTerm = requestObject.getSearchTerm().replaceAll("[^a-zA-Z0-9]*", "");
@@ -174,8 +212,7 @@ public class DataServiceImpl implements DataService {
 		if (Objects.isNull(county)) {
 			throw new BadRequestException(12006);
 		}
-		County existingCounty = countyRepository
-			.findByCountryIdAndName(county.getCountryId(), county.getName());
+		County existingCounty = countyRepository.findByCountryIdAndName(county.getCountryId(), county.getName());
 		if (!Objects.isNull(existingCounty)) {
 			throw new DataConflictException(19002);
 		}
@@ -206,8 +243,8 @@ public class DataServiceImpl implements DataService {
 	 * {@inheritDoc}}
 	 */
 	@Override
-	public CountryOrganizationDTO getCountryById(long countryId) {
-		Country country = countryRepository.findByIdAndIsDeleted(countryId, false);
+	public CountryOrganizationDTO getCountryById(long countryId, boolean isUsersRequired) {
+		Country country = countryRepository.findByIdAndIsDeletedFalseAndIsActiveTrue(countryId);
 		if (Objects.isNull(country)) {
 			throw new DataNotFoundException(19004);
 		}
@@ -217,10 +254,12 @@ public class DataServiceImpl implements DataService {
 		}.getType());
 		UserDTO userDto = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDto.getAuthorization();
-		List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(),
-			List.of(country.getId()));
-		countryOrganizationDto.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
-		}.getType()));
+		if (isUsersRequired) {
+			List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(),
+					List.of(country.getTenantId()));
+			countryOrganizationDto.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
+			}.getType()));
+		}
 		return countryOrganizationDto;
 	}
 
@@ -230,8 +269,7 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public County updateCounty(County county) {
 		getCountyById(county.getId());
-		County countyDetails = countyRepository.findByCountryIdAndName(
-			county.getCountryId(), county.getName());
+		County countyDetails = countyRepository.findByCountryIdAndName(county.getCountryId(), county.getName());
 		if (!Objects.isNull(countyDetails) && county.getId() != countyDetails.getId()) {
 			throw new DataConflictException(19002);
 		}
@@ -261,8 +299,8 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public Subcounty updateSubCounty(Subcounty subCounty) {
 		getSubCountyById(subCounty.getId());
-		Subcounty subCountyDetails = subCountyRepository.findByCountryIdAndCountyIdAndName(
-			subCounty.getCountryId(), subCounty.getCountyId(), subCounty.getName());
+		Subcounty subCountyDetails = subCountyRepository.findByCountryIdAndCountyIdAndName(subCounty.getCountryId(),
+				subCounty.getCountyId(), subCounty.getName());
 		if (!Objects.isNull(subCountyDetails) && subCountyDetails.getId() != subCounty.getId()) {
 			throw new DataConflictException(19003);
 		}
@@ -306,32 +344,32 @@ public class DataServiceImpl implements DataService {
 		if (0 == requestDto.getSkip()) {
 			totalCount = countryRepository.countByIsDeletedFalse();
 		}
-		Pageable pageable = Pagination.setPagination(requestDto.getSkip(), 
-			requestDto.getLimit(), Constants.CREATED_AT, Constants.BOOLEAN_FALSE);
+		Pageable pageable = Pagination.setPagination(requestDto.getSkip(), requestDto.getLimit(), Constants.CREATED_AT,
+				Constants.BOOLEAN_FALSE);
 		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
 			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
 		}
 		List<Country> countries = countryRepository.searchCountries(searchTerm, pageable).stream()
-			.collect(Collectors.toList());
+				.collect(Collectors.toList());
 		List<CountryListDTO> countryListDtos = new ArrayList<>();
 		if (0 == requestDto.getSkip()) {
-            totalCount = countryRepository.getCountryCountByName(searchTerm);
+			totalCount = countryRepository.getCountryCountByName(searchTerm);
 		}
 		UserDTO userDto = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDto.getAuthorization();
 
 		if (!countries.isEmpty()) {
 			for (Country country : countries) {
+				System.out.println("country in list ----" + country);
 				CountryListDTO countryListDto = new CountryListDTO();
 				countryListDto.setId(country.getId());
 				countryListDto.setName(country.getName());
 				countryListDto.setTenantId(country.getTenantId());
-				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
-						UserSelectedTenantContextHolder.get(), country.getTenantId(),
-						Constants.COUNTRY);
-				countryListDto.setAccountsCount(childOrgList.get("accountIds").size());
-				countryListDto.setOUCount(childOrgList.get("operatingUnitIds").size());
-				countryListDto.setSiteCount(childOrgList.get("siteIds").size());
+//				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
+//						UserSelectedTenantContextHolder.get(), country.getTenantId(), Constants.COUNTRY);
+				countryListDto.setAccountsCount(accountService.getCountByCountryId(country.getId()));
+				countryListDto.setOUCount(operatingUnitService.getCount(country.getId(), null, Constants.BOOLEAN_TRUE));
+				countryListDto.setSiteCount(siteService.getCount(country.getId(), null, null,Constants.BOOLEAN_TRUE));
 				countryListDtos.add(countryListDto);
 			}
 		}
@@ -358,8 +396,8 @@ public class DataServiceImpl implements DataService {
 		role.setName(Constants.ROLE_REGION_ADMIN);
 		user.setRoles(Set.of(role));
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		ResponseEntity<User> response = userApiInterface
-			.addAdminUser(token, UserSelectedTenantContextHolder.get(), user);
+		ResponseEntity<User> response = userApiInterface.addAdminUser(token, UserSelectedTenantContextHolder.get(),
+				user);
 		if (!Objects.isNull(response.getBody())) {
 			user = response.getBody();
 		}
@@ -370,10 +408,9 @@ public class DataServiceImpl implements DataService {
 	 * {@inheritDoc}
 	 */
 	public User updateRegionAdmin(User user) {
-		UserDTO userDto = UserContextHolder.getUserDto();
-		String token = Constants.BEARER + userDto.getAuthorization();
-		ResponseEntity<User> response = userApiInterface.updateAdminUser(
-			token, UserSelectedTenantContextHolder.get(), user);
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+		ResponseEntity<User> response = userApiInterface.updateAdminUser(token, UserSelectedTenantContextHolder.get(),
+				user);
 		if (!Objects.isNull(response.getBody())) {
 			user = response.getBody();
 		}
@@ -387,14 +424,14 @@ public class DataServiceImpl implements DataService {
 	public Boolean deleteRegionAdmin(CommonRequestDTO requestDto) {
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		ResponseEntity<Boolean> response = userApiInterface.deleteAdminUser(token,
-			UserSelectedTenantContextHolder.get(), requestDto);
+				UserSelectedTenantContextHolder.get(), requestDto);
 		Boolean isUserDeleted = true;
 		if (!Objects.isNull(response.getBody())) {
 			isUserDeleted = response.getBody();
 		}
 		return isUserDeleted;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -403,4 +440,46 @@ public class DataServiceImpl implements DataService {
 		countries = countryRepository.findByIsActive(isActive);
 		return countries;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Country getCountryByTenantId(Long tenantId) {
+		return countryRepository.findByTenantIdAndIsDeletedFalse(tenantId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean activateOrDeactiveRegion(Long id, Boolean isActive) {
+		Country country = countryRepository.findByIdAndIsDeleted(id, false);
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+		System.out.println("country--------" + country);
+		if (Objects.isNull(country)) {
+			throw new DataNotFoundException(19010);
+		}
+		country.setActive(isActive);
+		countryRepository.save(country);
+		Map<String, List<Long>> childOrgIds = userApiInterface.activateDeactivateOrg(token,
+				UserSelectedTenantContextHolder.get(), country.getTenantId(), isActive);
+		System.out.println("childOrgIds------------ " + childOrgIds);
+		if (!childOrgIds.get("accountIds").isEmpty()) {
+			accountService.activateDeactivateAccountsList(childOrgIds.get("accountIds"), isActive);
+		}
+
+		if (!childOrgIds.get("operatingUnitIds").isEmpty()) {
+			operatingUnitService.activateDeactivateOUList(childOrgIds.get("operatingUnitIds"), isActive);
+		}
+		if (!childOrgIds.get("siteIds").isEmpty()) {
+			siteService.activateDeactivateSiteList(childOrgIds.get("siteIds"), isActive);
+		}
+
+		List<Long> tenantIdList = childOrgIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+		tenantIdList.add(id);
+		System.out.println("childOrgIdsToDelete--------" + tenantIdList);
+		userApiInterface.activateDeactivateUser(token, UserSelectedTenantContextHolder.get(), tenantIdList, isActive);
+
+		return true;
+	}
+
 }

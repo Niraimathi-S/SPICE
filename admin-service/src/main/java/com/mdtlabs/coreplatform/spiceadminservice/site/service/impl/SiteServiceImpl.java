@@ -105,4 +105,22 @@ public class SiteServiceImpl implements SiteService {
 		return siteRepository.findByIdAndIsDeletedFalse(siteId);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+    public boolean activateDeactivateSiteList(List<Long> siteIds, boolean isActive) {
+    	List<Site> sites = siteRepository.findByIsDeletedFalseAndIsActiveAndTenantIdIn(!isActive,siteIds);
+    	
+    	System.out.println("sites-----"+sites);
+    	if (!sites.isEmpty()) {
+    		sites.stream().forEach(site -> site.setActive(isActive));
+    		siteRepository.saveAll(sites);
+		}
+//        siteRepository.activateInactivateSites(siteIds, isActive);
+        return true;
+    }
+    
+	public Integer getCount(Long countryId, Long accountId, Long operatingUnitId, boolean isActive) {
+		return siteRepository.getCount(countryId, accountId, operatingUnitId,isActive);
+	}
 }

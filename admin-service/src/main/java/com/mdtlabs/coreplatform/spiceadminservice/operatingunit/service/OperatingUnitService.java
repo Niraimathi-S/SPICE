@@ -1,11 +1,16 @@
 package com.mdtlabs.coreplatform.spiceadminservice.operatingunit.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.mdtlabs.coreplatform.common.domain.Paged;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitDetailsDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitListDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 
 /**
@@ -53,4 +58,38 @@ public interface OperatingUnitService {
 	 */
 	Boolean deleteOUAdmin(CommonRequestDTO requestDTO);
 
+	/**
+	 * To get operating unit list based on a search term and tenant Id.
+	 * 
+	 * @param requestDto - request details
+	 * @return Map(String, Object) - List of Operatingunit entites and its count
+	 * @author Niraimathi S
+	 */
+	Map<String, Object> getAllOperatingUnits(SearchRequestDTO requestDto);
+
+	/**
+	 * Gets operating unit details using Id and tenantId.
+	 * 
+	 * @param requestDTO - request data containing Id and tenantId
+	 * @return Operating unit entity
+	 */
+	OperatingUnitDetailsDTO getOUDetails(CommonRequestDTO requestDTO);
+	
+	/**
+	 * Activates or deactivates an operating unit based on list of tenant Ids.
+	 * 
+	 * @param tenantIdList - list of tenantId
+	 * @param doActivate - isActive status
+	 */
+    void activateDeactivateOUList(List<Long> tenantIdList, boolean doActivate);
+
+    /**
+     * To get count of operating units by country Id and accountId.
+     * 
+     * @param countryId - country Id
+     * @param isActive - isActive status
+     * @return Integer - count of Operating units
+     */
+	public Integer getCount(Long countryId, Long accountId, boolean isActive);
+    
 }

@@ -28,7 +28,7 @@ public interface DataService {
 	 * @return Country Entity
 	 * @author Karthick M
 	 */
-	Country createCountry(CountryOrganizationDTO countryDto);
+	Country createCountry(Country country);
 
 	/**
 	 * This method is used to update a country details like name.
@@ -100,7 +100,7 @@ public interface DataService {
 	 * @return Country entity
 	 * @author Karthick M
 	 */
-	CountryOrganizationDTO getCountryById(long countryId);
+	CountryOrganizationDTO getCountryById(long countryId, boolean isUsersRequired);
 
 	/**
 	 * Used to soft delete subcounty details using subcounty id.
@@ -186,4 +186,20 @@ public interface DataService {
 	 * @return List of country entities.
 	 */
 	List<Country> getAllCountries(Boolean isActive);
+
+	/**
+	 * To get country by its tenantId
+	 * 
+	 * @param tenantId
+	 * @return
+	 */
+	Country getCountryByTenantId(Long tenantId);
+
+	/**
+	 * To activate or deactivate an region by its tenantId.
+	 * 
+	 * @param id - tenantId
+	 * @return Boolean - Activation confirmation
+	 */
+	boolean activateOrDeactiveRegion(Long id, Boolean isActive);
 }

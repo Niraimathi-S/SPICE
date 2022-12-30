@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
@@ -283,17 +284,28 @@ public class UserController {
 	public ResponseEntity<String> validateSession() {
 		return ResponseEntity.ok().body(Constants.SESSSION_ALIVE);
 	}
-	
+
 	/**
 	 * Validates a user by its username and return it if exists.
 	 * 
-	 * @param email username 
+	 * @param email - username
 	 * @return User entity.
 	 */
 	@PostMapping("/validate-user")
 	public SuccessResponse<UserDTO> validateUsers(@RequestBody Map<String, String> email) {
-		return new SuccessResponse<>(SuccessCode.GET_USER, userService.validateUser(email),
-				HttpStatus.OK);
+		return new SuccessResponse<>(SuccessCode.GET_USER, userService.validateUser(email), HttpStatus.CREATED);
+	}
+
+	/**
+	 * To activate or deactivate users based on tenantIds.
+	 * 
+	 * @param tenantIds - list of tenantIds
+	 * @param isActive - isActive status
+	 * @return Boolean - response of user updated status
+	 */
+	@PostMapping("/update-active-status")
+	public ResponseEntity<Boolean> activateDeactivateUser(@RequestBody List<Long> tenantIds, @RequestParam("isActive") boolean isActive) {
+		return ResponseEntity.ok().body(userService.activateDeactivateUser(tenantIds, isActive));
 	}
 
 }

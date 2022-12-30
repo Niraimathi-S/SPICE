@@ -3,6 +3,8 @@ package com.mdtlabs.coreplatform.spiceadminservice.site.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mdtlabs.coreplatform.common.model.entity.Site;
@@ -19,7 +21,11 @@ import com.mdtlabs.coreplatform.common.model.entity.Site;
  */
 @Repository
 public interface SiteRepository extends JpaRepository<Site, Long> {
-	
+	public static String COUNT_BY_COUNTRY_ACCOUNT_OU_ID = "select count(site.id) from Site as "
+			+ "site where (:countryId is null or site.countryId=:countryId) AND (:accountId "
+			+ "is null or site.accountId=:accountId) AND (:operatingUnitId is null or site.operatingUnitId="
+			+ ":operatingUnitId) AND site.isDeleted=false AND site.isActive=:isActive";
+			
 	public boolean existsByName(String name);
 
 	/**
@@ -46,4 +52,26 @@ public interface SiteRepository extends JpaRepository<Site, Long> {
 	 * @return Site entity
 	 */
 	public Site findByIdAndIsDeletedFalse(Long siteId);
+
+	/**
+	 * To get list of sites based on list of tenantIds
+	 * 
+	 * @param isActive - isActive
+	 * @param siteIds - List of site tenantIds
+	 * @return List(Site) - List of Site entity
+	 * @author Niraimathi S
+	 */
+	public List<Site> findByIsDeletedFalseAndIsActiveAndTenantIdIn(boolean isActive, List<Long> siteIds);
+
+	/**
+	 * Return the count of sites using countryId, isDeleted and isActive fields.
+	 * 
+	 * @param countryId - country Id
+	 * @param isActive - isActive
+	 * @return integer - count of operting units
+	 * @author Niraimathi S
+	 */
+	@Query(value = COUNT_BY_COUNTRY_ACCOUNT_OU_ID)
+	Integer getCount(@Param("countryId") Long countryId, @Param("accountId") Long accountId, 
+			@Param("operatingUnitId") Long operaitngUnitId, @Param("isActive") boolean isActive);	
 }

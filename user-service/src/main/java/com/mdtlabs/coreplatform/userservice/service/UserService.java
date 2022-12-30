@@ -210,5 +210,14 @@ public interface UserService {
 	 */
 	UserDTO validateUser(Map<String, String> email);
 
+	/**
+	 * To activate or deactivate users based on tenantIds.
+	 * 
+	 * @param tenantIds - list of tenantIds
+	 * @param isActive - isActive status
+	 * @return Boolean - response of user updated status
+	 */
+	Boolean activateDeactivateUser(List<Long> tenantIds, boolean isActive);
+
 
 }

@@ -22,13 +22,13 @@ import com.mdtlabs.coreplatform.common.model.entity.Country;
 public interface CountryRepository extends JpaRepository<Country, Long> {
 
 	public static final String GET_ALL_COUNTRIES = "select country from Country as country "
-		+ "where country.isDeleted=false";
+		+ "where country.isDeleted=false AND country.isActive = true";
 	public static final String GET_COUNTRIES_BY_NAME = "select country from Country as "
 		+ "country where lower(country.name) LIKE CONCAT('%',lower(:searchTerm),'%')"
-		+ " AND country.isDeleted=false order by country.updatedBy";
+		+ " AND country.isDeleted=false AND country.isActive = true";
 	public static final String GET_COUNTRIES_COUNT_BY_NAME = "select count(id) from Country "
-		+ "as country where lower(country.name)"
-		+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND country.isDeleted=false";
+		+ "as country where lower(country.name) LIKE CONCAT('%',lower(:searchTerm),'%') "
+		+ "AND country.isDeleted=false AND country.isActive = true";
 
 	/**
 	* Finds a country based on countryCode and name.
@@ -139,7 +139,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	* @param id country Id
 	* @return List of country entity
 	*/
-	List<Country> findByIdAndIsDeletedFalseAndIsActiveTrue(long id);
+	Country findByIdAndIsDeletedFalseAndIsActiveTrue(long id);
 
 	/**
 	* To find the number of countries present. 
@@ -155,5 +155,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	 * @return List of Country Entities
 	 */
 	List<Country> findByIsActive(Boolean isActive);
+
+	Country findByTenantIdAndIsDeletedFalse(Long tenantId);
 
 }

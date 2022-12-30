@@ -145,9 +145,9 @@ public class DataController {
 	 * @author karthick M
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/country")
-	public SuccessResponse<Country> createCountry(@Valid @RequestBody CountryOrganizationDTO countryDto) {
-		dataService.createCountry(countryDto);
-		return new SuccessResponse<>(SuccessCode.COUNTRY_SAVE, HttpStatus.CREATED);
+	public SuccessResponse<Country> createCountry(@Valid @RequestBody Country country) {
+		dataService.createCountry(country);
+		return new SuccessResponse<>(SuccessCode.COUNTRY_SAVE, dataService.createCountry(country),HttpStatus.CREATED);
 	}
 
 	/**
@@ -188,8 +188,9 @@ public class DataController {
 	@RequestMapping(method = RequestMethod.GET, value = "/country/{id}")
 	public SuccessResponse<CountryOrganizationDTO> getCountryById(@PathVariable(value = "id") long countryId) {
 		SpiceLogger.logInfo("Getting a Country details by on ID");
+		CountryOrganizationDTO countryOrganizationDTO = dataService.getCountryById(countryId, Constants.BOOLEAN_TRUE);
 		return new SuccessResponse<CountryOrganizationDTO>(SuccessCode.GET_COUNTRY,
-				dataService.getCountryById(countryId), HttpStatus.OK);
+				countryOrganizationDTO, HttpStatus.OK);
 	}
 
 	/**
@@ -335,5 +336,29 @@ public class DataController {
 
 		return new SuccessResponse<List<Country>>(SuccessCode.GET_COUNTRIES, countries, 0, HttpStatus.OK);
 	}
+	
+	/**
+	 * To activate an region by its tenantId.
+	 * 
+	 * @param id - tenantId
+	 * @return Boolean - Activation confirmation
+	 */
+    @GetMapping("/country/activate/{id}")
+    public SuccessResponse<Boolean> activateRegion(@PathVariable Long id) {
+        dataService.activateOrDeactiveRegion(id, Constants.BOOLEAN_TRUE);
+        return new SuccessResponse<Boolean>(SuccessCode.ACTIVATE_COUNTRY, HttpStatus.OK);
+    }
+
+	/**
+	 * To deactivate an region by its tenantId.
+	 * 
+	 * @param id - tenantId
+	 * @return Boolean - Activation confirmation
+	 */
+    @GetMapping("/country/deactivate/{id}")
+    public SuccessResponse<Boolean> deactivateRegion(@PathVariable Long id) {
+        dataService.activateOrDeactiveRegion(id, Constants.BOOLEAN_FALSE);
+        return new SuccessResponse<Boolean>(SuccessCode.DEACTIVATE_COUNTRY, HttpStatus.OK);
+    }
 
 }

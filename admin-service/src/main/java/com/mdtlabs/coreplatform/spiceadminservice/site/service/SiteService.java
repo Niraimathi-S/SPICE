@@ -56,6 +56,7 @@ public interface SiteService {
 	 *
 	 * @param operatingUnitId operating unit Id.
 	 * @return List of Site Entities.
+	 * @author Niraimathi S
 	 */
 	public List<Site> getSitesByOperatingUnitId(Long operatingUnitId);
 
@@ -64,7 +65,28 @@ public interface SiteService {
 	 *
 	 * @param siteId site id
 	 * @return Site entity
+	 * @author Niraimathi S
 	 */
 	public Site getSiteById(Long siteId);
 
+	/**
+	 * To activate or deactivate list of sites based on its tenantIds
+	 * 
+	 * @param tenantIds - list of tenant Ids
+	 * @param isActive - isActive
+	 * @return Boolean - Activation Status
+	 * @author Niraimathi S
+	 */
+    public boolean activateDeactivateSiteList(List<Long> tenantIds, boolean isActive);
+
+    /**
+     * To get Count of Sites using countryId
+     * 
+     * @param countryId - country Id
+     * @param isActive - isActive
+     * @return Integer - count of sites
+	 * @author Niraimathi S
+     */
+	public Integer getCount(Long countryId, Long accountId, Long operatingUnitId, boolean isActive);
+    
 }

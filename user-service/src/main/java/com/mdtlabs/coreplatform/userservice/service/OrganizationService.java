@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.User;
@@ -93,7 +96,7 @@ public interface OrganizationService {
 	 * @param organization - organization details with users
 	 * @return Organization - organization entity.
 	 */
-	Organization createOrganization(OrganizationDTO organization);
+//	Organization createOrganization(OrganizationDTO organization);
 
 	/**
 	 * Gets child organization IDs of an organization.
@@ -148,7 +151,7 @@ public interface OrganizationService {
 	 * @return Map<String, List<Long>> - Child organization Ids.
 	 * @author Niraimathi S
 	 */
-	Map<String, List<Long>> activateInactivateOrg(long tenantId, String formName, boolean doActivate);
+	Map<String, List<Long>> activateDeactivateOrg(long tenantId, boolean doActivate);
 
 	/**
 	 * To validate parent organization .
@@ -157,5 +160,9 @@ public interface OrganizationService {
 	 * @param tenantIds - List of tenant ids
 	 */
 	void validateParentOrganization(Long parentOrganizationId, List<Long> tenantIds);
+
+	void createCountry(@Valid CountryOrganizationDTO countryOrganizationDTO);
+	
+    void addOrganizationUsers(List<User> organizationUsers, List<String> roles, Organization organization);
 
 }

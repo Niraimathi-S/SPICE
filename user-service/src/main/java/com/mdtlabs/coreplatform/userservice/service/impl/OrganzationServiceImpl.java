@@ -10,22 +10,33 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.google.common.reflect.TypeToken;
+import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataConflictException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Country;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.Role;
 import com.mdtlabs.coreplatform.common.model.entity.User;
+import com.mdtlabs.coreplatform.userservice.AdminApiInterface;
+import com.mdtlabs.coreplatform.userservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.userservice.repository.OrganizationRepository;
 import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
 import com.mdtlabs.coreplatform.userservice.service.RoleService;
@@ -51,11 +62,15 @@ public class OrganzationServiceImpl implements OrganizationService {
 	@Autowired
 	private RoleService roleService;
 
+	@Autowired
+	private AdminApiInterface adminApiInterface;
+
 	ModelMapper modelMapper = new ModelMapper();
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@org.springframework.transaction.annotation.Transactional
 	public Organization addOrganization(Organization organization) {
 		return organizationRepository.save(organization);
 	}
@@ -71,8 +86,7 @@ public class OrganzationServiceImpl implements OrganizationService {
 	 * {@inheritDoc}
 	 */
 	public Organization updateOrganization(Organization organization) {
-		Organization existingOrganization = organizationRepository.findByIdAndIsDeletedFalse(
-			organization.getId());
+		Organization existingOrganization = organizationRepository.findByIdAndIsDeletedFalse(organization.getId());
 		if (Objects.isNull(existingOrganization)) {
 			throw new DataNotFoundException(23008);
 		}
@@ -108,30 +122,32 @@ public class OrganzationServiceImpl implements OrganizationService {
 	 * {@inheritDoc}
 	 */
 	public List<Long> getUserTenants(long userId) {
-		//return organizationRepository.getUserTenants(userId);
+		// return organizationRepository.getUserTenants(userId);
 		return null;
+	}
+
+	private void validateOrganization(Organization organization) {
+		if (Objects.isNull(organization)) {
+			throw new BadRequestException(10000);
+		}
+		Organization existingOrganization = organizationRepository
+				.findByNameIgnoreCaseAndIsDeletedFalse(organization.getName());
+
+		if (!Objects.isNull(existingOrganization)) {
+			throw new DataConflictException(23007);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@org.springframework.transaction.annotation.Transactional
-	public Organization createOrganization(OrganizationDTO organizationDto) {
-		if (Objects.isNull(organizationDto)) {
-			throw new BadRequestException(10000);
-		}
-		Organization existingOrganization = organizationRepository
-			.findByNameIgnoreCaseAndIsDeletedFalse(organizationDto.getOrganization().getName());
-
-		if (!Objects.isNull(existingOrganization)) {
-			throw new DataConflictException(23007);
-		}
-		Organization organization = organizationDto.getOrganization();
-		organization = organizationRepository.save(organization);
+	public void addOrganizationUsers(List<User> organizationUsers, List<String> roles, Organization organization) {
+//		Organization organization = organizationDto.getOrganization();
+//		organization = organizationRepository.save(organization);
 		List<User> validatedUsers = new ArrayList<>();
 		List<User> users = new ArrayList<>();
-		validatedUsers = userService.validateUsers(organization.getParentOrganizationId(), 
-			organizationDto.getUsers());
+		validatedUsers = userService.validateUsers(organization.getParentOrganizationId(),organizationUsers);
 
 		if (!Objects.isNull(validatedUsers) && !validatedUsers.isEmpty()) {
 //			List<Long> userTenantsList = validatedUsers.stream().map(user -> user.getTenantId())
@@ -140,13 +156,13 @@ public class OrganzationServiceImpl implements OrganizationService {
 			users.addAll(validatedUsers);
 		}
 
-		for (User user : organizationDto.getUsers()) {
+		for (User user : organizationUsers) {
 			if (Objects.isNull(user.getId()) || 0 == user.getId()) {
 				users.add(user);
 			}
 		}
-		
-		String roleName = organizationDto.getRoles().get(0);
+
+		String roleName = roles.get(0);
 		Role role = null;
 		if (!roleName.isEmpty()) {
 			role = roleService.getRoleByName(roleName);
@@ -163,7 +179,6 @@ public class OrganzationServiceImpl implements OrganizationService {
 			user.setRoles(Set.of(role));
 			userService.addUser(user);
 		}
-		return organization;
 	}
 
 	/**
@@ -173,8 +188,7 @@ public class OrganzationServiceImpl implements OrganizationService {
 		List<Organization> organizations = new ArrayList<>();
 		if (!Objects.isNull(parentOrganizationId) && !tenantIds.isEmpty()) {
 			organizations = organizationRepository
-					.findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(
-					parentOrganizationId, tenantIds);
+					.findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(parentOrganizationId, tenantIds);
 		}
 		if (organizations.size() != tenantIds.size()) {
 			throw new DataNotAcceptableException(5002);
@@ -203,13 +217,12 @@ public class OrganzationServiceImpl implements OrganizationService {
 			} else {
 				childOrgs = organizationRepository.findByParentOrganizationIdIn(childOrgIds);
 			}
-			childOrgIds = childOrgs.stream().map(operatingUnit -> operatingUnit.getId())
-				.collect(Collectors.toList());
+			childOrgIds = childOrgs.stream().map(operatingUnit -> operatingUnit.getId()).collect(Collectors.toList());
 			childIds.put("operatingUnitIds", childOrgIds);
 			childOrgIdsToDelete.addAll(childOrgIds);
 		}
 		if (formName.equalsIgnoreCase("country") || formName.equalsIgnoreCase("account")
-			|| formName.equalsIgnoreCase("operating unit")) {
+				|| formName.equalsIgnoreCase("operating unit")) {
 
 			if (formName.equalsIgnoreCase("operating unit")) {
 				childOrgs = organizationRepository.findByParentOrganizationId(tenantId);
@@ -269,18 +282,59 @@ public class OrganzationServiceImpl implements OrganizationService {
 	public Boolean deleteAdminUsers(CommonRequestDTO requestDto) {
 		return userService.deleteOrganizationUser(requestDto);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, List<Long>> activateInactivateOrg(long tenantId, String formName, boolean doActivate) {
-        Map<String, List<Long>> childIds = new HashMap<>();
-        childIds = getChildOrganizations(tenantId, formName);
-        List<Long> childOrgIdsToDelete = childIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
-        System.out.println("childOrgIdsToDelete " + childOrgIdsToDelete);
-        organizationRepository.activateInactivateChildOrganizations(childOrgIdsToDelete, doActivate);
-        organizationRepository.activateInactivateOrganizations(tenantId, doActivate);
-        return childIds;
-    }
+	public Map<String, List<Long>> activateDeactivateOrg(long tenantId, boolean doActivate) {
+		Map<String, List<Long>> childIds = new HashMap<>();
+		Organization organization = organizationRepository.getOrganizationById(tenantId);
+		if (!Objects.isNull(organization)) {
+			childIds = getChildOrganizations(tenantId, organization.getFormName());
+			List<Long> childOrgIdsToDelete = childIds.values().stream().flatMap(List::stream)
+					.collect(Collectors.toList());
+			organizationRepository.activateInactivateChildOrganizations(childOrgIdsToDelete, doActivate);
+			organizationRepository.activateInactivateOrganizations(tenantId, doActivate);
+		}
+		return childIds;
+	}
+
+	public void createCountry(CountryOrganizationDTO countryDTO) {
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+		Country countryResponse = null;
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		Organization organization = new Organization(Constants.COUNTRY,countryResponse.getName(),null);
+		validateOrganization(organization);
+		organization = addOrganization(organization);
+		Country country = modelMapper.map(countryDTO, new TypeToken<Country>() {
+		}.getType());
+		country.setTenantId(organization.getId());
+		SuccessResponse<Country> response = adminApiInterface.createCountry(token,
+				UserSelectedTenantContextHolder.get(), country);
+
+//		countryResponse = modelMapper.map(response.getBody().get("entity"), new TypeToken<Country>() {
+//		}.getType());
+
+		organization.setFormDataId(countryResponse.getId());
+		OrganizationDTO organizationDto = new OrganizationDTO();
+		organizationDto.setOrganization(organization);
+		organizationDto.setRoles(List.of(Constants.ROLE_REGION_ADMIN));
+		organizationDto.setSiteOrganization(Constants.BOOLEAN_FALSE);
+		List<User> users = modelMapper.map(countryDTO.getUsers(), new TypeToken<List<User>>() {
+		}.getType());
+
+		for (User user : users) {
+			user.setCountry(countryResponse);
+		}
+		organizationDto.setUsers(users);
+//			ResponseEntity<Organization> response = createOrganization(token,
+//					UserSelectedTenantContextHolder.get(), organizationDto);
+//		Organization savedOrganization = createOrganization(organizationDto);
+//		countryResponse.setTenantId(savedOrganization.getId());
+//		countryResponse = countryRepository.save(countryResponse);
+//		regionCustomizationService.createRegionCustomizedJSON(savedOrganization);
+//			return countryResponse;
+
+	}
 
 }

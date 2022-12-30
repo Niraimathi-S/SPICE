@@ -6,11 +6,13 @@ import java.util.Map;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
@@ -55,4 +57,17 @@ public interface UserApiInterface {
 	@DeleteMapping("/organization/delete-admin-user")
 	public ResponseEntity<Boolean> deleteAdminUser(@RequestHeader("Authorization") String token,
 		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody CommonRequestDTO requestDto);
+
+	@PostMapping("/organization/activate-deactivate/{tenantId}")
+	public Map<String, List<Long>> activateDeactivateOrg(@RequestHeader("Authorization") String token,
+			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId,
+			@RequestParam(value = Constants.TENANT_PARAMETER_NAME) Long tenantId, @RequestParam Boolean isActive);
+
+	@GetMapping(value = "/organization/{id}")
+	public ResponseEntity<Organization> getOrganizationById(@RequestHeader("Authorization") String token,
+			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @PathVariable("id") Long id);
+	
+	@PostMapping("/user/update-active-status")
+	public ResponseEntity<Boolean> activateDeactivateUser(@RequestHeader("Authorization") String token,
+			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody List<Long> tenantIds, @RequestParam("isActive") boolean isActive);
 }

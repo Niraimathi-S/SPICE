@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
-import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.userservice.message.SuccessCode;
@@ -112,10 +115,11 @@ public class OrganizationController {
 	 * @return Organization - organization information
 	 */
 	@GetMapping(value = "/{id}")
-	public SuccessResponse<Organization> getOrganizationById(@PathVariable(value = FieldConstants.ID) 
+	public ResponseEntity<Organization> getOrganizationById(@PathVariable(value = FieldConstants.ID) 
 		long organizationId) {
-		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATION, organizationService.getOrganizationById(
-			organizationId), HttpStatus.OK);
+//		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATION, organizationService.getOrganizationById(
+//			organizationId), HttpStatus.OK);
+		return ResponseEntity.ok().body(organizationService.getOrganizationById(organizationId));
 	}
 
 	/**
@@ -124,7 +128,7 @@ public class OrganizationController {
 	 * @param name - the name of the organization
 	 * @return Organization - organization information
 	 */
-	@GetMapping(value = "/{name}")
+	@GetMapping(value = "/get-by-name/{name}")
 	public SuccessResponse<Organization> getOrganizationByName(@PathVariable(value = FieldConstants.NAME)
 		String name) {
 		return new SuccessResponse<>(SuccessCode.GET_ORGANIZATION, organizationService.getOrganizationByName(
@@ -149,11 +153,11 @@ public class OrganizationController {
 	 * @return Organization - Organization Entity.
 	 * @author Niraimathi S
 	 */
-	@PostMapping("/create")
-	public ResponseEntity<Organization> createOrganization(@RequestBody OrganizationDTO organizationDto) {
-		Organization newOrganization = organizationService.createOrganization(organizationDto);
-		return ResponseEntity.ok().body(newOrganization);
-	}
+//	@PostMapping("/create")
+//	public ResponseEntity<Organization> createOrganization(@RequestBody OrganizationDTO organizationDto) {
+//		Organization newOrganization = organizationService.createOrganization(organizationDto);
+//		return ResponseEntity.ok().body(newOrganization);
+//	}
 	
 	/**
 	 * Gets child organization IDs of an organization.
@@ -167,6 +171,8 @@ public class OrganizationController {
 		@RequestBody String formName) {
 		return organizationService.getChildOrganizations(tenantId, formName);
 	}
+	
+
 	
 	/**
 	 * This method is used to get organization information by list of ids.
@@ -212,6 +218,25 @@ public class OrganizationController {
 	@DeleteMapping("/delete-admin-user")
 	public ResponseEntity<Boolean> deleteAdminUser(@RequestBody CommonRequestDTO requestDto) {
 		return ResponseEntity.ok().body(organizationService.deleteAdminUsers(requestDto));
+	}
+	
+	/**
+	 * To activate or deactivate an organization by id.
+	 * 
+	 * @param tenantId - tenantId
+	 * @param isActive - active status
+	 * @return Map(String,List) - Collection of child organization Ids
+	 */
+	@PostMapping("/activate-deactivate/{tenantId}")
+	public Map<String, List<Long>> activateDeactivateOrg(@RequestParam(value = Constants.TENANT_PARAMETER_NAME) Long tenantId,
+			@RequestParam Boolean isActive) {
+		return organizationService.activateDeactivateOrg(tenantId, isActive);		
+	}
+	
+	@PostMapping("/create-country")
+	public SuccessResponse<CountryOrganizationDTO> createCountry(@Valid @RequestBody CountryOrganizationDTO countryOrganizationDTO){
+		organizationService.createCountry(countryOrganizationDTO);
+		return new SuccessResponse<>(SuccessCode.ORGANIZATION_SAVE, HttpStatus.CREATED);
 	}
 
 }

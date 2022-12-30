@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitDetailsDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitListDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
@@ -59,6 +62,27 @@ public class OperatingUnitController {
 		}
     	return new SuccessResponse<List<OperatingUnitListDTO>>(
     		SuccessCode.GET_COUNTRY, response.get(Constants.DATA), totalCount, HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/operating-unit-list")
+	public SuccessResponse<List<OperatingUnitDTO>> getAllOperatingUnits(@RequestBody SearchRequestDTO requestDto) {
+//		List<AccountDTO> accountList = accountService.getAllAccounts(requestDto);
+		Map<String, Object> response = operatingUnitService.getAllOperatingUnits(requestDto);
+		Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0
+				: Integer.parseInt(response.get(Constants.COUNT).toString());
+		if (0 == totalCount) {
+			return new SuccessResponse<List<OperatingUnitDTO>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA),
+					HttpStatus.OK);
+		}
+		return new SuccessResponse<List<OperatingUnitDTO>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA), totalCount,
+				HttpStatus.OK);
+	}
+
+	@PostMapping("/details")
+	public SuccessResponse<OperatingUnitDetailsDTO> getOUDetails(@RequestBody CommonRequestDTO commonRequestDTO) {
+		return new SuccessResponse<OperatingUnitDetailsDTO>(SuccessCode.GET_ACCOUNT,
+				operatingUnitService.getOUDetails(commonRequestDTO), HttpStatus.OK);
 	}
 	
 	/**
