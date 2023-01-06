@@ -12,6 +12,9 @@ import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.model.entity.Account;
 import com.mdtlabs.coreplatform.common.model.entity.ApiRolePermission;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
+import com.mdtlabs.coreplatform.common.model.entity.County;
+import com.mdtlabs.coreplatform.common.model.entity.Culture;
+import com.mdtlabs.coreplatform.common.model.entity.Subcounty;
 import com.mdtlabs.coreplatform.common.model.entity.Timezone;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 
@@ -36,8 +39,9 @@ public interface DataRepository extends JpaRepository<User, Long> {
     public static final String GET_COUNTRY_BY_ID_AND_IS_DELETED = "select country from Country as country where country.id =:id and country.isDeleted = false";
     public static final String GET_COUNTRY_BY_TENANT_ID = "select country from Country as country where country.tenantId = :tenantId and country.isDeleted = false";
     public static final String GET_ACCOUNT_BY_ID = "select account from Account as account where account.id= :id and account.isDeleted=false";
-    
-    
+    public static final String GET_COUNTY_BY_ID = "select county from County as county where county.id=:id AND county.isDeleted=false";
+    public static final String GET_SUBCOUNTY_BY_ID = "select subCounty from Subcounty as subCounty where subCounty.id=:id AND subCounty.isDeleted=false";
+    public static final String GET_CULTURE_BY_ID = "select culture from Culture as culture where culture.id=:id AND culture.isDeleted=false";
 	/**
 	 * <p>
 	 * Get all the country list.
@@ -110,7 +114,7 @@ public interface DataRepository extends JpaRepository<User, Long> {
 
 	/**
 	 * <p>
-	 * Used to get the accout object its Id and isDeleted.
+	 * Used to get the account object its Id and isDeleted.
 	 * </p>
 	 * 
 	 * @param accountId - account Id
@@ -120,4 +124,36 @@ public interface DataRepository extends JpaRepository<User, Long> {
 	public Account getAccountById(@Param(FieldConstants.ID) Long accountId);
 
 
+	/**
+	 * <p>
+	 * Used to get the County object its Id and isDeleted.
+	 * </p>
+	 * 
+	 * @param countyId - county Id
+	 * @return County entity
+	 */
+	@Query(value = GET_COUNTY_BY_ID)
+	public County getCountyById(@Param(FieldConstants.ID) Long countyId);
+	
+	/**
+	 * <p>
+	 * Used to get the SubCounty object its Id and isDeleted.
+	 * </p>
+	 * 
+	 * @param subCountyId - subcounty Id
+	 * @return SubCounty entity
+	 */
+	@Query(value = GET_SUBCOUNTY_BY_ID)
+	public Subcounty getSubCountyById(@Param(FieldConstants.ID) Long subCountyId);
+	
+	/**
+	 * <p>
+	 * Used to get the Culture object its Id and isDeleted.
+	 * </p>
+	 * 
+	 * @param cultureId - culture Id
+	 * @return Culture entity
+	 */
+	@Query(value = GET_CULTURE_BY_ID)
+	public Culture getCultureById(@Param(FieldConstants.ID) Long cultureId);
 }

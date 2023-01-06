@@ -20,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Fetch;
@@ -68,6 +69,7 @@ public class User extends TenantBaseEntity implements Serializable, UserDetails 
 
 	@NotEmpty(message = ErrorConstants.PHONE_NUMBER_NOT_NULL)
 	@Column(name = FieldConstants.PHONE_NUMBER)
+//	@Pattern(regexp = "^\\+[1-9]{1}[0-9]{3,14}$", message = ErrorConstants.PHONE_NUMBER_INVALID)
 	private String phoneNumber;
 
 	@Column(name = FieldConstants.ADDRESS)
@@ -75,6 +77,7 @@ public class User extends TenantBaseEntity implements Serializable, UserDetails 
 
 	@NotEmpty(message = ErrorConstants.EMAIL_NOT_NULL)
 	@Column(name = FieldConstants.USERNAME)
+	@Pattern(regexp = "^(.+)@(.+)$", message = ErrorConstants.EMAIL_INVALID)
 	private String username;
 
 	@ColumnTransformer(forColumn = FieldConstants.PASSWORD, read = "public.pgp_sym_decrypt(password::bytea, " + "'"
@@ -87,7 +90,7 @@ public class User extends TenantBaseEntity implements Serializable, UserDetails 
 	private String countryCode;
 
 	@Column(name = FieldConstants.IS_BLOCKED)
-	private Boolean isBlocked;
+	private Boolean isBlocked = false;
 
 	@Column(name = FieldConstants.BLOCKED_DATE, columnDefinition = "TIMESTAMP")
 	@UpdateTimestamp
@@ -119,7 +122,7 @@ public class User extends TenantBaseEntity implements Serializable, UserDetails 
 	private Date invalidResetTime;
 
 	@Column(name = FieldConstants.IS_PASSWORD_RESET_ENABLED)
-	private Boolean isPasswordResetEnabled;
+	private Boolean isPasswordResetEnabled = false;
 
 	@Column(name = FieldConstants.PASSWORD_RESET_ATTEMPTS)
 	private int passwordResetAttempts;

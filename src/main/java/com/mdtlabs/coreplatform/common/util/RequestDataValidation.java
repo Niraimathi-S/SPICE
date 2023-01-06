@@ -1,9 +1,13 @@
 package com.mdtlabs.coreplatform.common.util;
 
-import java.beans.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.stream.*;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class RequestDataValidation {
     public static List validateRequest(Object requestObject, List<String> mandatoryFields) {

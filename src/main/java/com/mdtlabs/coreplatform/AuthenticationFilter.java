@@ -187,6 +187,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 							}
 						});
 
+						System.out.println("apiPermissionMap---"+ apiPermissionMap);
+						System.out.println("apiRequest-------"+apiRequest);
 						for (RoleDTO role : userDto.getRoles()) {
 							if (apiPermissionMap.get(request.getMethod()).get(apiRequest).contains(role.getName())) {
 								isExist = true;

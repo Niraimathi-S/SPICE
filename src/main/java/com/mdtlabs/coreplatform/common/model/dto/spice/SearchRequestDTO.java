@@ -20,6 +20,8 @@ public class SearchRequestDTO extends PaginateDTO {
 	private Long lastRefillVisitId;
 	
 	private Long tenantId;
+	
+	private String userType;
 
 	// private int offset;
 

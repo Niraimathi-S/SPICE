@@ -396,4 +396,8 @@ public class CommonUtil {
 		return matcher.matches();
 	}
 
+    public static String getAuthToken() {
+        return Constants.BEARER
+                + UserContextHolder.getUserDto().getAuthorization();
+    }
 }

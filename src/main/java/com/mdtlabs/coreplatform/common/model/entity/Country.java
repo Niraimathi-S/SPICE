@@ -23,6 +23,13 @@ import lombok.Data;
 @Table(name = TableConstants.TABLE_COUNTRY)
 public class Country extends TenantBaseEntity {
 
+	public Country(Long countryId) {
+		super(countryId);
+		// TODO Auto-generated constructor stub
+	}
+
+	public Country() {}
+	
 	private static final long serialVersionUID = 1L;
 
 	@NotEmpty(message = ErrorConstants.COUNTRY_NAME_NOT_NULL)

@@ -24,17 +24,25 @@ import lombok.Data;
  */
 @Data
 @MappedSuperclass
-@FilterDef(name = Constants.TENANT_FILTER_NAME,
-        parameters = @ParamDef(name = Constants.TENANT_PARAMETER_NAME, type = Constants.TENANT_PARAMETER_TYPE),
-        //defaultCondition = Constants.TENANT_COLUMN_NAME + " in (:" + Constants.TENANT_PARAMETER_NAME + ")")
-        defaultCondition = Constants.TENANT_COLUMN_NAME + " = :" + Constants.TENANT_PARAMETER_NAME)
+@FilterDef(name = Constants.TENANT_FILTER_NAME, parameters = @ParamDef(name = Constants.TENANT_PARAMETER_NAME, type = Constants.TENANT_PARAMETER_TYPE),
+		// defaultCondition = Constants.TENANT_COLUMN_NAME + " in (:" +
+		// Constants.TENANT_PARAMETER_NAME + ")")
+		defaultCondition = Constants.TENANT_COLUMN_NAME + " = :" + Constants.TENANT_PARAMETER_NAME)
 @Filter(name = Constants.TENANT_FILTER_NAME)
 @EntityListeners(TenantEntityListener.class)
-public class TenantBaseEntity extends BaseEntity{
+public class TenantBaseEntity extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
-    
-	//@JsonIgnore
-    @Column(name = FieldConstants.TENANT_ID)
+	public TenantBaseEntity(Long id) {
+		super(id);
+		// TODO Auto-generated constructor stub
+	}
+
+	public TenantBaseEntity() {
+	}
+
+	private static final long serialVersionUID = 1L;
+
+	// @JsonIgnore
+	@Column(name = FieldConstants.TENANT_ID)
 	protected Long tenantId;
 }

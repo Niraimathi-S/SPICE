@@ -66,6 +66,7 @@ public class RequestDTO extends CommonRequestDTO {
 
 	private Boolean isDeleted = false;
     private Long screeningId;
-
-
+    private String reason;
+    private String status;
+	private Long tenantId;
 }

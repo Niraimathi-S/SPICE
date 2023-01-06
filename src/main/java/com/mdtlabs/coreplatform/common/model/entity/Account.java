@@ -50,11 +50,17 @@ public class Account extends TenantBaseEntity {
 			@JoinColumn(name = FieldConstants.ACCOUNT_ID) }, inverseJoinColumns = { @JoinColumn(name = FieldConstants.CLINICAL_WORFKLOW_ID) })
 	private List<AccountWorkflow> clinicalWorkflows;
 
-	@NotNull(message = ErrorConstants.CLINICAL_WORKFLOW_NOT_NULL)
+//	@NotNull(message = ErrorConstants.CLINICAL_WORKFLOW_NOT_NULL)
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	// @Fetch(FetchMode.SELECT)
 	@JoinTable(name = TableConstants.TABLE_ACCOUNT_CUSTOMIZED_WORKFLOW, joinColumns = {
 			@JoinColumn(name = FieldConstants.ACCOUNT_ID) }, inverseJoinColumns = { @JoinColumn(name = FieldConstants.CUSTOMIZED_WORFKLOW_ID) })
 	private List<AccountWorkflow> customizedWorkflows;
+	
+	@Column(name = FieldConstants.REASON)
+	private String reason;
+	
+	@Column(name = FieldConstants.STATUS)
+	private String status;
 
 }

@@ -2,7 +2,11 @@ package com.mdtlabs.coreplatform.common.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ManyToAny;
 
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.TableConstants;
@@ -25,6 +29,9 @@ public class Site extends TenantBaseEntity{
     @Column(name = FieldConstants.ADDRESS_TYPE)
     private String addressType;
 
+    @Column(name = FieldConstants.ADDRESS_USE)
+    private String addressUse;
+    
     @Column(name = FieldConstants.ADDRESS_1)
     private String address1;
 
@@ -62,13 +69,14 @@ public class Site extends TenantBaseEntity{
     private Long countyId;
 
     @Column(name = FieldConstants.SUB_COUNTY_ID)
-    private Long subCountryId;
+    private Long subCountyId;
 
     @Column(name = FieldConstants.ACCOUNT_ID)
     private Long accountId;
 
-    @Column(name = FieldConstants.OPERATING_UNIT_ID)
-    private Long operatingUnitId;
+    @JoinColumn(name = FieldConstants.OPERATING_UNIT_ID)
+    @ManyToOne
+    private Operatingunit operatingUnit;
 
     @Column(name = FieldConstants.CULTURE_ID)
     private Long cultureId;

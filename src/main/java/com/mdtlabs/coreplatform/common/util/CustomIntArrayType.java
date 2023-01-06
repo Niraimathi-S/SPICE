@@ -1,12 +1,15 @@
 package com.mdtlabs.coreplatform.common.util;
 
+import java.io.Serializable;
+import java.sql.Array;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
-
-import java.io.Serializable;
-import java.sql.*;
-import java.util.Set;
 
 public class CustomIntArrayType implements UserType {
 	@Override

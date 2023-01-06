@@ -20,11 +20,12 @@ import lombok.Data;
 @Table(name = "organization")
 public class Organization extends TenantBaseEntity {
 
-	public Organization(String formName, String name, Long parentOrganizationId) {
+	public Organization(String formName, String name, Long parentOrganizationId, Long tenantId) {
 		super();
 		this.formName = formName;
 		this.name = name;
 		this.parentOrganizationId = parentOrganizationId;
+		this.tenantId = tenantId;
 	}
 
 	public Organization() {

@@ -325,10 +325,11 @@ public final class Constants {
 	public static final String NUT = "nut";
 	public static final String HOURS_PER_WEEK = "hrs/week";
 
-	public static final String ACCOUNT = "Account";
+	public static final String ACCOUNT = "account";
 	public static final String REGION = "Country";
-	public static final String OPERATING_UNIT = "Operating Unit";
+	public static final String OPERATING_UNIT = "operatingunit";
 	public static final String COUNTRY = "country";
+	public static final String SITE = "site";
 	public static final String SESSSION_ALIVE = "Session alive";
 	public static final String COUNT = "count";
 	public static final String DATA = "data";
@@ -383,7 +384,8 @@ public final class Constants {
 	public static final Map<String, String> SPICE_WEB_ROLES = new HashMap<>();
 	public static final String UPDATED_AT = "updatedAt";
 	public static final String COUNTRY_ID = "countryId";
-	
+    public static final String SEARCH_TERM = "[^a-zA-Z0-9]*";
+
 	static {
 		SPICE_WEB_ROLES.put(ROLE_ACCOUNT_ADMIN, ROLE_ACCOUNT_ADMIN);
 		SPICE_WEB_ROLES.put(ROLE_OPERATING_UNIT_ADMIN, ROLE_OPERATING_UNIT_ADMIN);

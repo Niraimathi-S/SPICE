@@ -30,6 +30,13 @@ import lombok.Data;
 @DynamicUpdate
 public class AccountWorkflow extends TenantBaseEntity {
 
+	public AccountWorkflow(Long id) {
+		super(id);
+	}
+	
+	public AccountWorkflow() {
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank(message = ErrorConstants.ACCOUNT_WORKFLOW_NAME_NOT_EMPTY)

@@ -100,4 +100,18 @@ public final class ErrorConstants {
 	public static final String EMAIL_NOT_NULL = "Username/email Id should not be empty";
 	public static final String ERROR_UPDATE_PASWORD = "Error while update user password : ";
 	public static final String ERROR_USER_DOESNT_ROLE = "You don't have a permission. Please contact administrator";
+	public static final String PHONE_NUMBER_INVALID = "Phone number is Invalid.";
+	public static final String EMAIL_INVALID = "Email is Invalid";
+	public static final String PARENT_ORG_ID_NOT_NULL = "Parent Organization Id should not be null";
+	public static final String SITE_NAME_NOT_NULL = "Site should not be empty";
+	public static final String ADDRESS_TYPE_NOT_NULL = "Address type should not be empty";
+	public static final String ADDRESS_USE_NOT_NULL = "Address use should not be empty";
+	public static final String ADDRESS_NOT_NULL = "Address should not be empty";
+	public static final String SITE_NOT_NULL = "Site should not be empty";
+	public static final String POSTAL_CODE_NOT_NULL = "Postal code should not be empty";
+	public static final String SITE_TYPE_NOT_NULL = "Site type should not be empty";
+	public static final String ACCOUNT_ID_NOT_NULL = "Account Id should not be empty";
+	public static final String OPERATING_UNIT_NOT_NULL = "Operating unit should not be empty";
+	public static final String CULTURE_NOT_NULL = "Culture should not be empty";
+	public static final String USER_MIN_SIZE = "Site should have atleast one user";
 }

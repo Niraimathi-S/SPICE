@@ -18,7 +18,7 @@ import lombok.Data;
 @Entity
 @Table(name = TableConstants.TABLE_OPERATING_UNIT)
 @DynamicUpdate
-public class Operatingunit extends BaseEntity {
+public class Operatingunit extends TenantBaseEntity {
 
 	private static final long serialVersionUID = -2584864712605974827L;
 
@@ -28,12 +28,11 @@ public class Operatingunit extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = FieldConstants.ACCOUNT_ID)
-	private Long accountId;
+	private Account account;
 
 	@Column(name = FieldConstants.COUNTRY_ID)
 	private Long countryId;
 
-	@Column(name = FieldConstants.TENANT_ID)
-	private Long tenantId;
-
+//	@Column(name = FieldConstants.TENANT_ID)
+//	private Long tenantId;
 }
