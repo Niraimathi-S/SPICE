@@ -10,14 +10,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.google.common.reflect.TypeToken;
@@ -28,15 +26,20 @@ import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataConflictException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountWorkflowDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
-import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SiteOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Account;
 import com.mdtlabs.coreplatform.common.model.entity.Country;
+import com.mdtlabs.coreplatform.common.model.entity.Operatingunit;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.Role;
+import com.mdtlabs.coreplatform.common.model.entity.Site;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.userservice.AdminApiInterface;
-import com.mdtlabs.coreplatform.userservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.userservice.repository.OrganizationRepository;
 import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
 import com.mdtlabs.coreplatform.userservice.service.RoleService;
@@ -70,7 +73,7 @@ public class OrganzationServiceImpl implements OrganizationService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@org.springframework.transaction.annotation.Transactional
+//	@org.springframework.transaction.annotation.Transactional
 	public Organization addOrganization(Organization organization) {
 		return organizationRepository.save(organization);
 	}
@@ -134,7 +137,7 @@ public class OrganzationServiceImpl implements OrganizationService {
 				.findByNameIgnoreCaseAndIsDeletedFalse(organization.getName());
 
 		if (!Objects.isNull(existingOrganization)) {
-			throw new DataConflictException(23007);
+			throw new DataConflictException(4014);
 		}
 	}
 
@@ -142,7 +145,8 @@ public class OrganzationServiceImpl implements OrganizationService {
 	 * {@inheritDoc}
 	 */
 	@org.springframework.transaction.annotation.Transactional
-	public void addOrganizationUsers(List<User> organizationUsers, List<String> roles, Organization organization) {
+	public void addOrganizationUsers(List<User> organizationUsers, List<String> roles, 
+			Organization organization, Boolean isSiteUser) {
 //		Organization organization = organizationDto.getOrganization();
 //		organization = organizationRepository.save(organization);
 		List<User> validatedUsers = new ArrayList<>();
@@ -162,10 +166,12 @@ public class OrganzationServiceImpl implements OrganizationService {
 			}
 		}
 
-		String roleName = roles.get(0);
 		Role role = null;
-		if (!roleName.isEmpty()) {
-			role = roleService.getRoleByName(roleName);
+		if (!isSiteUser) {
+			String roleName = roles.get(0);
+			if (!roleName.isEmpty()) {
+				role = roleService.getRoleByName(roleName);
+			}
 		}
 		for (User user : users) {
 			Set<Organization> userOrganizations = new HashSet<>();
@@ -176,7 +182,9 @@ public class OrganzationServiceImpl implements OrganizationService {
 				userOrganizations.add(organization);
 			}
 			user.setOrganizations(userOrganizations);
-			user.setRoles(Set.of(role));
+			if (!isSiteUser) {
+				user.setRoles(Set.of(role));
+			}
 			userService.addUser(user);
 		}
 	}
@@ -204,7 +212,9 @@ public class OrganzationServiceImpl implements OrganizationService {
 		List<Organization> childOrgs = new ArrayList<>();
 		List<Long> childOrgIds = new ArrayList<>();
 		List<Long> childOrgIdsToDelete = new ArrayList<>();
-
+		Organization organization = organizationRepository.findByIdAndIsDeletedFalse(tenantId);
+		formName = organization.getFormName();
+		
 		if (formName.equalsIgnoreCase("country")) {
 			childOrgs = organizationRepository.findByParentOrganizationId(tenantId);
 			childOrgIds = childOrgs.stream().map(account -> account.getId()).collect(Collectors.toList());
@@ -241,7 +251,7 @@ public class OrganzationServiceImpl implements OrganizationService {
 	 * {@inheritDoc}
 	 */
 	public Set<Organization> getOrganizationsByIds(List<Long> organizationIds) {
-		return organizationRepository.findByIsDeletedFalseAndIsActiveTrueAndIdIn(organizationIds);
+		return organizationRepository.findByIsDeletedFalseAndIsActiveAndIdIn(Constants.BOOLEAN_TRUE, organizationIds);
 	}
 
 	/**
@@ -299,42 +309,130 @@ public class OrganzationServiceImpl implements OrganizationService {
 		return childIds;
 	}
 
+	public Boolean activateDeactivateOrganization(List<Long> formdataIdList, boolean doActivate) {
+		if (!Objects.isNull(formdataIdList)) {
+			Set<Organization> organizations = organizationRepository.findByIsDeletedFalseAndIsActiveAndIdIn(!doActivate
+				, formdataIdList);
+			List<Organization> savedOrganizations = new ArrayList<>();
+			System.out.println("organizations----"+organizations);
+			if (!Objects.isNull(organizations)) {
+				organizations.stream().forEach(organization -> organization.setActive(doActivate));
+				savedOrganizations = organizationRepository.saveAll(organizations);
+			}
+			return !Objects.isNull(savedOrganizations);
+		}
+		return Boolean.FALSE;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void createCountry(CountryOrganizationDTO countryDTO) {
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		Country countryResponse = null;
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		Organization organization = new Organization(Constants.COUNTRY,countryResponse.getName(),null);
+		Organization organization = new Organization(Constants.COUNTRY, countryDTO.getName(), null, null);
 		validateOrganization(organization);
 		organization = addOrganization(organization);
-		Country country = modelMapper.map(countryDTO, new TypeToken<Country>() {
-		}.getType());
+		Country country = modelMapper.map(countryDTO, Country.class);
 		country.setTenantId(organization.getId());
-		SuccessResponse<Country> response = adminApiInterface.createCountry(token,
-				UserSelectedTenantContextHolder.get(), country);
+		countryResponse = adminApiInterface.createCountry(token,
+			UserSelectedTenantContextHolder.get(), country);
+		System.out.println("countryResponse------"+countryResponse);
+		
+		if (!Objects.isNull(countryResponse)) {
+			organization.setFormDataId(countryResponse.getId());
+			List<User> users = modelMapper.map(countryDTO.getUsers(), new TypeToken<List<User>>() {
+			}.getType());
 
-//		countryResponse = modelMapper.map(response.getBody().get("entity"), new TypeToken<Country>() {
-//		}.getType());
-
-		organization.setFormDataId(countryResponse.getId());
-		OrganizationDTO organizationDto = new OrganizationDTO();
-		organizationDto.setOrganization(organization);
-		organizationDto.setRoles(List.of(Constants.ROLE_REGION_ADMIN));
-		organizationDto.setSiteOrganization(Constants.BOOLEAN_FALSE);
-		List<User> users = modelMapper.map(countryDTO.getUsers(), new TypeToken<List<User>>() {
-		}.getType());
-
-		for (User user : users) {
-			user.setCountry(countryResponse);
+			for (User user : users) {
+				user.setCountry(countryResponse);
+			}
+			
+			addOrganizationUsers(users, List.of(Constants.ROLE_REGION_ADMIN) , organization, Constants.BOOLEAN_FALSE);
+			addOrganization(organization);
 		}
-		organizationDto.setUsers(users);
-//			ResponseEntity<Organization> response = createOrganization(token,
-//					UserSelectedTenantContextHolder.get(), organizationDto);
-//		Organization savedOrganization = createOrganization(organizationDto);
-//		countryResponse.setTenantId(savedOrganization.getId());
-//		countryResponse = countryRepository.save(countryResponse);
-//		regionCustomizationService.createRegionCustomizedJSON(savedOrganization);
-//			return countryResponse;
-
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void createAccount(AccountOrganizationDTO accountDTO) {
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+		Account accountResponse = null;
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		Organization organization = new Organization(Constants.ACCOUNT, accountDTO.getName(),
+			accountDTO.getParentOrganizationId(), null);
+		validateOrganization(organization);
+		organization = addOrganization(organization);
+		AccountWorkflowDTO account = modelMapper.map(accountDTO, AccountWorkflowDTO.class);
+//		Country country = new Country();
+//		country.setId(accountDTO.getCountryId());
+		account.setTenantId(organization.getId());
+		account.setClinicalWorkflows(accountDTO.getClinicalWorkflow());
+		account.setCustomizedWorkflows(accountDTO.getCustomizedWorkflow());
+		accountResponse = adminApiInterface.createAccount(token,
+			UserSelectedTenantContextHolder.get(), account);
+		System.out.println("accountrsponse------"+accountResponse);
+		
+		if (!Objects.isNull(accountResponse)) {
+			organization.setFormDataId(accountResponse.getId());
+			List<User> users = modelMapper.map(accountDTO.getUsers(), new TypeToken<List<User>>() {
+			}.getType());			
+			addOrganizationUsers(users, List.of(Constants.ROLE_ACCOUNT_ADMIN) , organization, Constants.BOOLEAN_FALSE);
+			addOrganization(organization);
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void createOU(OperatingUnitOrganizationDTO operatingUnitDTO) {
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+		Operatingunit operatingunitResponse= null;
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		Organization organization = new Organization(Constants.OPERATING_UNIT,operatingUnitDTO.getName(), 
+			operatingUnitDTO.getParentOrganizationId(), operatingUnitDTO.getParentOrganizationId());
+		validateOrganization(organization);
+		organization = addOrganization(organization);
+		Operatingunit operatingunit = modelMapper.map(operatingUnitDTO, Operatingunit.class);
+		operatingunit.setTenantId(organization.getId());
+//		operatingunit.setAccount();
+		operatingunitResponse = adminApiInterface.createOperatingUnit(token,
+			UserSelectedTenantContextHolder.get(), operatingunit);
+		System.out.println("accountrsponse------"+operatingunitResponse);
+		
+		if (!Objects.isNull(operatingunitResponse)) {
+			organization.setFormDataId(operatingunitResponse.getId());
+			List<User> users = modelMapper.map(operatingUnitDTO.getUsers(), new TypeToken<List<User>>() {
+			}.getType());			
+			addOrganizationUsers(users, List.of(Constants.ROLE_OPERATING_UNIT_ADMIN) , organization, Constants.BOOLEAN_FALSE);
+			addOrganization(organization);
+		}
+	}
+	
+	public void createSite(SiteOrganizationDTO siteDto) {
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+		Site siteResponse= null;
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		Organization organization = new Organization(Constants.SITE,siteDto.getName(), 
+				siteDto.getParentOrganizationId(), siteDto.getParentOrganizationId());
+		validateOrganization(organization);
+		organization = addOrganization(organization);
+		Site site = modelMapper.map(siteDto, Site.class);
+		site.setTenantId(organization.getId());
+//		operatingunit.setAccount();
+		siteResponse = adminApiInterface.createSite(token,
+			UserSelectedTenantContextHolder.get(), site);
+		System.out.println("accountrsponse------"+siteResponse);
+		
+		if (!Objects.isNull(siteResponse)) {
+			organization.setFormDataId(siteResponse.getId());
+//			List<User> users = modelMapper.map(siteDto.getUsers(), new TypeToken<List<User>>() {
+//			}.getType());			
+			addOrganizationUsers(siteDto.getUsers(), List.of(Constants.ROLE_OPERATING_UNIT_ADMIN) , organization, Constants.BOOLEAN_TRUE);
+			addOrganization(organization);
+		}
 	}
 
 }

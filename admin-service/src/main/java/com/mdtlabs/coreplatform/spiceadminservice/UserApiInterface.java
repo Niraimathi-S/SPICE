@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 
@@ -58,16 +59,22 @@ public interface UserApiInterface {
 	public ResponseEntity<Boolean> deleteAdminUser(@RequestHeader("Authorization") String token,
 		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody CommonRequestDTO requestDto);
 
-	@PostMapping("/organization/activate-deactivate/{tenantId}")
-	public Map<String, List<Long>> activateDeactivateOrg(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId,
-			@RequestParam(value = Constants.TENANT_PARAMETER_NAME) Long tenantId, @RequestParam Boolean isActive);
+	@PostMapping("/organization/activate-deactivate")
+	public Boolean activateDeactivateOrg(@RequestHeader("Authorization") String token,
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId,
+		@RequestBody List<Long> tenantIds, @RequestParam Boolean isActive);
 
 	@GetMapping(value = "/organization/{id}")
 	public ResponseEntity<Organization> getOrganizationById(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @PathVariable("id") Long id);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @PathVariable("id") Long id);
 	
 	@PostMapping("/user/update-active-status")
 	public ResponseEntity<Boolean> activateDeactivateUser(@RequestHeader("Authorization") String token,
-			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody List<Long> tenantIds, @RequestParam("isActive") boolean isActive);
+		@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, @RequestBody List<Long> tenantIds, 
+		@RequestParam("isActive") boolean isActive);
+	
+	@PostMapping("/user/search")
+	public ResponseEntity<Map> searchUser(@RequestHeader("Authorization") String token,
+			@RequestHeader(Constants.HEADER_TENANT_ID) Long userTenantId, 
+			@RequestBody SearchRequestDTO requestDTO);
 }

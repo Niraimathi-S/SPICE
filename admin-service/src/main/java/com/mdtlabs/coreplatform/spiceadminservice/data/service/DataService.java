@@ -201,5 +201,8 @@ public interface DataService {
 	 * @param id - tenantId
 	 * @return Boolean - Activation confirmation
 	 */
-	boolean activateOrDeactiveRegion(Long id, Boolean isActive);
+	boolean activateOrDeactiveRegion(Long tenantId, Boolean isActive);
+	
+	List<Subcounty> getAllSubCountyByCountyId(Long countyId);
+
 }

@@ -69,4 +69,7 @@ public interface AccountWorkflowRepository extends JpaRepository<AccountWorkflow
 	 * @return AccountWorkflow Entity
 	 */
 	public AccountWorkflow findByIdAndIsDeleted(long id, boolean isDeleted);
+	
+	public List<AccountWorkflow> findByIdInAndIsDeletedFalse(List<Long> workflowIds);
+
 }

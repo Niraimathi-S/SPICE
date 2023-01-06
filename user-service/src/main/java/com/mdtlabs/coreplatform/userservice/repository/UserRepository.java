@@ -32,12 +32,25 @@ public interface UserRepository extends JpaRepository<User, Long>, PagingAndSort
 	public static final String GET_USER_BY_ID = "select user from User as user where"
 		+ " user.id =:userId and user.isActive =:status";
 	public static final String GET_USER_BY_USERNAME = "select user from User as user "
-		+ "where user.username =:username and user.isActive =:status";
+		+ "where user.username =:username and user.isActive =:status and user.isDeleted=false";
 	public static final String GET_USERS_BY_USERNAME_NOT_BY_ID = "select user from User "
 		+ "as user where user.isActive =:status and user.username =:username and user.id !=:userId";
 	public static final String GET_USERS_BY_TENANT_IDS = "select user from User user "
-		+ "join user.organizations as org where org.id in (:tenantIds)";
+		+ "join user.organizations as org where org.id in (:tenantIds) AND user.isDeleted=false";
+	public static final String SEARCH_USERS = "select user from User user "
+		+ "join user.organizations as org where org.id in (:tenantIds) AND user.isDeleted=false "
+		+ "AND ((:searchTerm is null or lower(user.firstName) LIKE CONCAT('%',lower(:searchTerm),'%')) "
+		+ "OR (:searchTerm is null or lower(user.lastName) LIKE CONCAT('%',lower(:searchTerm),'%')) "
+		+ "OR (:searchTerm is null or lower(user.username) LIKE CONCAT('%',lower(:searchTerm),'%'))) ";
 	
+	public static final String GET_USERS_COUNT_BY_TENANT_IDS = "select count(user.id) from User user "
+		+ "join user.organizations as org where org.id in (:tenantIds) AND user.isDeleted=false";
+	public static final String SEARCH_USER_COUNT = "select count(user.id) from User user "
+		+ "join user.organizations as org where org.id in (:tenantIds) AND user.isDeleted=false "
+		+ "AND ((:searchTerm is null or lower(user.firstName) LIKE CONCAT('%',lower(:searchTerm),'%')) "
+		+ "OR (:searchTerm is null or lower(user.lastName) LIKE CONCAT('%',lower(:searchTerm),'%')) "
+		+ "OR (:searchTerm is null or lower(user.username) LIKE CONCAT('%',lower(:searchTerm),'%'))) ";
+		
 	/**
 	 * This method is used to get user with respect to id.
 	 *
@@ -129,5 +142,22 @@ public interface UserRepository extends JpaRepository<User, Long>, PagingAndSort
 	 * @return User entity.
 	 */
 	public User findByUsernameIgnoreCaseAndIsDeletedFalse(String email);
+	
+	/**
+	 * This method is used to find users by tenant IDs, username, firstName or lastName.
+	 *
+	 * @param tenantIds - tenant IDs
+	 * @return List(User) - list of users
+	 */
+	@Query(value = SEARCH_USERS)
+	public List<User> searchUsersByTenantIds(@Param("tenantIds") List<Long> tenantIds, 
+		@Param("searchTerm") String searchTerm, Pageable pageable);
+	
+	@Query(value = SEARCH_USER_COUNT)
+	public Integer getSearchedUserCount(@Param("tenantIds") List<Long> tenantIds, 
+		@Param("searchTerm") String searchTerm);
+	
+	@Query(value = GET_USERS_COUNT_BY_TENANT_IDS)
+	public Integer countUsersByTenantIds(@Param("tenantIds") List<Long> tenantIds);
 
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
 
@@ -219,5 +220,13 @@ public interface UserService {
 	 */
 	Boolean activateDeactivateUser(List<Long> tenantIds, boolean isActive);
 
+
+	/**
+	 * To search users by their tenantId.
+	 * 
+	 * @param requestDTO - request data containing tenantId and search term
+	 * @return
+	 */
+	Map<String, Object> searchUser(SearchRequestDTO requestDTO);
 
 }

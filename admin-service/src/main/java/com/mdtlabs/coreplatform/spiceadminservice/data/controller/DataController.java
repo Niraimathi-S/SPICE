@@ -145,9 +145,9 @@ public class DataController {
 	 * @author karthick M
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/country")
-	public SuccessResponse<Country> createCountry(@Valid @RequestBody Country country) {
-		dataService.createCountry(country);
-		return new SuccessResponse<>(SuccessCode.COUNTRY_SAVE, dataService.createCountry(country),HttpStatus.CREATED);
+	public Country createCountry(@Valid @RequestBody Country country) {
+		return dataService.createCountry(country);
+//		return new SuccessResponse<>(SuccessCode.COUNTRY_SAVE,HttpStatus.CREATED);
 	}
 
 	/**
@@ -269,6 +269,12 @@ public class DataController {
 	@GetMapping(value = "/subcounty-list/{id}")
 	public List<Subcounty> getAllSubCountyByCountryId(@PathVariable(value = "id") long countryId) {
 		return dataService.getAllSubCountyByCountryId(countryId);
+
+	}
+	
+	@GetMapping(value = "/subcounty-by-county-id/{id}")
+	public List<Subcounty> getAllSubCountyByCountyId(@PathVariable(value = "id") long countyId) {
+		return dataService.getAllSubCountyByCountyId(countyId);
 
 	}
 

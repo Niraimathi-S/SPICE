@@ -250,8 +250,7 @@ public class DataServiceImpl implements DataService {
 		}
 		CountryOrganizationDTO countryOrganizationDto = new CountryOrganizationDTO();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		countryOrganizationDto = modelMapper.map(country, new TypeToken<CountryOrganizationDTO>() {
-		}.getType());
+		countryOrganizationDto = modelMapper.map(country, CountryOrganizationDTO.class);
 		UserDTO userDto = UserContextHolder.getUserDto();
 		String token = Constants.BEARER + userDto.getAuthorization();
 		if (isUsersRequired) {
@@ -333,6 +332,10 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public List<Subcounty> getAllSubCountyByCountryId(Long countryId) {
 		return subCountyRepository.findByCountryId(countryId);
+	}
+	
+	public List<Subcounty> getAllSubCountyByCountyId(Long countyId) {
+		return subCountyRepository.findByCountyIdAndIsDeletedFalse(countyId);
 	}
 
 	/**
@@ -451,35 +454,76 @@ public class DataServiceImpl implements DataService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean activateOrDeactiveRegion(Long id, Boolean isActive) {
-		Country country = countryRepository.findByIdAndIsDeleted(id, false);
+	public boolean activateOrDeactiveRegion(Long tenantId, Boolean isActive) {
+		Country country = countryRepository.findByTenantIdAndIsDeletedFalseAndIsActive(tenantId, !isActive);
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		System.out.println("country--------" + country);
 		if (Objects.isNull(country)) {
 			throw new DataNotFoundException(19010);
 		}
+		System.out.println("country_---------"+country);
 		country.setActive(isActive);
 		countryRepository.save(country);
-		Map<String, List<Long>> childOrgIds = userApiInterface.activateDeactivateOrg(token,
-				UserSelectedTenantContextHolder.get(), country.getTenantId(), isActive);
-		System.out.println("childOrgIds------------ " + childOrgIds);
-		if (!childOrgIds.get("accountIds").isEmpty()) {
-			accountService.activateDeactivateAccountsList(childOrgIds.get("accountIds"), isActive);
-		}
+//		Map<String, List<Long>> childOrgIds = userApiInterface.activateDeactivateOrg(token,
+//				UserSelectedTenantContextHolder.get(), country.getTenantId(), isActive);
+//		System.out.println("childOrgIds------------ " + childOrgIds);
+		List<Long> tenantIds = new ArrayList<>();
+//		if (!childOrgIds.get("accountIds").isEmpty()) {
+		tenantIds.addAll(accountService.activateDeactivateAccountsList(List.of(country.getId()), isActive));
+//		}
 
-		if (!childOrgIds.get("operatingUnitIds").isEmpty()) {
-			operatingUnitService.activateDeactivateOUList(childOrgIds.get("operatingUnitIds"), isActive);
-		}
-		if (!childOrgIds.get("siteIds").isEmpty()) {
-			siteService.activateDeactivateSiteList(childOrgIds.get("siteIds"), isActive);
-		}
+//		if (!tenantIds.get(Constants.ACCOUNT).isEmpty()) {
+			tenantIds.addAll(operatingUnitService.activateDeactivateOUList(country.getId(), null, isActive));
+//		}
+//		if (!tenantIds.get(Constants.OPERATING_UNIT).isEmpty()) {
+			tenantIds.addAll(siteService.activateDeactivateSiteList(country.getId(), null, null, isActive));
+//		}
+		
+		System.out.println("tenantIds--------"+tenantIds);
 
-		List<Long> tenantIdList = childOrgIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
-		tenantIdList.add(id);
-		System.out.println("childOrgIdsToDelete--------" + tenantIdList);
-		userApiInterface.activateDeactivateUser(token, UserSelectedTenantContextHolder.get(), tenantIdList, isActive);
+//		List<Long> tenantIdList = formdataIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+//		List<Long> tenantIdList = tenantIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+
+		tenantIds.add(tenantId);
+		userApiInterface.activateDeactivateOrg(token,
+				UserSelectedTenantContextHolder.get(), tenantIds, isActive);
+		
+		System.out.println("tenantIdList--------" + tenantIds);
+		
+		userApiInterface.activateDeactivateUser(token, UserSelectedTenantContextHolder.get(), tenantIds, isActive);
 
 		return true;
 	}
 
+	
+//	public boolean activateOrDeactiveRegions(Long id, Boolean isActive) {//old
+//		Country country = countryRepository.findByIdAndIsDeleted(id, false);
+//		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+//		System.out.println("country--------" + country);
+//		if (Objects.isNull(country)) {
+//			throw new DataNotFoundException(19010);
+//		}
+//		country.setActive(isActive);
+//		countryRepository.save(country);
+//		Map<String, List<Long>> childOrgIds = userApiInterface.activateDeactivateOrg(token,
+//				UserSelectedTenantContextHolder.get(), country.getTenantId(), isActive);
+//		System.out.println("childOrgIds------------ " + childOrgIds);
+//		List<Long> formdataIds = new ArrayList<>();
+//		if (!childOrgIds.get("accountIds").isEmpty()) {
+//			formdataIds.addAll(accountService.activateDeactivateAccountsList(childOrgIds.get("accountIds"), isActive));
+//		}
+//
+//		if (!childOrgIds.get("operatingUnitIds").isEmpty()) {
+//			formdataIds.addAll(operatingUnitService.activateDeactivateOUList(childOrgIds.get("operatingUnitIds"), isActive));
+//		}
+//		if (!childOrgIds.get("siteIds").isEmpty()) {
+//			formdataIds.addAll(siteService.activateDeactivateSiteList(childOrgIds.get("siteIds"), isActive));
+//		}
+//
+//		List<Long> tenantIdList = childOrgIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+//		tenantIdList.add(id);
+//		System.out.println("childOrgIdsToDelete--------" + tenantIdList);
+//		userApiInterface.activateDeactivateUser(token, UserSelectedTenantContextHolder.get(), tenantIdList, isActive);
+//
+//		return true;
+//	}
 }

@@ -1,0 +1,47 @@
+server:
+   servlet:
+      #contextPath: /auth-service
+      contextPath: /
+   port: 8089
+
+#DB Config
+spring:
+   application:
+      name: auth-service
+   main:
+      allow-bean-definition-overriding: true
+      allow-circular-references: true
+   datasource:
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://mypostgres:5432/spice?serverTimezone=UTC
+      username : postgres
+      password : root
+   jpa:
+      show-sql: true
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            enable_lazy_load_no_trans: true
+          
+springdoc:
+  packagesToScan: com.mdtlabs.coreplatform.authserver
+
+eureka:
+   client:
+      serviceUrl:
+         defaultZone: http://servicediscovery:8761/eureka/
+
+app:
+   public-key: public_key.der
+   private-key: private_key.der
+   login-time-limit-in-hour: ${LOGIN_TIME_LIMIT_IN_HOUR:1}
+   login-count-limit: ${LOGIN_COUNT_LIMIT:5}
+
+spicelog: 
+   fileName: './log/SpiceApplicationLog.log'
+   fileNamePattern: './log/SpiceApplicationLog.%d{yyyy-MM-dd}.%i.log.gz'
+   consolePattern: '%white(%d{ISO8601}) %highlight(%-5level) [%yellow(%t)] :  %msg%n%throwable'
+   filePattern: '%-4relative [%thread] %-5level %logger{35} - %msg%n'
+   maxHistory: 2
+   totalSizeCap: 3GB
+   maxFileSize: 10MB

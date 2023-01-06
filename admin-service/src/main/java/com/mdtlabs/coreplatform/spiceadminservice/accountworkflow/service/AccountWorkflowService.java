@@ -58,5 +58,5 @@ public interface AccountWorkflowService {
 	 */
 	public List<AccountWorkflow> getAllAccountWorkFlows();
 
-
+	public List<AccountWorkflow> getAccountWorkflowsById(List<Long> workflowIds);
 }

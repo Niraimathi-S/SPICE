@@ -119,5 +119,7 @@ public class AccountWorkflowServiceImpl implements AccountWorkflowService {
 		return accountWorkflowRepository.findAll();
 	}
 
-
+	public List<AccountWorkflow> getAccountWorkflowsById(List<Long> workflowIds) {
+		return accountWorkflowRepository.findByIdInAndIsDeletedFalse(workflowIds);
+	}
 }

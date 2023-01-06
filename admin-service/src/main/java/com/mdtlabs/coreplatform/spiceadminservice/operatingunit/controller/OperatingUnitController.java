@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,12 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitDetailsDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitListDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Account;
+import com.mdtlabs.coreplatform.common.model.entity.Operatingunit;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceadminservice.message.SuccessResponse;
@@ -58,10 +63,10 @@ public class OperatingUnitController {
     		? 0 : Integer.parseInt(response.get(Constants.COUNT).toString());
     	if (0 == totalCount) {
         	return new SuccessResponse<List<OperatingUnitListDTO>>(
-        	SuccessCode.GET_COUNTRY, response.get(Constants.DATA), HttpStatus.OK);
+        	SuccessCode.GOT_OU, response.get(Constants.DATA), HttpStatus.OK);
 		}
     	return new SuccessResponse<List<OperatingUnitListDTO>>(
-    		SuccessCode.GET_COUNTRY, response.get(Constants.DATA), totalCount, HttpStatus.OK);
+    		SuccessCode.GOT_OU, response.get(Constants.DATA), totalCount, HttpStatus.OK);
 	}
 	
 	
@@ -72,23 +77,23 @@ public class OperatingUnitController {
 		Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0
 				: Integer.parseInt(response.get(Constants.COUNT).toString());
 		if (0 == totalCount) {
-			return new SuccessResponse<List<OperatingUnitDTO>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA),
+			return new SuccessResponse<List<OperatingUnitDTO>>(SuccessCode.GOT_OU, response.get(Constants.DATA),
 					HttpStatus.OK);
 		}
-		return new SuccessResponse<List<OperatingUnitDTO>>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA), totalCount,
+		return new SuccessResponse<List<OperatingUnitDTO>>(SuccessCode.GOT_OU, response.get(Constants.DATA), totalCount,
 				HttpStatus.OK);
 	}
 
 	@PostMapping("/details")
 	public SuccessResponse<OperatingUnitDetailsDTO> getOUDetails(@RequestBody CommonRequestDTO commonRequestDTO) {
-		return new SuccessResponse<OperatingUnitDetailsDTO>(SuccessCode.GET_ACCOUNT,
+		return new SuccessResponse<OperatingUnitDetailsDTO>(SuccessCode.GOT_OU,
 				operatingUnitService.getOUDetails(commonRequestDTO), HttpStatus.OK);
 	}
 	
 	/**
 	 * To add operating unit admin user.
 	 *
-	 * @param user - account admin user details
+	 * @param user - operating unit admin user details
 	 * @return User - User entity
 	 * @author Niraimathi S
 	 */
@@ -124,5 +129,41 @@ public class OperatingUnitController {
         return new SuccessResponse<>(SuccessCode.OU_ADMIN_DELETE, HttpStatus.OK);
 	}
 	
+	/**
+	 * Gets  operating unit admin users list.
+	 * 
+	 * @param requestDTO - request data 
+	 * @return List(User) - List of Users
+	 * @author Niraimathi S
+	 */
+	@PostMapping(value = "/admin-users")
+	public SuccessResponse<List<UserDTO>> getOUAdminUsers(@RequestBody SearchRequestDTO requestDTO) {
+		Map<String, Object> users = operatingUnitService.getOUUsersList(requestDTO);
+        return new SuccessResponse<>(SuccessCode.GOT_ADMIN_USERS, users, users.size(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/activate/{id}")
+	public SuccessResponse<Operatingunit> activateOUById(@PathVariable("id") long id) {
+		operatingUnitService.activateDeactivateOU(id, true);
+		return new SuccessResponse<>(SuccessCode.OU_ACTIVATE, HttpStatus.OK);
+	}
+
+	/**
+	 * To de-activate the account by its id.
+	 *
+	 * @param id Account id to deactivate an active account
+	 * @return Account entity
+	 * @author Jeyaharini T A
+	 */
+	@GetMapping("/deactivate/{id}")
+	public SuccessResponse<Account> deactivateOUById(@PathVariable("id") long id) {
+		operatingUnitService.activateDeactivateOU(id, true);
+		return new SuccessResponse<Account>(SuccessCode.OU_DEACTIVATE, HttpStatus.OK);
+	}
+	
+	@PostMapping("/create")
+	public Operatingunit createOperatingUnit(@RequestBody @Valid Operatingunit operatingUnit) {
+		return operatingUnitService.createOperatingUnit(operatingUnit);
+	}
 	
 }

@@ -5,7 +5,11 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountDetailsDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountWorkflowDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
@@ -28,7 +32,7 @@ public interface AccountService {
 	 * @return Account entity
 	 * @author Jeyaharini T A
 	 */
-	public Account addAccount(Account account);
+	public Account addAccount(AccountWorkflowDTO account);
 
 	/**
 	 * To update the existing account details by it's id.
@@ -37,7 +41,7 @@ public interface AccountService {
 	 * @return Account entity
 	 * @author Jeyaharini T A
 	 */
-	public Account updateAccount(Account account);
+	public Account updateAccount(AccountWorkflowDTO account);
 
 	/**
 	 * To get account by it's id.
@@ -55,7 +59,7 @@ public interface AccountService {
 	 * @param id - account id
 	 * @return Account entity
 	 */
-	public AccountOrganizationDTO getAccountDetails(CommonRequestDTO requestDTO);
+	public AccountDetailsDTO getAccountDetails(CommonRequestDTO requestDTO);
 	
 	/**
 	 * To activate or deactivate account by updating isActive column.
@@ -65,7 +69,7 @@ public interface AccountService {
 	 * @return Account entity
 	 * @author Jeyaharini T A
 	 */
-	public Account activateDeactivateAccount(long id, boolean isActive);
+	public Account activateDeactivateAccount(RequestDTO requestDTO);
 
 	/**
 	 * To get deactivated accounts.
@@ -134,8 +138,24 @@ public interface AccountService {
 	 * @param isActive - isActive value
 	 * @author Niraimathi S
 	 */
-	public void activateDeactivateAccountsList(List<Long> accounts, boolean isActive);
+	public List<Long> activateDeactivateAccountsList(List<Long> accounts, boolean isActive);
 	
+	/**
+	 * To get count of account by its country Id
+	 * 
+	 * @param countryId - country Id
+	 * @return Integer - count of accounts
+	 * @author Niraimathi S
+	 */
 	public Integer getCountByCountryId(Long countryId);
+
+	/**
+	 * Get the account users list for the selected region.
+	 * 
+	 * @param requestDto - request object containing tenantId 
+	 * @return List(User) - List of users
+	 * @author Niraimathi S
+	 */
+	public Map<String, Object> getAccountUsersList(SearchRequestDTO requestDto);
 
 }

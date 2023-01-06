@@ -1,7 +1,6 @@
 package com.mdtlabs.coreplatform.spiceadminservice.operatingunit.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import com.google.common.reflect.TypeToken;
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
+import com.mdtlabs.coreplatform.common.exception.DataConflictException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
@@ -86,9 +86,15 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		Organization organization = userApiInterface
 			.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
-		
+		Long countryId = null;
+		Long accountId = null;
+		if (organization.getFormName().equals("country")) {
+			countryId = organization.getFormDataId();
+		} else {
+			accountId = organization.getFormDataId();
+		}
 		if (!Objects.isNull(organization)) {
-			List<Operatingunit> operatingunits = operatingUnitRepository.findOperatingUnitList(searchTerm, organization.getFormDataId(), pageable)
+			List<Operatingunit> operatingunits = operatingUnitRepository.findOperatingUnitList(searchTerm, countryId, accountId, pageable)
 					.stream().collect(Collectors.toList());
 			if (!operatingunits.isEmpty()) {
 				for (Operatingunit operatingunit : operatingunits) {
@@ -99,7 +105,7 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 //					operatingUnitListDto.setTenantId(operatingunit.getTenantId());
 //					Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
 //							UserSelectedTenantContextHolder.get(), UserSelectedTenantContextHolder.get(), "account");
-					operatingUnitListDto.setSiteCount(siteService.getCount(null, null, organization.getFormDataId(), Constants.BOOLEAN_TRUE));
+					operatingUnitListDto.setSiteCount(siteService.getCount(null, null,operatingunit.getId(), Constants.BOOLEAN_TRUE));
 					operatingUnitListDtos.add(operatingUnitListDto);
 				}
 			}
@@ -108,7 +114,7 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 		if (0 == requestDto.getSkip() && requestDto.getSearchTerm().isBlank()) {
 			totalCount = operatingUnitRepository.getCount(null, organization.getFormDataId(), Constants.BOOLEAN_TRUE);
 		} else if ((0 == requestDto.getSkip() && !requestDto.getSearchTerm().isBlank())) {
-//			totalCount = operatingUnitRepository.getOperatingUnitsCount(searchTerm, organization.getFormDataId());
+			totalCount = operatingUnitRepository.getOperatingUnitsCount(searchTerm, countryId, accountId);
 		}
 		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, operatingUnitListDtos);
 		return response;
@@ -155,7 +161,7 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 	public Map<String, Object> getAllOperatingUnits(SearchRequestDTO requestDto) {
 		String searchTerm = requestDto.getSearchTerm();
 		int totalCount = 0;
-		Pageable pageable = Pagination.setPagination(requestDto.getPageNumber(), requestDto.getLimit(),
+		Pageable pageable = Pagination.setPagination(requestDto.getSkip(), requestDto.getLimit(),
 				Constants.UPDATED_AT, Constants.BOOLEAN_FALSE);
 
 		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
@@ -166,122 +172,116 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 		Map<String, List<Long>> childOrgList = new HashMap<>();
 		ParentOrganizationDTO accountDto = new ParentOrganizationDTO();
 
-		List<Long> tenantIdList = new ArrayList<>();
-		Organization organizationResponse = userApiInterface
-				.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
-		if (!Objects.isNull(organizationResponse)) {
-			if (organizationResponse.getFormName().equals("country")) {
-				childOrgList = userApiInterface.getChildOrganizations(token, UserSelectedTenantContextHolder.get(),
-						requestDto.getTenantId(), "country");
-			} else {
-				childOrgList = userApiInterface.getChildOrganizations(token, UserSelectedTenantContextHolder.get(),
-						requestDto.getTenantId(), "account");
-
-				Account account = dataRepository.getAccountById(requestDto.getTenantId());
-				if (!Objects.isNull(account)) {
-					modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-					accountDto = modelMapper.map(account, new TypeToken<ParentOrganizationDTO>() {
-					}.getType());
-				}
-			}
-		}
-
-		tenantIdList = childOrgList.get("operatingUnitIds");
+		Long countryId = null;
+		Long accountId = null;
+		
+//		List<Long> tenantIdList = new ArrayList<>();
+//		Organization organizationResponse = userApiInterface
+//				.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
+		Organization organization = userApiInterface
+			.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
 		List<OperatingUnitDTO> operatingUnitDTOs = new ArrayList<>();
-		if (!Objects.isNull(tenantIdList) && !tenantIdList.isEmpty()) {
-			operatingunits = operatingUnitRepository.getOperatingUnitsByTenants(searchTerm, tenantIdList, pageable);
-
-			if (!Objects.isNull(operatingunits)) {
-				for (Operatingunit operatingUnit : operatingunits) {
-					OperatingUnitDTO operatingUnitDTO = new OperatingUnitDTO();
-					operatingUnitDTO.setId(operatingUnit.getId());
-					operatingUnitDTO.setName(operatingUnit.getName());
-					operatingUnitDTO.setTenantId(operatingUnit.getTenantId());
-					if (organizationResponse.getFormName().equals("country")) {
-						Account account = dataRepository.getAccountById(operatingUnit.getAccountId());
-						if (!Objects.isNull(account)) {
-							modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-							accountDto = modelMapper.map(account, new TypeToken<ParentOrganizationDTO>() {
-							}.getType());
-						}
-					}
-					operatingUnitDTO.setAccount(accountDto);
-					operatingUnitDTOs.add(operatingUnitDTO);
-				}
+		if (!Objects.isNull(organization)) {
+			if (organization.getFormName().equals("country")) {
+				countryId = organization.getFormDataId();
+			} else {
+				accountId = organization.getFormDataId();
 			}
+			System.out.println("countryId ----"+ countryId +"\t accountId---"+ accountId);
+			operatingunits = operatingUnitRepository.getOperatingUnits(searchTerm, countryId, accountId, pageable);
+//
+//			if (!Objects.isNull(operatingunits)) {
+//				for (Operatingunit operatingUnit : operatingunits) {
+//					OperatingUnitDTO operatingUnitDTO = new OperatingUnitDTO();
+//					operatingUnitDTO.setId(operatingUnit.getId());
+//					operatingUnitDTO.setName(operatingUnit.getName());
+//					operatingUnitDTO.setTenantId(operatingUnit.getTenantId());
+//					if (!Objects.isNull(operatingUnit.getAccount())) {
+//						modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//						accountDto = modelMapper.map(operatingUnit.getAccount(),
+//								new TypeToken<ParentOrganizationDTO>() {}.getType());
+//					}
+//					operatingUnitDTO.setAccount(accountDto);
+//					operatingUnitDTOs.add(operatingUnitDTO);
+//				}
+//			}/
+			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+			operatingUnitDTOs = modelMapper.map(operatingunits, new TypeToken<List<OperatingUnitDTO>>() {
+			}.getType());	
+			System.out.println("operatingUnitDTOs-----"+operatingUnitDTOs);
 		}
 		if (0 == requestDto.getSkip() && requestDto.getSearchTerm().isBlank()) {
 			totalCount = operatingUnitRepository.countByIsDeletedFalse();
 		} else if ((0 == requestDto.getSkip() && !requestDto.getSearchTerm().isBlank())) {
-			totalCount = operatingUnitRepository.getOperatingUnitsCount(searchTerm, tenantIdList);
+			totalCount = operatingUnitRepository.getOperatingUnitsCount(searchTerm, countryId, accountId);
 		}
 
 		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, operatingUnitDTOs);
 		return response;
 	}
 
-	public Map<String, Object> getAllOperatingUnit(SearchRequestDTO requestDto) {
-		String searchTerm = requestDto.getSearchTerm();
-		int totalCount = 0;
-		Pageable pageable = Pagination.setPagination(requestDto.getPageNumber(), requestDto.getLimit(),
-				Constants.UPDATED_AT, Constants.BOOLEAN_FALSE);
-
-		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
-			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
-		}
-		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
-		List<Operatingunit> operatingunits = new ArrayList<>();
-		ParentOrganizationDTO accountDto = new ParentOrganizationDTO();
-		Long organizationId = 0L;
-
-		List<Long> tenantIdList = new ArrayList<>();
-		Organization organizationResponse = userApiInterface
-				.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
-		if (!Objects.isNull(organizationResponse)) {
-			organizationId = organizationResponse.getFormDataId();
-			if (organizationResponse.getFormName().equals("country")) {
-				operatingunits = operatingUnitRepository
-						.findByIsDeletedFalseAndIsActiveAndCountryId(Constants.BOOLEAN_TRUE, organizationId);
-			} else {
-				operatingunits = operatingUnitRepository
-						.findByIsDeletedFalseAndIsActiveAndAccountId(Constants.BOOLEAN_TRUE, organizationId);
-				Account account = dataRepository.getAccountById(requestDto.getTenantId());
-				if (!Objects.isNull(account)) {
-					modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-					accountDto = modelMapper.map(account, new TypeToken<ParentOrganizationDTO>() {
-					}.getType());
-				}
-			}
-		}
-
-		List<OperatingUnitDTO> operatingUnitDTOs = new ArrayList<>();
-		if (!Objects.isNull(operatingunits)) {
-			for (Operatingunit operatingUnit : operatingunits) {
-				OperatingUnitDTO operatingUnitDTO = new OperatingUnitDTO();
-				operatingUnitDTO.setId(operatingUnit.getId());
-				operatingUnitDTO.setName(operatingUnit.getName());
-				operatingUnitDTO.setTenantId(operatingUnit.getTenantId());
-				if (organizationResponse.getFormName().equals("country")) {
-					Account account = dataRepository.getAccountById(operatingUnit.getAccountId());
-					if (!Objects.isNull(account)) {
-						modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-						accountDto = modelMapper.map(account, new TypeToken<ParentOrganizationDTO>() {
-						}.getType());
-					}
-				}
-				operatingUnitDTO.setAccount(accountDto);
-				operatingUnitDTOs.add(operatingUnitDTO);
-			}
-		}
-		if (0 == requestDto.getSkip() && requestDto.getSearchTerm().isBlank()) {
-			totalCount = operatingUnitRepository.countByIsDeletedFalse();
-		} else if ((0 == requestDto.getSkip() && !requestDto.getSearchTerm().isBlank())) {
-			totalCount = operatingUnitRepository.getOperatingUnitsCount(searchTerm, tenantIdList);
-		}
-
-		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, operatingUnitDTOs);
-		return response;
-	}
+//	public Map<String, Object> getAllOperatingUnit(SearchRequestDTO requestDto) {
+//		String searchTerm = requestDto.getSearchTerm();
+//		int totalCount = 0;
+//		Pageable pageable = Pagination.setPagination(requestDto.getPageNumber(), requestDto.getLimit(),
+//				Constants.UPDATED_AT, Constants.BOOLEAN_FALSE);
+//
+//		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
+//			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9]*", "");
+//		}
+//		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+//		List<Operatingunit> operatingunits = new ArrayList<>();
+//		ParentOrganizationDTO accountDto = new ParentOrganizationDTO();
+//		Long organizationId = 0L;
+//
+//		List<Long> tenantIdList = new ArrayList<>();
+//		Organization organizationResponse = userApiInterface
+//				.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
+//		if (!Objects.isNull(organizationResponse)) {
+//			organizationId = organizationResponse.getFormDataId();
+//			if (organizationResponse.getFormName().equals("country")) {
+//				operatingunits = operatingUnitRepository
+//						.findByIsDeletedFalseAndIsActiveAndCountryId(Constants.BOOLEAN_TRUE, organizationId);
+//			} else {
+//				operatingunits = operatingUnitRepository
+//						.findByIsDeletedFalseAndIsActiveAndAccountId(Constants.BOOLEAN_TRUE, organizationId);
+//				Account account = dataRepository.getAccountById(requestDto.getTenantId());
+//				if (!Objects.isNull(account)) {
+//					modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//					accountDto = modelMapper.map(account, new TypeToken<ParentOrganizationDTO>() {
+//					}.getType());
+//				}
+//			}
+//		}
+//
+//		List<OperatingUnitDTO> operatingUnitDTOs = new ArrayList<>();
+//		if (!Objects.isNull(operatingunits)) {
+//			for (Operatingunit operatingUnit : operatingunits) {
+//				OperatingUnitDTO operatingUnitDTO = new OperatingUnitDTO();
+//				operatingUnitDTO.setId(operatingUnit.getId());
+//				operatingUnitDTO.setName(operatingUnit.getName());
+//				operatingUnitDTO.setTenantId(operatingUnit.getTenantId());
+//				if (organizationResponse.getFormName().equals("country")) {
+//					Account account = dataRepository.getAccountById(operatingUnit.getAccount().getId());
+//					if (!Objects.isNull(account)) {
+//						modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//						accountDto = modelMapper.map(account, new TypeToken<ParentOrganizationDTO>() {
+//						}.getType());
+//					}
+//				}
+//				operatingUnitDTO.setAccount(accountDto);
+//				operatingUnitDTOs.add(operatingUnitDTO);
+//			}
+//		}
+//		if (0 == requestDto.getSkip() && requestDto.getSearchTerm().isBlank()) {
+//			totalCount = operatingUnitRepository.countByIsDeletedFalse();
+//		} else if ((0 == requestDto.getSkip() && !requestDto.getSearchTerm().isBlank())) {
+//			totalCount = operatingUnitRepository.getOperatingUnitsCount(searchTerm, tenantIdList);
+//		}
+//
+//		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, operatingUnitDTOs);
+//		return response;
+//	}
 
 	/**
 	 * {@inheritDoc}
@@ -308,9 +308,9 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 			}.getType()));
 		}
 
-		Account account = dataRepository.getAccountById(operatingunit.getAccountId());
-		if (!Objects.isNull(account)) {
-			ParentOrganizationDTO accountDTO = modelMapper.map(account, new TypeToken<ParentOrganizationDTO>() {
+//		Account account = dataRepository.getAccountById(operatingunit.getAccountId());
+		if (!Objects.isNull(operatingunit.getAccount().getId())) {
+			ParentOrganizationDTO accountDTO = modelMapper.map(operatingunit.getAccount(), new TypeToken<ParentOrganizationDTO>() {
 			}.getType());
 			ouDTO.setAccount(accountDTO);
 		}
@@ -320,18 +320,83 @@ public class OperatingUnitServiceImpl implements OperatingUnitService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void activateDeactivateOUList(List<Long> tenantIdList, boolean isActive) {
+	public List<Long> activateDeactivateOUList(Long countryId, Long accountId,  boolean isActive) {
 		List<Operatingunit> operatingunits = operatingUnitRepository
-				.findByIsDeletedFalseAndIsActiveAndTenantIdIn(!isActive, tenantIdList);
+				.findByCountryIdAndAccountIdAndIsActive(countryId, accountId, !isActive);
+		List<Long> tenantIds = new ArrayList<>();
 		System.out.println("operatingunits------" + operatingunits);
 		if (!operatingunits.isEmpty()) {
-			operatingunits.stream().forEach(site -> site.setActive(isActive));
+			operatingunits.stream().forEach(ou -> 
+			{
+				ou.setActive(isActive);
+				tenantIds.add(ou.getTenantId());
+			});
 			operatingUnitRepository.saveAll(operatingunits);
+		System.out.println("ou tenantIds----"+tenantIds);
 		}
+		return tenantIds;
 	}
+	
+	public void activateDeactivateOU(long id, boolean isActive) {
+		Operatingunit operatingunit = operatingUnitRepository.findByIdAndIsDeletedFalseAndIsActive(id, isActive);
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+		if (Objects.isNull(operatingunit)) {
+			throw new DataNotFoundException(29010);
+		}
+		System.out.println("ou---------" + operatingunit);
+		operatingunit.setActive(isActive);
+		operatingUnitRepository.save(operatingunit);
+		List<Long> tenantIds = new ArrayList<>();
+		tenantIds.addAll(siteService.activateDeactivateSiteList(null, null, operatingunit.getId(), isActive));
+		System.out.println("tenantIdList--------" + tenantIds);
+
+		userApiInterface.activateDeactivateUser(token, UserSelectedTenantContextHolder.get(), tenantIds, isActive);
+	}
+
 	
 	public Integer getCount(Long countryId, Long accountId, boolean isActive) {
 		return operatingUnitRepository.getCount(countryId,
 			accountId, isActive);
+	}
+	
+	/**
+	 * ({@inheritDoc}
+	 */
+	public Map<String, Object> getOUUsersList(SearchRequestDTO requestDto) {
+		if (Objects.isNull(requestDto.getTenantId())) {
+			throw new DataNotAcceptableException(26013);
+		}
+
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+//		Organization organization = userApiInterface
+//				.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
+//
+//		List<User> users = new ArrayList<>();
+//		List<UserDTO> usersDtos = new ArrayList<>();
+//
+//		if (!Objects.isNull(organization)) {
+//			Map<String, List<Long>> childIds = userApiInterface.getChildOrganizations(token,
+//					UserSelectedTenantContextHolder.get(), requestDto.getTenantId(), organization.getFormName());
+//			List<Long> tenantIdList = childIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+//			tenantIdList.add(requestDto.getTenantId());
+//			users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(), tenantIdList);
+//		}
+//		if (!Objects.isNull(users)) {
+//			usersDtos = modelMapper.map(users, new TypeToken<List<UserDTO>>() {
+//			}.getType());
+//		}
+		Map<String, Object> usersResponse = userApiInterface.searchUser(token,
+				UserSelectedTenantContextHolder.get(), requestDto).getBody();
+		return usersResponse;
+	}
+	
+	public Operatingunit createOperatingUnit(Operatingunit operatingUnit) {
+		Operatingunit existingOperatingUnit = operatingUnitRepository.findByNameIgnoreCaseAndIsDeletedFalse(operatingUnit.getName());
+		
+		if (!Objects.isNull(existingOperatingUnit)) {
+			throw new DataConflictException(29011);
+		}
+		
+		return operatingUnitRepository.save(operatingUnit);
 	}
 }

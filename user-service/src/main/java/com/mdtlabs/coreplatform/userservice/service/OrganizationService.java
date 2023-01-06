@@ -6,9 +6,12 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SiteOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 
@@ -152,7 +155,7 @@ public interface OrganizationService {
 	 * @author Niraimathi S
 	 */
 	Map<String, List<Long>> activateDeactivateOrg(long tenantId, boolean doActivate);
-
+	
 	/**
 	 * To validate parent organization .
 	 * 
@@ -161,8 +164,15 @@ public interface OrganizationService {
 	 */
 	void validateParentOrganization(Long parentOrganizationId, List<Long> tenantIds);
 
-	void createCountry(@Valid CountryOrganizationDTO countryOrganizationDTO);
+	void createCountry(CountryOrganizationDTO countryOrganizationDTO);
 	
-    void addOrganizationUsers(List<User> organizationUsers, List<String> roles, Organization organization);
+    void addOrganizationUsers(List<User> organizationUsers, List<String> roles, Organization organization, Boolean isSiteUsers);
 
+	void createOU(OperatingUnitOrganizationDTO operatingUnitDTO);
+
+	void createAccount(AccountOrganizationDTO accountDTO);
+	
+	Boolean activateDeactivateOrganization(List<Long> tenantIds, boolean doActivate);
+
+	void createSite(SiteOrganizationDTO siteDto);
 }

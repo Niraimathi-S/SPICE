@@ -227,6 +227,8 @@ CREATE TABLE account (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   is_active BOOLEAN DEFAULT true,
   is_deleted BOOLEAN DEFAULT false,
+  reason VARCHAR,
+  status VARCHAR,
   ref_id VARCHAR
 );
 

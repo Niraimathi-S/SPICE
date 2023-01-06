@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SiteOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.userservice.message.SuccessCode;
@@ -227,15 +230,33 @@ public class OrganizationController {
 	 * @param isActive - active status
 	 * @return Map(String,List) - Collection of child organization Ids
 	 */
-	@PostMapping("/activate-deactivate/{tenantId}")
-	public Map<String, List<Long>> activateDeactivateOrg(@RequestParam(value = Constants.TENANT_PARAMETER_NAME) Long tenantId,
+	@PostMapping("/activate-deactivate")
+	public Boolean activateDeactivateOrg(@RequestBody List<Long> tenantIds,
 			@RequestParam Boolean isActive) {
-		return organizationService.activateDeactivateOrg(tenantId, isActive);		
+		return organizationService.activateDeactivateOrganization(tenantIds, isActive);		
 	}
 	
 	@PostMapping("/create-country")
 	public SuccessResponse<CountryOrganizationDTO> createCountry(@Valid @RequestBody CountryOrganizationDTO countryOrganizationDTO){
 		organizationService.createCountry(countryOrganizationDTO);
+		return new SuccessResponse<>(SuccessCode.ORGANIZATION_SAVE, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/create-account")
+	public SuccessResponse<AccountOrganizationDTO> createAccount(@Valid @RequestBody AccountOrganizationDTO accountOrganizationDTO){
+		organizationService.createAccount(accountOrganizationDTO);
+		return new SuccessResponse<>(SuccessCode.ORGANIZATION_SAVE, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/create-operating-unit")
+	public SuccessResponse<OperatingUnitOrganizationDTO> createOperatingUnit(@Valid @RequestBody OperatingUnitOrganizationDTO operatingUnitOrganizationDTO){
+		organizationService.createOU(operatingUnitOrganizationDTO);
+		return new SuccessResponse<>(SuccessCode.ORGANIZATION_SAVE, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/create-site")
+	public SuccessResponse<SiteOrganizationDTO> createSite(@Valid @RequestBody SiteOrganizationDTO siteDto){
+		organizationService.createSite(siteDto);
 		return new SuccessResponse<>(SuccessCode.ORGANIZATION_SAVE, HttpStatus.CREATED);
 	}
 

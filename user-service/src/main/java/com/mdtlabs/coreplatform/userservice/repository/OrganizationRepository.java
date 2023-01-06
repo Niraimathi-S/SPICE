@@ -174,7 +174,7 @@ public interface OrganizationRepository
 	 * @param organizationIds - list of organizations ids
 	 * @return Set(Organization) - Set of Organization Entities
 	 */
-	public Set<Organization> findByIsDeletedFalseAndIsActiveTrueAndIdIn(List<Long> organizationIds);
+	public Set<Organization> findByIsDeletedFalseAndIsActiveAndIdIn(Boolean isActive, List<Long> organizationIds);
 
 	/**
 	 * <p>
@@ -187,5 +187,8 @@ public interface OrganizationRepository
 	 */
 	public List<Organization> findByParentOrganizationIdAndIsActiveTrueAndTenantIdIn(
 		Long parentOrganizationId, List<Long> tenantIds);
+
+	public List<Organization> findByIsDeletedFalseAndIsActiveAndFormDataIdIn(boolean doActivate,
+			List<Long> formdataIdList);
 
 }

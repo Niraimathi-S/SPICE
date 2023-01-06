@@ -1,8 +1,15 @@
 package com.mdtlabs.coreplatform.spiceadminservice.site.service;
 
 import java.util.List;
+import java.util.Map;
 
+import javax.validation.Valid;
+
+import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SiteDetailsDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Site;
+import com.mdtlabs.coreplatform.common.model.entity.User;
 
 /**
  * <p>
@@ -77,7 +84,8 @@ public interface SiteService {
 	 * @return Boolean - Activation Status
 	 * @author Niraimathi S
 	 */
-    public boolean activateDeactivateSiteList(List<Long> tenantIds, boolean isActive);
+    public List<Long> activateDeactivateSiteList(Long countryId, Long accountId, Long operatingUnitId,
+    	boolean isActive);
 
     /**
      * To get Count of Sites using countryId
@@ -88,5 +96,35 @@ public interface SiteService {
 	 * @author Niraimathi S
      */
 	public Integer getCount(Long countryId, Long accountId, Long operatingUnitId, boolean isActive);
-    
+
+	/**
+	 * To add site admin user.
+	 *
+	 * @param user - account admin user details
+	 * @return User - User entity
+	 * @author Niraimathi S
+	 */
+	public User addSiteAdmin(User user);
+	
+	/**
+	 * To update site admin user.
+	 *
+	 * @param user - updated user details
+	 * @return User - user entity
+	 * @author Niraimathi S
+	 */
+	public User updateSiteAdmin(User user);
+	
+	/**
+	 * To delete site admin user.
+	 *
+	 * @param requestDto - request data containing user id and tenantId.
+	 * @return Boolean
+	 * @author Niraimathi S
+	 */
+	public Boolean deleteSiteAdmin(CommonRequestDTO requestDto);
+	
+	public Map<String, Object> getSiteList(RequestDTO requestDto);
+
+	public SiteDetailsDTO getSiteDetails(CommonRequestDTO requestDTO);    
 }

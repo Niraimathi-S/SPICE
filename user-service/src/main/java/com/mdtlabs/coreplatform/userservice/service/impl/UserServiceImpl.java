@@ -47,6 +47,7 @@ import com.mdtlabs.coreplatform.common.Constants;
 import com.mdtlabs.coreplatform.common.ErrorConstants;
 import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
+import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.common.exception.DataConflictException;
 import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
@@ -60,6 +61,7 @@ import com.mdtlabs.coreplatform.common.logger.Logger;
 import com.mdtlabs.coreplatform.common.model.dto.EmailDTO;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.EmailTemplate;
 import com.mdtlabs.coreplatform.common.model.entity.EmailTemplateValue;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
@@ -72,6 +74,7 @@ import com.mdtlabs.coreplatform.common.repository.GenericRepository;
 import com.mdtlabs.coreplatform.common.repository.UserTokenRepository;
 import com.mdtlabs.coreplatform.common.util.CommonUtil;
 import com.mdtlabs.coreplatform.common.util.DateUtil;
+import com.mdtlabs.coreplatform.common.util.Pagination;
 import com.mdtlabs.coreplatform.common.util.StringUtil;
 import com.mdtlabs.coreplatform.userservice.repository.UserRepository;
 import com.mdtlabs.coreplatform.userservice.service.OrganizationService;
@@ -788,12 +791,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	 */
 	public UserDTO validateUser(Map<String, String> requestData) {
 		String email = requestData.get(Constants.EMAIL);
-		Long parentOrganizationId = Long.parseLong(requestData.get("parentOrganizationId").toString());
+		Long parentOrganizationId = null;
+		if (!Objects.isNull(requestData.get("parentOrganizationId"))) {
+			parentOrganizationId = Long.parseLong((requestData.get("parentOrganizationId")).toString());
+		}
+		System.out.println("parentOrganizationId--------"+parentOrganizationId);
 		if (email.isBlank()) {
 			throw new DataNotAcceptableException(5003);
 		}
 		User user = userRepository.findByUsernameIgnoreCaseAndIsDeletedFalse(email);
-//		organizationService.validateParentOrganization(parentOrganizationId, userTenantsList);
+		if (!Objects.isNull(parentOrganizationId)) {
+			List<Long> userTenantsList = user.getOrganizations().stream().map(Organization::getId).toList();
+			System.out.println("userTenantsList--------"+userTenantsList);
+			
+			organizationService.validateParentOrganization(parentOrganizationId, userTenantsList);
+		}
 		UserDTO userDTO = null;
 		if (!Objects.isNull(user)) {
 			userDTO = modelMapper.map(user, new TypeToken<UserDTO>() {
@@ -811,7 +823,48 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			users.stream().forEach(user -> user.setActive(isActive));
 			users = userRepository.saveAll(users);
 		}
+		System.out.println("users----------"+users);
 		return null != users;
+	}
+	
+	public Map<String, Object> searchUser(SearchRequestDTO requestDTO) {
+		Organization organization = organizationService.getOrganizationById(requestDTO.getTenantId());
+
+		List<User> users = new ArrayList<>();
+		List<UserDTO> usersDtos = new ArrayList<>();
+		List<Long> tenantIdList = new ArrayList<>();
+		int totalCount = 0;
+		Pageable pageable = Pagination.setPagination(requestDTO.getSkip(), requestDTO.getLimit(), Constants.UPDATED_AT,
+				Constants.BOOLEAN_FALSE);
+		String searchTerm = requestDTO.getSearchTerm();
+
+		if (!Objects.isNull(searchTerm) && 0 > searchTerm.length()) {
+			searchTerm = searchTerm.replaceAll("[^a-zA-Z0-9@]*", "");
+		}
+		if (!Objects.isNull(organization)) {
+			Map<String, List<Long>> childIds = organizationService.getChildOrganizations(requestDTO.getTenantId(),
+					organization.getFormName());
+			tenantIdList = childIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+			tenantIdList.add(requestDTO.getTenantId());
+			System.out.println("tenantIDs list  ___"+tenantIdList);
+			users = userRepository.searchUsersByTenantIds(tenantIdList, requestDTO.getSearchTerm(), pageable);
+			
+			System.out.println("users-------"+users);
+		}
+		if (!Objects.isNull(users)) {
+//			users = users.stream().filter()
+			usersDtos = modelMapper.map(users, new TypeToken<List<UserDTO>>() {
+			}.getType());
+//			System.out.println("userDTOs---"+usersDtos);
+		}
+		if (0 == requestDTO.getSkip() && requestDTO.getSearchTerm().isBlank()) {
+			totalCount = userRepository.countUsersByTenantIds(tenantIdList);
+		} else if ((0 == requestDTO.getSkip() && !requestDTO.getSearchTerm().isBlank())) {
+			totalCount = userRepository.getSearchedUserCount(tenantIdList, requestDTO.getSearchTerm());
+		}
+
+		Map<String, Object> response = Map.of(Constants.COUNT, totalCount, Constants.DATA, usersDtos);
+		return response;
 	}
 
 }

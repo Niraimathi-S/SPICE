@@ -149,14 +149,14 @@ public class StaticDataServiceImpl implements StaticDataService {
 
 		response.setClinicalWorkflow(clinicalWorkflowResponse);
 		response.setAccountId(account.getId());
-		response.setOperatingUnitId(sites.get(0).getOperatingUnitId());
+		response.setOperatingUnitId(sites.get(0).getOperatingUnit().getId());
 		response.setSites(siteDTOList);
 
 		response.setDefaultSite(
 				sites.stream().filter(site -> site.getTenantId() == UserSelectedTenantContextHolder.get())
 						.findAny().orElse(null));
 		response.setOperatingSites(
-				apiInterface.getSitesByOperatingUnitId(token, tenantId, sites.get(0).getOperatingUnitId()));
+				apiInterface.getSitesByOperatingUnitId(token, tenantId, sites.get(0).getOperatingUnit().getId()));
 
 		setMetaData(response, countryId, token, tenantId);
 		getAccountCustomization(countryId, response, token, tenantId);

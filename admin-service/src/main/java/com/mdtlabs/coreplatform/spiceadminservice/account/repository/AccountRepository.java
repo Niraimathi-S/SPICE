@@ -44,8 +44,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 		+ "where account.country.id = :countryId And account.isDeleted=false And account.isActive=true";
 	
 	public static final String COUNT_BY_NAME = "select count(account.id) from Account as account"
-			+ " where lower(account.name) LIKE CONCAT('%',lower(:searchTerm),'%')"
-			+ " AND account.isDeleted=false AND account.isActive=true AND account.country.id=:countryId";
+		+ " where lower(account.name) LIKE CONCAT('%',lower(:searchTerm),'%')"
+		+ " AND account.isDeleted=false AND account.isActive=true AND account.country.id=:countryId";
+	
+	public static final String GET_BY_COUNTRY_ID = "select account from Account as account where account.country.id "
+		+ "in (:countryIdList) AND account.isActive=:isActive AND account.isDeleted = false";
 	
 	/**
 	 * To get the account by id.
@@ -173,5 +176,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	@Query(value = COUNT_BY_NAME)
 	public int getAccountsCount(@Param(value = "searchTerm") String searchTerm, 
 		@Param("countryId") Long countryId);
+
+	@Query(value = GET_BY_COUNTRY_ID)
+	public List<Account> findAccountByCountryIdAndIsActive(@Param("countryIdList") List<Long> countryIdList,
+		@Param("isActive") boolean isActive);
+
+	public Account findByTenantIdAndIsDeletedFalseAndIsActive(long tenantId, boolean isActive);
 
 }

@@ -5,12 +5,12 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.mdtlabs.coreplatform.common.domain.Paged;
+import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitDetailsDTO;
-import com.mdtlabs.coreplatform.common.model.dto.spice.OperatingUnitListDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
+import com.mdtlabs.coreplatform.common.model.entity.Operatingunit;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 
 /**
@@ -62,7 +62,7 @@ public interface OperatingUnitService {
 	 * To get operating unit list based on a search term and tenant Id.
 	 * 
 	 * @param requestDto - request details
-	 * @return Map(String, Object) - List of Operatingunit entites and its count
+	 * @return Map(String, Object) - List of OperatingUnit entities and its count
 	 * @author Niraimathi S
 	 */
 	Map<String, Object> getAllOperatingUnits(SearchRequestDTO requestDto);
@@ -72,16 +72,18 @@ public interface OperatingUnitService {
 	 * 
 	 * @param requestDTO - request data containing Id and tenantId
 	 * @return Operating unit entity
+	 * @author Niraimathi S
 	 */
 	OperatingUnitDetailsDTO getOUDetails(CommonRequestDTO requestDTO);
 	
 	/**
-	 * Activates or deactivates an operating unit based on list of tenant Ids.
+	 * Activates or deactivates an operating unit based on list of tenant IDs.
 	 * 
 	 * @param tenantIdList - list of tenantId
 	 * @param doActivate - isActive status
+	 * @author Niraimathi S
 	 */
-    void activateDeactivateOUList(List<Long> tenantIdList, boolean doActivate);
+    List<Long> activateDeactivateOUList(Long countryId, Long accountId, boolean doActivate);
 
     /**
      * To get count of operating units by country Id and accountId.
@@ -89,7 +91,35 @@ public interface OperatingUnitService {
      * @param countryId - country Id
      * @param isActive - isActive status
      * @return Integer - count of Operating units
+     * @author Niraimathi S
      */
 	public Integer getCount(Long countryId, Long accountId, boolean isActive);
     
+	/**
+	 * Gets operating unit list based on operating unit tenant Id.
+	 * 
+	 * @param requestDto - request data containing tenantId, search term etc.,
+	 * @return List(UserDTO) - List of User entity
+	 * @author Niraimathi S
+	 */
+	public Map<String, Object> getOUUsersList(SearchRequestDTO requestDto);
+
+	/**
+	 * TO activate or deactive an operating unit by its Id.
+	 * 
+	 * @param id - operating unit id
+	 * @param isActive - isActive status
+	 * @author Niraimathi S
+	 */
+	void activateDeactivateOU(long id, boolean isActive);
+
+	/**
+	 * Creates a new OperatingUnit.
+	 * 
+	 * @param operatingUnit - operating unit details
+	 * @return OperatingUnit - OperatingUnit entity
+	 * @author Niraimathi S
+	 */
+	Operatingunit createOperatingUnit(Operatingunit operatingUnit);
+
 }

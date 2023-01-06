@@ -24,25 +24,33 @@ import com.mdtlabs.coreplatform.common.model.entity.Operatingunit;
 public interface OperatingUnitRepository extends JpaRepository<Operatingunit, Long> {
 
 	public static String GET_ALL_OPERATING_UNITS = "select operatingUnit from Operatingunit "
-		+ "as operatingUnit where lower(operatingUnit.name)"
-		+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND operatingUnit.isDeleted=false"
-		+ "AND operatingUnit.account.id=:accountId";
+		+ "as operatingUnit where lower(operatingUnit.name) "
+		+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND operatingUnit.isDeleted=false AND"
+		+ "(:countryId is null or operatingUnit.countryId=:countryId) AND (:accountId is null or "
+		+ "operatingUnit.account.id=:accountId)";
 	
 	public static String GET_ALL_OPERATING_UNITS_BY_TENANTS = "select operatingUnit from Operatingunit "
-		+ "as operatingUnit where lower(operatingUnit.name)"
+		+ "as operatingUnit where lower(operatingUnit.name) "
 		+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND operatingUnit.isDeleted=false AND "
-		+ "operatingUnit.tenantId in (:tenants)"
-		+ " order by operatingUnit.updatedAt";
+		+ "(:countryId is null or operatingUnit.countryId=:countryId) AND (:accountId is null or "
+		+ "operatingUnit.account.id=:accountId)";
 	
 	public static String GET_ALL_OPERATING_UNITS_COUNT = "select count(operatingUnit.id) from Operatingunit "
-		+ "as operatingUnit where lower(operatingUnit.name)"
+		+ "as operatingUnit where lower(operatingUnit.name) "
 		+ " LIKE CONCAT('%',lower(:searchTerm),'%') AND operatingUnit.isDeleted=false AND "
-		+ "operatingUnit.tenantId in (:tenants)";
+		+ "(:countryId is null or operatingUnit.countryId=:countryId) AND (:accountId is null "
+		+ "or operatingUnit.account.id=:accountId)";
 
 	public static String COUNT_BY_COUNTRY_AND_ACCOUNT_ID = "select count(operatingUnit.id) from Operatingunit as "
 		+ "operatingUnit where (:countryId is null or operatingUnit.countryId=:countryId) AND (:accountId "
-		+ "is null or operatingUnit.accountId=:accountId) AND operatingUnit.isDeleted=false AND "
+		+ "is null or operatingUnit.account.id=:accountId) AND operatingUnit.isDeleted=false AND "
 		+ "operatingUnit.isActive=:isActive";
+	
+	public static String GET_BY_ACCOUNT_ID_AND_COUNTRY_ID = "select operatingUnit from Operatingunit as "
+			+ "operatingUnit where operatingUnit.isDeleted=false AND "
+			+ " (:countryId is null or operatingUnit.countryId=:countryId) AND (:accountId "
+			+ "is null or operatingUnit.account.id=:accountId) AND "
+			+ "operatingUnit.isActive=:isActive";
 	
 	/**
 	 * To get count of all operating units.
@@ -59,17 +67,21 @@ public interface OperatingUnitRepository extends JpaRepository<Operatingunit, Lo
 	 * @return List(Operatingunit) - List of operating units.
 	 */
 	@Query(value = GET_ALL_OPERATING_UNITS)
-	List<Operatingunit> findOperatingUnitList(@Param("searchTerm") String searchTerm, @Param("accountId") Long accountId, Pageable pageable);
+	List<Operatingunit> findOperatingUnitList(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId,
+		@Param("accountId") Long accountId, Pageable pageable);
 
 	/**
+	 * Gets list of operatingunits based on country or account id and operating unit name
 	 * 
-	 * @param searchTerm
-	 * @param tenants
+	 * @param searchTerm - searchTerm 
+	 * @param countryId - country Id
+	 * @param accountId
 	 * @param pageable
 	 * @return
 	 */
 	@Query(value = GET_ALL_OPERATING_UNITS_BY_TENANTS)
-	List<Operatingunit> getOperatingUnitsByTenants(@Param("searchTerm") String searchTerm, @Param("tenants") List<Long> tenants, Pageable pageable);
+	List<Operatingunit> getOperatingUnits(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId,
+		@Param("accountId") Long accountId, Pageable pageable);
 
 	/**
 	 * 
@@ -78,7 +90,8 @@ public interface OperatingUnitRepository extends JpaRepository<Operatingunit, Lo
 	 * @return
 	 */
 	@Query(value = GET_ALL_OPERATING_UNITS_COUNT)
-	int getOperatingUnitsCount(@Param("searchTerm") String searchTerm, @Param("tenants") List<Long> tenants);
+	int getOperatingUnitsCount(@Param("searchTerm") String searchTerm, @Param("countryId") Long countryId,
+		@Param("accountId") Long accountId);
 
 	/**
 	 * 
@@ -126,5 +139,13 @@ public interface OperatingUnitRepository extends JpaRepository<Operatingunit, Lo
 	 * 
 	 */
 	@Query(value = COUNT_BY_COUNTRY_AND_ACCOUNT_ID)
-	Integer getCount(@Param("countryId") Long countryId, @Param("accountId") Long accountId, @Param("isActive") boolean isActive);	
+	Integer getCount(@Param("countryId") Long countryId, @Param("accountId") Long accountId,
+		@Param("isActive") boolean isActive);
+
+	@Query(value = GET_BY_ACCOUNT_ID_AND_COUNTRY_ID)
+	List<Operatingunit> findByCountryIdAndAccountIdAndIsActive(@Param("countryId") Long countryId, @Param("accountId") Long accountId, @Param("isActive") boolean isActive);
+
+	Operatingunit findByIdAndIsDeletedFalseAndIsActive(long id, boolean isActive);
+
+	Operatingunit findByNameIgnoreCaseAndIsDeletedFalse(String name);	
 }

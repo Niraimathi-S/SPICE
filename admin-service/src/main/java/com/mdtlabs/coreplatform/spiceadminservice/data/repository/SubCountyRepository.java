@@ -90,4 +90,6 @@ public interface SubCountyRepository extends JpaRepository<Subcounty, Long> {
 	 */
 	public List<Subcounty> findByCountryId(Long countryId);
 
+	public List<Subcounty> findByCountyIdAndIsDeletedFalse(Long countyId);
+
 }

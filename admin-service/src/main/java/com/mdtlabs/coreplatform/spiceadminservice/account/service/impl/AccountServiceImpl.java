@@ -1,7 +1,6 @@
 package com.mdtlabs.coreplatform.spiceadminservice.account.service.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.reflect.TypeToken;
 import com.mdtlabs.coreplatform.AuthenticationFilter;
 import com.mdtlabs.coreplatform.common.Constants;
-import com.mdtlabs.coreplatform.common.FieldConstants;
 import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.exception.BadRequestException;
@@ -29,24 +27,26 @@ import com.mdtlabs.coreplatform.common.exception.DataNotAcceptableException;
 import com.mdtlabs.coreplatform.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.AccountDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountDetailsDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.AccountListDTO;
-import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountWorkflowDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CountryDTO;
-import com.mdtlabs.coreplatform.common.model.dto.spice.CountryOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.UserOrganizationDTO;
 import com.mdtlabs.coreplatform.common.model.entity.Account;
+import com.mdtlabs.coreplatform.common.model.entity.Country;
 import com.mdtlabs.coreplatform.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.common.model.entity.Role;
 import com.mdtlabs.coreplatform.common.model.entity.User;
+import com.mdtlabs.coreplatform.common.model.entity.spice.AccountWorkflow;
 import com.mdtlabs.coreplatform.common.repository.DataRepository;
 import com.mdtlabs.coreplatform.common.util.Pagination;
 import com.mdtlabs.coreplatform.spiceadminservice.UserApiInterface;
 import com.mdtlabs.coreplatform.spiceadminservice.account.repository.AccountRepository;
 import com.mdtlabs.coreplatform.spiceadminservice.account.service.AccountService;
-import com.mdtlabs.coreplatform.spiceadminservice.data.service.DataService;
+import com.mdtlabs.coreplatform.spiceadminservice.accountworkflow.service.AccountWorkflowService;
 import com.mdtlabs.coreplatform.spiceadminservice.operatingunit.service.OperatingUnitService;
 import com.mdtlabs.coreplatform.spiceadminservice.site.service.SiteService;
 
@@ -66,20 +66,17 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	UserApiInterface userApiInterface;
 
-//	@Autowired
-//	DataService dataService;
-
 	@Autowired
 	DataRepository dataRepository;
-
-//	@Autowired
-//	AccountService accountService;
 
 	@Autowired
 	OperatingUnitService operatingUnitService;
 
 	@Autowired
 	SiteService siteService;
+	
+	@Autowired
+	AccountWorkflowService accountWorkflowService;
 
 	ModelMapper modelMapper = new ModelMapper();
 
@@ -90,41 +87,67 @@ public class AccountServiceImpl implements AccountService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Account addAccount(Account account) {
-		if (Objects.isNull(account)) {
+	public Account addAccount(AccountWorkflowDTO accountDTO) {
+		if (Objects.isNull(accountDTO)) {
 			throw new BadRequestException(12006);
 		}
-
-		if (!Objects.isNull(account.getClinicalWorkflows())) {
-			if (account.getClinicalWorkflows().isEmpty()) {
+		Account account = new Account();
+		
+		if (!Objects.isNull(accountDTO.getClinicalWorkflows())) {
+			if (accountDTO.getClinicalWorkflows().isEmpty()) {
 				throw new BadRequestException(26009);
-			}
-			boolean containsNullOrEmpty = account.getClinicalWorkflows().stream()
-					.anyMatch(workflow -> (Objects.isNull(workflow)));
-			if (containsNullOrEmpty) {
-				throw new BadRequestException(26009);
-			}
+			}			
+//			boolean containsNullOrEmpty = accountDTO.getClinicalWorkflows().stream()
+//					.anyMatch(workflow -> (Objects.isNull(workflow)));
+//			if (containsNullOrEmpty) {
+//				throw new BadRequestException(26009);
+//			}
 		}
+		
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		account = modelMapper.map(accountDTO, Account.class);
+		account.setCountry(new Country(accountDTO.getCountryId()));
+		
+//		List<AccountWorkflow> workflows = new ArrayList<>();
+//		if (!accountDTO.getClinicalWorkflows().isEmpty()) {
+//			account.setClinicalWorkflows(accountDTO.getClinicalWorkflows().stream().map(id -> new AccountWorkflow(id)).collect(Collectors.toList()));
+//		}
+//		if (!accountDTO.getCustomizedWorkflows().isEmpty()) {
+//			account.setCustomizedWorkflows(accountDTO.getCustomizedWorkflows().stream().map(id -> new AccountWorkflow(id)).collect(Collectors.toList()));
+//		}
+		
+        account.setClinicalWorkflows(getaccountWorkflows(accountDTO.getClinicalWorkflows()));
+        if (!Objects.isNull(accountDTO.getCustomizedWorkflows())) {
+            account.setCustomizedWorkflows(getaccountWorkflows(new ArrayList<>(accountDTO.getCustomizedWorkflows())));
+        }
 
+		System.out.println("account ---"+account);
 		Account savedAccount = accountRepository.save(account);
-
 		return savedAccount;
 	}
+	
+    private List<AccountWorkflow> getaccountWorkflows(List<Long> workflowIds) {
+        List<AccountWorkflow> workflows = accountWorkflowService.getAccountWorkflowsById(workflowIds);
+        System.out.println("workflows from account workflow " + workflows);
+        if (workflowIds.size() != workflows.size()) {
+            throw new DataNotFoundException(26011);
+        }
+        return workflows;
+    }
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Account updateAccount(Account account) {
+	public Account updateAccount(AccountWorkflowDTO account) {
 		if (Objects.isNull(account)) {
 			throw new BadRequestException(12006);
 		}
-
 		Account existingAccount = accountRepository.findByIdAndIsDeleted(account.getId(), false);
-
+		System.out.println("existingAccount---"+existingAccount);
+		
 		if (Objects.isNull(existingAccount)) {
 			throw new DataNotFoundException(26008);
 		}
-
 		if (!Objects.isNull(account.getClinicalWorkflows())) {
 			if (account.getClinicalWorkflows().isEmpty()) {
 				throw new BadRequestException(26009);
@@ -137,15 +160,16 @@ public class AccountServiceImpl implements AccountService {
 		}
 		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 		modelMapper.map(account, existingAccount);
+		existingAccount.setCountry(new Country(account.getCountryId()));
+		existingAccount.setClinicalWorkflows(getaccountWorkflows(account.getClinicalWorkflows()));
+        existingAccount.setCustomizedWorkflows(getaccountWorkflows(new ArrayList<>(account.getCustomizedWorkflows())));
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		Organization organization = new Organization();
 		organization.setId(account.getTenantId());
 		organization.setName(account.getName());
 		userApiInterface.updateOrganization(token, UserSelectedTenantContextHolder.get(), organization);
+		System.out.println("existingAccount---"+existingAccount);
 		return accountRepository.save(existingAccount);
-		// accountRepository.updateAccount(account.getClinicalWorkflows(),
-		// account.getId());
-		// return accountRepository.findById(account.getId()).orElseThrow();
 	}
 
 	/**
@@ -162,7 +186,7 @@ public class AccountServiceImpl implements AccountService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public AccountOrganizationDTO getAccountDetails(CommonRequestDTO requestDTO) {
+	public AccountDetailsDTO getAccountDetails(CommonRequestDTO requestDTO) {
 		if (Objects.isNull(requestDTO.getId()) || Objects.isNull(requestDTO.getTenantId())) {
 			throw new DataNotAcceptableException(12012);
 		}
@@ -171,24 +195,22 @@ public class AccountServiceImpl implements AccountService {
 		if (Objects.isNull(account)) {
 			throw new DataNotFoundException(26008);
 		}
-		AccountOrganizationDTO accountOrganizationDTO = new AccountOrganizationDTO();
+		AccountDetailsDTO accountDetailsDTO = new AccountDetailsDTO();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		accountOrganizationDTO = modelMapper.map(account, new TypeToken<AccountOrganizationDTO>() {
-		}.getType());
+		accountDetailsDTO = modelMapper.map(account, AccountDetailsDTO.class);
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(),
 				List.of(account.getTenantId()));
 
-		accountOrganizationDTO.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
+		accountDetailsDTO.setUsers(modelMapper.map(users, new TypeToken<List<UserOrganizationDTO>>() {
 		}.getType()));
 
-		CountryDTO countryDTO = modelMapper.map(account.getCountry(), new TypeToken<CountryDTO>() {
-		}.getType());
-		accountOrganizationDTO.setCountry(countryDTO);
-		accountOrganizationDTO.setCountryCode(countryDTO.getCountryCode());
-		accountOrganizationDTO.setClinicalWorkflow(account.getClinicalWorkflows());
-		accountOrganizationDTO.setCustomizedWorkflow(account.getCustomizedWorkflows());
-		return accountOrganizationDTO;
+		CountryDTO countryDTO = modelMapper.map(account.getCountry(), CountryDTO.class);
+		accountDetailsDTO.setCountry(countryDTO);
+		accountDetailsDTO.setCountryCode(countryDTO.getCountryCode());
+		accountDetailsDTO.setClinicalWorkflow(account.getClinicalWorkflows());
+		accountDetailsDTO.setCustomizedWorkflow(account.getCustomizedWorkflows());
+		return accountDetailsDTO;
 	}
 
 //	/**
@@ -211,8 +233,8 @@ public class AccountServiceImpl implements AccountService {
 		}
 
 		if (!Objects.isNull(searchRequestDto.getIsPaginated()) && searchRequestDto.getIsPaginated()) {
-			Pageable pageable = Pagination.setPagination(searchRequestDto.getPageNumber(), searchRequestDto.getLimit(),
-					FieldConstants.MODIFIED_AT, false);
+			Pageable pageable = Pagination.setPagination(searchRequestDto.getSkip(), searchRequestDto.getLimit(),
+					Constants.UPDATED_AT, false);
 			Page<Account> accounts = accountRepository.getDeactivatedAccountsWithPagination(formattedSearchTerm,
 					pageable);
 			return accounts.stream().collect(Collectors.toList());
@@ -253,8 +275,8 @@ public class AccountServiceImpl implements AccountService {
 					accountListDto.setTenantId(account.getTenantId());
 	//				Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
 	//						UserSelectedTenantContextHolder.get(), account.getTenantId(), "account");
-					accountListDto.setOUCount(operatingUnitService.getCount(null, organization.getFormDataId(), Constants.BOOLEAN_TRUE));
-					accountListDto.setSiteCount(siteService.getCount(null, organization.getFormDataId(), null, Constants.BOOLEAN_TRUE));
+					accountListDto.setOUCount(operatingUnitService.getCount(null, account.getId(), Constants.BOOLEAN_TRUE));
+					accountListDto.setSiteCount(siteService.getCount(null, account.getId(), null, Constants.BOOLEAN_TRUE));
 					accountListDtos.add(accountListDto);
 				}
 			}
@@ -317,9 +339,7 @@ public class AccountServiceImpl implements AccountService {
 		}
 		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
 		List<Account> accounts = new ArrayList<>();
-//		Map<String, List<Long>> childOrgList = userApiInterface.getChildOrganizations(token,
-//				UserSelectedTenantContextHolder.get(), requestDto.getTenantId(), "country");
-//		
+
 		Organization organization = userApiInterface
 				.getOrganizationById(token, UserSelectedTenantContextHolder.get(), requestDto.getTenantId()).getBody();
 		List<AccountDTO> accountDTOs = new ArrayList<>();
@@ -353,21 +373,34 @@ public class AccountServiceImpl implements AccountService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Account activateDeactivateAccount(long id, boolean isActiveStatus) {
+	public Account activateDeactivateAccount(RequestDTO requestDTO) {
 
-//        Map<String, List<Long>> childOrgIds = userApiInterface.activateInactivateOrg(id,
-//                "account", isActiveStatus);
-//
-//        System.out.println("---------------------child organization    \n\n" + childOrgIds);
-//
-//        if (!childOrgIds.get("operatingUnitIds").isEmpty()) {
-//            operatingUnitService.activateDeactivateOUList(childOrgIds.get("accountIds"), isActiveStatus);
-//        }
-//        if (!childOrgIds.get("siteIds").isEmpty()) {
-//            siteService.activateDeactivateSiteList(childOrgIds.get("accountIds"), isActiveStatus);
-//        }
-//        accountToUpdate.setIsActive(isActiveStatus);
-//        return accountRepository.save(accountToUpdate);
+		Boolean isActiveStatus = requestDTO.getIsActive();
+		Account account = accountRepository.findByTenantIdAndIsDeletedFalseAndIsActive(requestDTO.getTenantId(),
+			!isActiveStatus);
+		if (Objects.isNull(account)) {
+			throw new DataNotFoundException(26008);
+		}
+		if (!Objects.isNull(requestDTO.getReason())) {
+			account.setReason(requestDTO.getStatus());
+			account.setStatus(requestDTO.getReason());
+		}
+		account.setActive(isActiveStatus);
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+
+		
+		accountRepository.save(account);
+		List<Long> tenantIdList = new ArrayList<>();
+		tenantIdList.addAll(operatingUnitService.activateDeactivateOUList(null, account.getId(), isActiveStatus));
+			tenantIdList.addAll(siteService.activateDeactivateSiteList(null, account.getId(), null, isActiveStatus));
+		
+		tenantIdList.add(requestDTO.getTenantId());
+
+		userApiInterface.activateDeactivateOrg(token,
+				UserSelectedTenantContextHolder.get(), tenantIdList, isActiveStatus);
+		
+		userApiInterface.activateDeactivateUser(token, UserSelectedTenantContextHolder.get(), tenantIdList, isActiveStatus);
+
 		return null;
 	}
 
@@ -375,17 +408,55 @@ public class AccountServiceImpl implements AccountService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void activateDeactivateAccountsList(List<Long> tenantList, boolean isActive) {
-		List<Account> accounts = accountRepository.findByIsDeletedFalseAndIsActiveAndTenantIdIn(!isActive, tenantList);
-
+	public List<Long> activateDeactivateAccountsList(List<Long> tenantList, boolean isActive) {
+		List<Account> accounts = accountRepository.findAccountByCountryIdAndIsActive(tenantList, !isActive);
+		List<Long> tenantIds = new	ArrayList<>();
 		System.out.println("accounts-----" + accounts);
 		if (!accounts.isEmpty()) {
-			accounts.stream().forEach(site -> site.setActive(isActive));
+			accounts.stream().forEach(account -> {
+				account.setActive(isActive);
+				tenantIds.add(account.getTenantId());
+			}
+			);
 			accountRepository.saveAll(accounts);
+			System.out.println("account tenantIds----"+tenantIds);
 		}
+		return tenantIds;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Integer getCountByCountryId(Long countryId) {
 		return accountRepository.countByCountryId(countryId);
+	}
+	
+	/**
+	 * ({@inheritDoc}
+	 */
+	public Map<String, Object> getAccountUsersList(SearchRequestDTO requestDto) {
+		if (Objects.isNull(requestDto.getTenantId())) {
+			throw new DataNotAcceptableException(26013);
+		}
+		
+		String token = Constants.BEARER + UserContextHolder.getUserDto().getAuthorization();
+//		List<UserDTO> usersDtos = new ArrayList<>();
+//		Map<String, List<Long>> childIds = userApiInterface.getChildOrganizations(token,
+//		UserSelectedTenantContextHolder.get(), requestDto.getTenantId(), "country");
+//		
+//		List<Long> tenantIdList = childIds.values().stream().flatMap(List::stream).collect(Collectors.toList());
+//		tenantIdList.add(requestDto.getTenantId());
+//		
+//		System.out.println("tenantId ---------"+ tenantIdList);
+//		List<User> users = userApiInterface.getUsersByTenantIds(token, UserSelectedTenantContextHolder.get(),
+//				tenantIdList);
+//		if (!Objects.isNull(users)) {
+//			usersDtos = modelMapper.map(users, new TypeToken<List<UserDTO>>() {
+//			}.getType());
+//		}
+		Map<String, Object> usersResponse = userApiInterface.searchUser(token,
+				UserSelectedTenantContextHolder.get(), requestDto).getBody();
+			
+		return usersResponse;
 	}
 }

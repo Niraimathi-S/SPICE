@@ -74,4 +74,16 @@ public class SuccessResponse<T> extends ResponseEntity<Object> {
 		this(MessageValidator.getInstance().getMessage(Integer.toString(
 			successCode.getKey()), Constants.SUCCESS), null, entity, responseCode, totalCount);
 	}
+	
+	public SuccessResponse(SuccessCode successCode, Object entity, HttpStatus responseCode,
+			String ... args) {
+		this(MessageValidator.getInstance().getMessage(Integer.toString(
+			successCode.getKey()), Constants.SUCCESS, args), entity, null, responseCode, null);
+	}
+	
+	public SuccessResponse(SuccessCode successCode, Object entity, int totalCount, HttpStatus responseCode, 
+			String ... args) {
+		this(MessageValidator.getInstance().getMessage(Integer.toString(
+			successCode.getKey()), Constants.SUCCESS, args), entity, null, responseCode, totalCount);
+	}
 }

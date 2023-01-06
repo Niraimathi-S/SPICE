@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.common.Constants;
+import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.AccountDTO;
-import com.mdtlabs.coreplatform.common.model.dto.spice.AccountOrganizationDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountDetailsDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.AccountWorkflowDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.CommonRequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.RequestDTO;
 import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
@@ -55,9 +57,9 @@ public class AccountController {
 	 * @author Jeyaharini T A
 	 */
 	@PostMapping("/create")
-	public SuccessResponse<Account> addAccount(@Valid @RequestBody Account account) {
-		accountService.addAccount(account);
-		return new SuccessResponse<>(SuccessCode.ACCOUNT_SAVE, HttpStatus.CREATED);
+	public Account addAccount(@Valid @RequestBody AccountWorkflowDTO account) {
+		return accountService.addAccount(account);
+//		return new SuccessResponse<>(SuccessCode.ACCOUNT_SAVE, HttpStatus.CREATED);
 	}
 
 	/**
@@ -68,7 +70,7 @@ public class AccountController {
 	 * @author Jeyaharini T A
 	 */
 	@PutMapping("/update")
-	public SuccessResponse<Account> updateAccount(@Valid @RequestBody Account account) {
+	public SuccessResponse<Account> updateAccount(@Valid @RequestBody AccountWorkflowDTO account) {
 		accountService.updateAccount(account);
 		return new SuccessResponse<Account>(SuccessCode.ACCOUNT_UPDATE, HttpStatus.OK);
 	}
@@ -81,8 +83,8 @@ public class AccountController {
 	 * @author Jeyaharini T A
 	 */
 	@PostMapping("/details")
-	public SuccessResponse<AccountOrganizationDTO> getAccountDetails(@RequestBody CommonRequestDTO requestDTO) {
-		return new SuccessResponse<AccountOrganizationDTO>(SuccessCode.GET_ACCOUNT,
+	public SuccessResponse<AccountDetailsDTO> getAccountDetails(@RequestBody CommonRequestDTO requestDTO) {
+		return new SuccessResponse<AccountDetailsDTO>(SuccessCode.GET_ACCOUNT,
 				accountService.getAccountDetails(requestDTO), HttpStatus.OK);
 	}
 
@@ -95,7 +97,10 @@ public class AccountController {
 	 */
 	@GetMapping("/activate/{id}")
 	public SuccessResponse<Account> activateAccountById(@PathVariable("id") long id) {
-		accountService.activateDeactivateAccount(id, true);
+		RequestDTO requestDTO = new RequestDTO();
+		requestDTO.setIsActive(true);
+		requestDTO.setTenantId(id);
+		accountService.activateDeactivateAccount(requestDTO);
 		return new SuccessResponse<Account>(SuccessCode.ACCOUNT_ACTIVATE, HttpStatus.OK);
 	}
 
@@ -106,9 +111,12 @@ public class AccountController {
 	 * @return Account entity
 	 * @author Jeyaharini T A
 	 */
-	@GetMapping("/deactivate/{id}")
-	public SuccessResponse<Account> deactivateAccountById(@PathVariable("id") long id) {
-		accountService.activateDeactivateAccount(id, false);
+	@PostMapping("/deactivate/{id}")
+	public SuccessResponse<Account> deactivateAccountById(@PathVariable("id") long id, @RequestBody RequestDTO requestDTO) {
+//		Account account = new Account();
+		requestDTO.setIsActive(false);
+		requestDTO.setTenantId(id);
+		accountService.activateDeactivateAccount(requestDTO);
 		return new SuccessResponse<Account>(SuccessCode.ACCOUNT_DEACTIVATE, HttpStatus.OK);
 	}
 
@@ -120,7 +128,7 @@ public class AccountController {
 	 * @return List of Account entities
 	 * @author Jeyaharini T A
 	 */
-	@GetMapping("/deactivate-list")
+	@PostMapping("/deactivate-list")
 	public SuccessResponse<List<Account>> getAllDeactivedAccounts(@RequestBody SearchRequestDTO searchRequestDto) {
 		List<Account> deactivatedAccountsList = accountService.getDeactivatedAccounts(searchRequestDto);
 		if (!deactivatedAccountsList.isEmpty()) {
@@ -229,5 +237,27 @@ public class AccountController {
 	public SuccessResponse<User> deleteAccountAdmin(@RequestBody CommonRequestDTO requestDto) {
 		accountService.deleteAccountAdmin(requestDto);
 		return new SuccessResponse<>(SuccessCode.REGION_ADMIN_DELETE, HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * Get the account users list for the selected region.
+	 * 
+	 * @param requestDto - request object containing tenantId 
+	 * @return List(User) - List of users
+	 * @author Niraimathi S
+	 */
+	@PostMapping(value = "/admin-users")
+	public SuccessResponse<List<UserDTO>> getAccountUsersList(@RequestBody SearchRequestDTO requestDto) {
+		
+		Map<String, Object> response = accountService.getAccountUsersList(requestDto);
+		Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0
+				: Integer.parseInt(response.get(Constants.COUNT).toString());
+		if (0 == totalCount) {
+			return new SuccessResponse<>(SuccessCode.GET_ACCOUNT, response.get(Constants.DATA),
+					HttpStatus.OK);
+		}
+		return new SuccessResponse<>(SuccessCode.GOT_ADMIN_USERS, response.get(Constants.DATA), totalCount,
+				HttpStatus.OK);
 	}
 }

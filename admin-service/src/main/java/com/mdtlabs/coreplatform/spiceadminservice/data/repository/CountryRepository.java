@@ -158,4 +158,6 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 
 	Country findByTenantIdAndIsDeletedFalse(Long tenantId);
 
+	Country findByTenantIdAndIsDeletedFalseAndIsActive(Long tenantId, boolean b);
+
 }

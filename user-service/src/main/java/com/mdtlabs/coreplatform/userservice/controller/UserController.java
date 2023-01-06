@@ -1,7 +1,9 @@
 package com.mdtlabs.coreplatform.userservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -26,6 +28,7 @@ import com.mdtlabs.coreplatform.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.common.model.dto.UserProfileDTO;
+import com.mdtlabs.coreplatform.common.model.dto.spice.SearchRequestDTO;
 import com.mdtlabs.coreplatform.common.model.entity.User;
 import com.mdtlabs.coreplatform.common.model.entity.UserToken;
 import com.mdtlabs.coreplatform.userservice.AdminApiInterface;
@@ -307,5 +310,35 @@ public class UserController {
 	public ResponseEntity<Boolean> activateDeactivateUser(@RequestBody List<Long> tenantIds, @RequestParam("isActive") boolean isActive) {
 		return ResponseEntity.ok().body(userService.activateDeactivateUser(tenantIds, isActive));
 	}
-
+	
+	/**
+	 * To get admin users for an organization.
+	 * 
+	 * @param requestDTO - request object containing tenantId and search term.
+	 * @return List(USerDTO) - List of admin users
+	 */
+	@PostMapping("/admin-users")
+	public SuccessResponse<List<UserDTO>> searchUser(@RequestBody SearchRequestDTO requestDTO) {
+//		return ResponseEntity.ok().body(userService.searchUser(requestDTO));
+		Map<String, Object> response = userService.searchUser(requestDTO);
+		
+        List<UserDTO> userList = response.containsKey(Constants.DATA)
+                ? (List<UserDTO>) response.get(Constants.DATA)
+                : new ArrayList<>();
+        Integer totalCount = (response.containsKey(Constants.COUNT) && !Objects.isNull(response.get(Constants.COUNT)))
+                ? Integer.parseInt(response.get(Constants.COUNT).toString())
+                : null;
+            return new SuccessResponse(SuccessCode.GET_USERS, userList, totalCount,
+                HttpStatus.OK);
+        }
+//	
+//		Integer totalCount = (Objects.isNull(response.get(Constants.COUNT))) ? 0
+//				: Integer.parseInt(response.get(Constants.COUNT).toString());
+//		if (0 == totalCount) {
+//			return new SuccessResponse<>(SuccessCode.GET_USERS, response.get(Constants.DATA),
+//					HttpStatus.OK);
+//		}
+//		return new SuccessResponse<>(SuccessCode.GET_USERS, response.get(Constants.DATA), totalCount,
+//				HttpStatus.OK);
+//	}
 }
